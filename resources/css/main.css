@@ -1,0 +1,99 @@
+*:focus {
+  outline: 1px solid #3498db !important; /* ## Mengubah warna outline (bukan border) saat fokus */
+}
+
+.nav.nav-treeview.pl-3 a {
+    max-width: 100%;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.btn .fas {
+    display: inline-block;
+    transition: transform 0.5s ease-in-out;
+}
+
+.btn.loading .fas {
+    animation: spin 1s infinite linear;
+}
+
+/* ## CSS Overlay Datatable */
+.datatable-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(100, 100, 100, 0.1); /* ## Warna hitam transparan, sesuaikan transparansi sesuai kebutuhan */
+}
+
+/* ## CSS Dimming Tabel */
+.dimmed-table {
+    /* ## Menonaktifkan event mouse selama loading */
+    pointer-events: none; 
+}
+
+.bg-orange {
+    color: #fff !important;
+}
+
+.animation__spin {
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+.toggle-password {
+    width: 50px;
+    text-align: center;
+}
+
+.daterangepicker-select {
+    cursor: pointer;
+}
+
+.table-vertical-align th,
+.table-vertical-align td {
+    vertical-align: middle
+}
+
+/* ## CSS untuk checkbox biar rapi */
+.custom-control {
+    padding-left: 2rem;
+}
+
+/* ## mengubah warna border menjadi merah pada select2 setelah terjadi validasi error */
+.select2-container--default.select2-container--error .select2-selection {
+    border-color: #dc3545 !important;
+}
+
+/* ## CSS for Quick Summary Packinglist */
+.card-body.p-0 table > thead > tr > th:first-of-type,
+.card-body.p-0 table > thead > tr > th:last-of-type,
+.card-body.p-0 table > tbody > tr > td:first-of-type,
+.card-body.p-0 table > tbody > tr > td:last-of-type {
+    padding: .75rem !important;
+}
+#roll_summary_table th,
+#roll_summary_table td {
+    vertical-align: middle!important;
+}
+
+
+/* ## CSS for modified dropdown style */
+.dropdown-item:focus, .dropdown-item:hover {
+    color: #16181b;
+    text-decoration: none;
+    background-color: #e9ecef;
+}
+
+/* ## CSS for delay the preloader. to give time for load component serverside*/
+.preloader {
+  transition-delay: 300ms;
+}
+
+.table .filterhead {
+    padding: 0.75rem !important;
+}
