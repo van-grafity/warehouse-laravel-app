@@ -5,6 +5,9 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+use Database\Seeders\PermissionCategoriesTableSeeder;
+use Database\Seeders\RolePermissionsSeeder;
+use Database\Seeders\UsersTableSeeder;
 use Database\Seeders\ColorsTableSeeder;
 use Database\Seeders\SuppliersTableSeeder;
 
@@ -23,6 +26,9 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
+        $this->call(PermissionCategoriesTableSeeder::class);
+        $this->call(RolePermissionsSeeder::class);
+        $this->call(UsersTableSeeder::class);
         $this->call(ColorsTableSeeder::class);
         $this->call(SuppliersTableSeeder::class);
     }
