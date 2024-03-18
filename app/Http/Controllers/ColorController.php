@@ -27,8 +27,7 @@ class ColorController extends Controller
      */
     public function dtable()
     {
-        $query = DB::table('colors')->get();
-        
+        $query = Color::get();
         
         return Datatables::of($query)
             ->addIndexColumn()
