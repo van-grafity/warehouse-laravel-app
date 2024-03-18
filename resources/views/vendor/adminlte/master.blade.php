@@ -22,6 +22,10 @@
     {{-- Custom stylesheets (pre AdminLTE) --}}
     @yield('adminlte_css_pre')
 
+
+    {{-- Extra Configured Plugins Stylesheets --}}
+    @include('adminlte::plugins', ['type' => 'css'])
+
     {{-- Base Stylesheets --}}
     @if(!config('adminlte.enabled_laravel_mix'))
         <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
@@ -34,9 +38,6 @@
     @else
         <link rel="stylesheet" href="{{ mix(config('adminlte.laravel_mix_css_path', 'css/app.css')) }}">
     @endif
-
-    {{-- Extra Configured Plugins Stylesheets --}}
-    @include('adminlte::plugins', ['type' => 'css'])
 
     {{-- Livewire Styles --}}
     @if(config('adminlte.livewire'))

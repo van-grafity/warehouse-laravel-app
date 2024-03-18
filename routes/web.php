@@ -21,6 +21,10 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('home', App\Http\Controllers\HomeController::class);
+    
+    Route::resource('user', App\Http\Controllers\UserController::class);
+    Route::get('user-dtable', [App\Http\Controllers\UserController::class,'dtable'])->name('user.dtable');
+    
     Route::resource('color', App\Http\Controllers\ColorController::class);
     Route::get('color-dtable', [App\Http\Controllers\ColorController::class,'dtable'])->name('color.dtable');
     
