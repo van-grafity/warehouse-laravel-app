@@ -63,10 +63,6 @@
                         <label for="color" class="col-form-label">Color</label>
                         <input type="text" class="form-control" id="color" name="color" required>
                     </div>
-                    <div class="form-group d-none">
-                        <label for="code" class="col-form-label">Code</label>
-                        <input type="text" class="form-control" id="code" name="code" required>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

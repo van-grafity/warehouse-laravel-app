@@ -22,6 +22,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'Developer',
             'email' => 'developer@example.com',
             'password' => Hash::make('123456789'),
+            'department_id' => '1',
         ]);
         $user->syncRoles('developer');
         $user->syncPermissions('user.access');
@@ -31,6 +32,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'Admin App',
             'email' => 'admin@example.com',
             'password' => Hash::make('123456789'),
+            'department_id' => '3',
         ]);
         $user->syncRoles('admin');
         
@@ -38,6 +40,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'User Default',
             'email' => 'user@example.com',
             'password' => Hash::make('123456789'),
+            'department_id' => '8',
         ]);
         $user->syncRoles('user');
     }

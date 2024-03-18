@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Supplier;
+use App\Models\Department;
 
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
 
-class SupplierController extends Controller
+class DepartmentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,10 +16,10 @@ class SupplierController extends Controller
     public function index()
     {
         $data = [
-            'title' => 'Supplier',
-            'page_title' => 'Supplier List'
+            'title' => 'Department',
+            'page_title' => 'Department List'
         ];
-        return view('pages.supplier.index', $data);
+        return view('pages.department.index', $data);
     }
 
     /**
@@ -27,14 +27,14 @@ class SupplierController extends Controller
      */
     public function dtable()
     {
-        $query = Supplier::get();
+        $query = Department::get();
         
         return Datatables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
             ->addColumn('action', function($data){
                 return '
-                <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_supplier\', '.$data->id.')">Edit</a>
+                <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_department\', '.$data->id.')">Edit</a>
                 <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$data->id.')">Delete</a>';
             })
             ->make(true);
@@ -46,16 +46,16 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         try {
-            $supplier = Supplier::firstOrCreate([
-                'supplier' => $request->supplier,
+            $department = Department::firstOrCreate([
+                'department' => $request->department,
                 'description' => $request->description,
             ]);
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully added new supplier (' . $supplier->supplier . ')',
+                'message' => 'Successfully added new department (' . $department->department . ')',
                 'data' => [
-                    'supplier' => $supplier,
+                    'department' => $department,
                 ]
             ];
             return response()->json($data_return, 200);
@@ -74,13 +74,13 @@ class SupplierController extends Controller
     public function show(string $id)
     {
         try {
-            $supplier = Supplier::find($id);
+            $department = Department::find($id);
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully get supplier (' . $supplier->supplier . ')',
+                'message' => 'Successfully get department (' . $department->department . ')',
                 'data' => [
-                    'supplier' => $supplier,
+                    'department' => $department,
                 ]
             ];
             return response()->json($data_return, 200);
@@ -99,16 +99,15 @@ class SupplierController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $supplier = Supplier::find($id);
-            $supplier->supplier = $request->supplier;
-            $supplier->description = $request->description;
-
-            $supplier->save();
+            $department = Department::find($id);
+            $department->department = $request->department;
+            $department->description = $request->description;
+            $department->save();
             
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully updated supplier ('. $supplier->supplier .')',
-                'data' => $supplier
+                'message' => 'Successfully updated department ('. $department->department .')',
+                'data' => $department
             ];
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {
@@ -126,12 +125,12 @@ class SupplierController extends Controller
     public function destroy(string $id)
     {
         try {
-            $supplier = Supplier::find($id);
-            $supplier->delete();
+            $department = Department::find($id);
+            $department->delete();
             $data_return = [
                 'status' => 'success',
-                'data'=> $supplier,
-                'message'=> 'Supplier '.$supplier->supplier.' successfully Deleted!',
+                'data'=> $department,
+                'message'=> 'Department '.$department->department.' successfully Deleted!',
             ];
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {

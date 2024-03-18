@@ -319,6 +319,10 @@ return [
                     'text' => 'Supplier',
                     'url' => 'supplier',
                 ],
+                [
+                    'text' => 'Department',
+                    'url' => 'department',
+                ],
             ],
         ],
     ],

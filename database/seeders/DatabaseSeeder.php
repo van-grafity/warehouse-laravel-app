@@ -7,10 +7,10 @@ use Illuminate\Database\Seeder;
 
 use Database\Seeders\PermissionCategoriesTableSeeder;
 use Database\Seeders\RolePermissionsSeeder;
+use Database\Seeders\DepartmentsTableSeeder;
 use Database\Seeders\UsersTableSeeder;
 use Database\Seeders\ColorsTableSeeder;
 use Database\Seeders\SuppliersTableSeeder;
-use Database\Seeders\DepartmentsTableSeeder;
 
 
 class DatabaseSeeder extends Seeder
@@ -29,9 +29,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call(PermissionCategoriesTableSeeder::class);
         $this->call(RolePermissionsSeeder::class);
+        $this->call(DepartmentsTableSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(ColorsTableSeeder::class);
         $this->call(SuppliersTableSeeder::class);
-        $this->call(DepartmentsTableSeeder::class);
     }
 }

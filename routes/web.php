@@ -26,4 +26,7 @@ Route::middleware(['auth'])->group(function () {
     
     Route::resource('supplier', App\Http\Controllers\SupplierController::class);
     Route::get('supplier-dtable', [App\Http\Controllers\SupplierController::class,'dtable'])->name('supplier.dtable');
+
+    Route::resource('department', App\Http\Controllers\DepartmentController::class);
+    Route::get('department-dtable', [App\Http\Controllers\DepartmentController::class,'dtable'])->name('department.dtable');
 });
