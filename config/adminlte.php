@@ -315,6 +315,10 @@ return [
                     'text' => 'Color',
                     'url' => 'color',
                 ],
+                [
+                    'text' => 'Supplier',
+                    'url' => 'supplier',
+                ],
             ],
         ],
     ],
