@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Color;
 
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
@@ -34,8 +35,8 @@ class ColorController extends Controller
             ->escapeColumns([])
             ->addColumn('action', function($data){
                 return '
-                <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="edit_color('.$data->id.')">Edit</a>
-                <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="delete_color('.$data->id.')">Delete</a>';
+                <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_color\', '.$data->id.')">Edit</a>
+                <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$data->id.')">Delete</a>';
             })
             ->make(true);
     }
@@ -45,8 +46,26 @@ class ColorController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
-        
+        try {
+            $color = Color::firstOrCreate([
+                'color' => $request->color,
+            ]);
+
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully added new color (' . $color->color . ')',
+                'data' => [
+                    'color' => $color,
+                ]
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
     }
 
     /**
@@ -54,15 +73,24 @@ class ColorController extends Controller
      */
     public function show(string $id)
     {
-        //
-    }
+        try {
+            $color = Color::find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully get color (' . $color->color . ')',
+                'data' => [
+                    'color' => $color,
+                ]
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
     }
 
     /**
@@ -70,7 +98,24 @@ class ColorController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $color = Color::find($id);
+            $color->color = $request->color;
+            $color->save();
+            
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully updated color ('. $color->color .')',
+                'data' => $color
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
     }
 
     /**
@@ -78,6 +123,21 @@ class ColorController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $color = Color::find($id);
+            $color->delete();
+            $data_return = [
+                'status' => 'success',
+                'data'=> $color,
+                'message'=> 'Color '.$color->color.' successfully Deleted!',
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
     }
 }

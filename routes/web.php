@@ -24,5 +24,3 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('color', App\Http\Controllers\ColorController::class);
     Route::get('color-dtable', [App\Http\Controllers\ColorController::class,'dtable'])->name('color.dtable');
 });
-
-Route::get('color-oke', [App\Http\Controllers\ColorController::class,'index']);

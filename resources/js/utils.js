@@ -67,12 +67,12 @@ const using_fetch = async ({ url = "", data = {}, method = "GET", token = null }
         referrerPolicy: "no-referrer",
     };
 
-    if (["GET", "DELETE"].includes(method)) {
+    if (["GET"].includes(method)) {
         const queryString = new URLSearchParams(data).toString();
         url = `${url}?${queryString}`;
     }
 
-    if (["POST", "PUT"].includes(method)) {
+    if (["POST", "PUT","DELETE"].includes(method)) {
         headers["X-CSRF-TOKEN"] = token;
         fetchOptions.body = JSON.stringify(data);
     }
@@ -252,4 +252,10 @@ const using_axios = async ({ url = "", data = {}, method = "GET", token = null }
     }
 }
 
+window.stopFormSubmission = stopFormSubmission;
 window.clear_form = clear_form;
+window.getFormData = getFormData;
+window.using_fetch = using_fetch;
+window.swal_info = swal_info;
+window.swal_confirm = swal_confirm;
+window.swal_failed = swal_failed;

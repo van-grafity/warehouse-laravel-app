@@ -85,9 +85,9 @@
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     
     // ## URL List
+    const show_url = "{{ route('color.show',':id') }}";
     const store_url = "{{ route('color.store') }}";
     const update_url = "{{ route('color.update',':id') }}";
-    const detail_url = "{{ route('color.show',':id') }}";
     const delete_url = "{{ route('color.destroy',':id') }}";
     const dtable_url = "{{ route('color.dtable') }}";
 
@@ -107,15 +107,13 @@
             modal_id : modal_element_id,
             title : "Edit Color",
             btn_submit : "Save",
-            form_action_url : update_url,
+            form_action_url : update_url.replace(':id',color_id),
         }
         clear_form(modal_data);
         
-        params_data = { id : color_id };
         fetch_data = {
-            url: detail_url,
+            url: show_url.replace(':id',color_id),
             method: "GET",
-            data: params_data,
             token: token,
         }
         result = await using_fetch(fetch_data);
@@ -153,7 +151,7 @@
             } else {
                 // ## kalau ada color id berarti UPDATE dan Method nya PUT
                 fetch_data = {
-                    url: update_url,
+                    url: update_url.replace(':id',formData.edit_color_id),
                     method: "PUT",
                     data: formData,
                     token: token,
@@ -190,11 +188,9 @@
         let confirm_delete = await swal_confirm(swal_data);
         if(!confirm_delete) { return false; };
 
-        params_data = { id : color_id };
         fetch_data = {
-            url: delete_url,
+            url: delete_url.replace(':id',color_id),
             method: "DELETE",
-            data: params_data,
             token: token,
         }
         result = await using_fetch(fetch_data);
