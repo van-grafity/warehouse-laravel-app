@@ -9,10 +9,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex p-0">
-                    <h3 class="card-title p-3 my-auto"> Permission List </h3>
+                    <h3 class="card-title p-3 my-auto"> Role List </h3>
 
                     <div class="ml-auto p-3">
-                        <a href="javascript:void(0)" class="btn btn-success " id="btn_modal_create" onclick="show_modal_create('modal_permission')">Create</a>
+                        <a href="javascript:void(0)" class="btn btn-success " id="btn_modal_create" onclick="show_modal_create('modal_role')">Create</a>
                     </div>
                 </div>
                 <!-- /.card-header -->
@@ -22,14 +22,14 @@
                             <i class="fas fa-sync-alt"></i>
                         </button>
                     </div>
-                    <table id="permission_table" class="table table-bordered table-hover text-center">
+                    <table id="role_table" class="table table-bordered table-hover text-center">
                         <thead>
                             <tr>
                                 <th width="50">No</th>
-                                <th width="250" class="text-center">Permission</th>
+                                <th width="" class="text-center">Name</th>
+                                <th width="" class="text-center">Title</th>
                                 <th width="" class="text-center">Description</th>
-                                <th width="">Category</th>
-                                <th width="150">Action</th>
+                                <th width="200">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,39 +47,35 @@
 </div>
 
 <!-- Modal Add and Edit Product Detail -->
-<div class="modal fade" id="modal_permission" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal_role" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form action="" method="post" onsubmit="stopFormSubmission(event)">
-                <input type="hidden" name="edit_permission_id" value="" id="edit_permission_id">
+                <input type="hidden" name="edit_role_id" value="" id="edit_role_id">
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ModalLabel">Add New Permission</h5>
+                    <h5 class="modal-title" id="ModalLabel">Add New Role</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="permission" class="col-form-label">Permission</label>
-                        <input type="text" class="form-control" id="permission" name="permission" required>
+                        <label for="role" class="col-form-label">Role</label>
+                        <input type="text" class="form-control" id="role" name="role" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="title" class="col-form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
                     </div>
                     <div class="form-group">
                         <label for="description" class="col-form-label">Description</label>
                         <textarea class="form-control" name="description" id="description" cols="30" rows="2" required></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="permission_category" class="form-label">Permission Category</label>
-                        <select class="form-control select2 validate-on-change" id="permission_category" name="permission_category" style="width: 100%;" data-placeholder="Choose Category" required>
-                            @foreach ($permission_categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary btn-submit" onclick="submitForm('modal_permission')">Save</button>
+                    <button type="submit" class="btn btn-primary btn-submit" onclick="submitForm('modal_role')">Save</button>
                 </div>
             </form>
         </div>
@@ -94,16 +90,16 @@
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     
     // ## URL List
-    const show_url = "{{ route('permission.show',':id') }}";
-    const store_url = "{{ route('permission.store') }}";
-    const update_url = "{{ route('permission.update',':id') }}";
-    const delete_url = "{{ route('permission.destroy',':id') }}";
-    const dtable_url = "{{ route('permission.dtable') }}";
+    const show_url = "{{ route('role.show',':id') }}";
+    const store_url = "{{ route('role.store') }}";
+    const update_url = "{{ route('role.update',':id') }}";
+    const delete_url = "{{ route('role.destroy',':id') }}";
+    const dtable_url = "{{ route('role.dtable') }}";
 
     const show_modal_create = (modal_element_id) => {
         let modal_data = {
             modal_id : modal_element_id,
-            title : "Add New Permission",
+            title : "Add New Role",
             btn_submit : "Save",
             form_action_url : store_url,
         }
@@ -111,27 +107,28 @@
         $(`#${modal_element_id}`).modal('show');
     }
 
-    const show_modal_edit = async (modal_element_id, permission_id) => {
+    const show_modal_edit = async (modal_element_id, role_id) => {
         let modal_data = {
             modal_id : modal_element_id,
-            title : "Edit Permission",
+            title : "Edit Role",
             btn_submit : "Save",
-            form_action_url : update_url.replace(':id',permission_id),
+            form_action_url : update_url.replace(':id',role_id),
         }
         clear_form(modal_data);
         
         fetch_data = {
-            url: show_url.replace(':id',permission_id),
+            url: show_url.replace(':id',role_id),
             method: "GET",
             token: token,
         }
         result = await using_fetch(fetch_data);
-        permission_data = result.data.permission
+        role_data = result.data.role
 
-        $('#permission').val(permission_data.name);
-        $('#description').val(permission_data.description);
-        $('#permission_category').val(permission_data.permission_category_id).trigger('change');
-        $('#edit_permission_id').val(permission_data.id);
+        $('#role').val(role_data.name);
+        $('#title').val(role_data.title);
+        $('#description').val(role_data.description);
+        $('#role_category').val(role_data.role_category_id).trigger('change');
+        $('#edit_role_id').val(role_data.id);
         
         $(`#${modal_element_id}`).modal('show');
     }
@@ -150,8 +147,8 @@
                 return false;
             }
 
-            if(!formData.edit_permission_id) {
-                // ## kalau tidak ada permission id berarti STORE dan Method nya POST
+            if(!formData.edit_role_id) {
+                // ## kalau tidak ada role id berarti STORE dan Method nya POST
                 fetch_data = {
                     url: store_url,
                     method: "POST",
@@ -159,9 +156,9 @@
                     token: token,
                 }
             } else {
-                // ## kalau ada permission id berarti UPDATE dan Method nya PUT
+                // ## kalau ada role id berarti UPDATE dan Method nya PUT
                 fetch_data = {
-                    url: update_url.replace(':id',formData.edit_permission_id),
+                    url: update_url.replace(':id',formData.edit_role_id),
                     method: "PUT",
                     data: formData,
                     token: token,
@@ -186,10 +183,10 @@
         $(`#${modal_id}`).modal('hide');
     }
 
-    const show_modal_delete = async (permission_id) => {
+    const show_modal_delete = async (role_id) => {
         swal_data = {
             title: "Are you Sure?",
-            text: "Want to delete the permission",
+            text: "Want to delete the role",
             icon: "warning",
             confirmButton: "Delete",
             confirmButtonClass: "btn-danger",
@@ -199,7 +196,7 @@
         if(!confirm_delete) { return false; };
 
         fetch_data = {
-            url: delete_url.replace(':id',permission_id),
+            url: delete_url.replace(':id',role_id),
             method: "DELETE",
             token: token,
         }
@@ -224,26 +221,26 @@
 </script>
 
 <script type="text/javascript">
-    let permission_table = $('#permission_table').DataTable({
+    let role_table = $('#role_table').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
             url: dtable_url,
             beforeSend: function() {
                 // ## Tambahkan kelas dimmed-table sebelum proses loading dimulai
-                $('#permission_table').addClass('dimmed-table').append('<div class="datatable-overlay"></div>');
+                $('#role_table').addClass('dimmed-table').append('<div class="datatable-overlay"></div>');
             },
             complete: function() {
                 // ## Hapus kelas dimmed-table setelah proses loading selesai
-                $('#permission_table').removeClass('dimmed-table').find('.datatable-overlay').remove();
+                $('#role_table').removeClass('dimmed-table').find('.datatable-overlay').remove();
             },
         },
         order: [],
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
             { data: 'name', name: 'name', className: 'text-left'},
+            { data: 'title', name: 'title', className: 'text-left'},
             { data: 'description', name: 'description', className: 'text-left'},
-            { data: 'permission_category', name: 'permission_category'},
             { data: 'action', name: 'action'},
         ],
         columnDefs: [
@@ -261,12 +258,12 @@
 
     $('#reload_table_btn').on('click', function(event) {
         $(this).addClass('loading').attr('disabled',true);
-        permission_table.ajax.reload(function(json){
+        role_table.ajax.reload(function(json){
             $('#reload_table_btn').removeClass('loading').attr('disabled',false);
         });
     });
 
-    let validator = $('#modal_permission form').validate({
+    let validator = $('#modal_role form').validate({
         errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("invalid-feedback");
@@ -288,10 +285,6 @@
         unhighlight: function (element, errorClass, validClass) {
             $(element).removeClass("is-invalid");
         },
-    });
-
-    $('#permission_category.select2').select2({
-        dropdownParent: $('#modal_permission'),
     });
 
 </script>

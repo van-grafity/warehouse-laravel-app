@@ -32,10 +32,10 @@ class PermissionCategoryController extends Controller
         return Datatables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
-            ->addColumn('action', function($data){
+            ->addColumn('action', function($row){
                 return '
-                <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_permission_category\', '.$data->id.')">Edit</a>
-                <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$data->id.')">Delete</a>';
+                <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_permission_category\', '.$row->id.')">Edit</a>
+                <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>';
             })
             ->make(true);
     }

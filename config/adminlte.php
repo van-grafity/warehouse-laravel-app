@@ -349,6 +349,10 @@ return [
                     'text' => 'Permission',
                     'url' => 'permission',
                 ],
+                [
+                    'text' => 'Role',
+                    'url' => 'role',
+                ],
             ],
         ],
     ],

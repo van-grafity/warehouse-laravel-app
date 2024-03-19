@@ -41,4 +41,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('permission', App\Http\Controllers\PermissionController::class);
     Route::get('permission-dtable', [App\Http\Controllers\PermissionController::class,'dtable'])->name('permission.dtable');
+    
+    Route::resource('role', App\Http\Controllers\RoleController::class);
+    Route::get('role-dtable', [App\Http\Controllers\RoleController::class,'dtable'])->name('role.dtable');
 });

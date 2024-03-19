@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Supplier;
+use Spatie\Permission\Models\Role;
+
 
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
 
-class SupplierController extends Controller
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,10 +17,10 @@ class SupplierController extends Controller
     public function index()
     {
         $data = [
-            'title' => 'Supplier',
-            'page_title' => 'Supplier List'
+            'title' => 'Role',
+            'page_title' => 'Role List',
         ];
-        return view('pages.supplier.index', $data);
+        return view('pages.role.index', $data);
     }
 
     /**
@@ -27,15 +28,17 @@ class SupplierController extends Controller
      */
     public function dtable()
     {
-        $query = Supplier::get();
+        $query = Role::get();
         
         return Datatables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
             ->addColumn('action', function($row){
                 return '
-                <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_supplier\', '.$row->id.')">Edit</a>
-                <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>';
+                <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_role\', '.$row->id.')">Edit</a>
+                <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>
+                <a href="" class="btn btn-info btn-sm">Permission</a>
+                ';
             })
             ->make(true);
     }
@@ -46,16 +49,17 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         try {
-            $supplier = Supplier::firstOrCreate([
-                'supplier' => $request->supplier,
+            $role = Role::create([
+                'name' => $request->role,
+                'title' => $request->title,
                 'description' => $request->description,
             ]);
-
+            
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully added new supplier (' . $supplier->supplier . ')',
+                'message' => 'Successfully added new role (' . $role->name . ')',
                 'data' => [
-                    'supplier' => $supplier,
+                    'role' => $role,
                 ]
             ];
             return response()->json($data_return, 200);
@@ -74,13 +78,13 @@ class SupplierController extends Controller
     public function show(string $id)
     {
         try {
-            $supplier = Supplier::find($id);
+            $role = Role::find($id);
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully get supplier (' . $supplier->supplier . ')',
+                'message' => 'Successfully get role (' . $role->role . ')',
                 'data' => [
-                    'supplier' => $supplier,
+                    'role' => $role,
                 ]
             ];
             return response()->json($data_return, 200);
@@ -99,16 +103,16 @@ class SupplierController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $supplier = Supplier::find($id);
-            $supplier->supplier = $request->supplier;
-            $supplier->description = $request->description;
-
-            $supplier->save();
+            $role = Role::find($id);
+            $role->name = $request->role;
+            $role->title = $request->title;
+            $role->description = $request->description;
+            $role->save();
             
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully updated supplier ('. $supplier->supplier .')',
-                'data' => $supplier
+                'message' => 'Successfully updated role ('. $role->name .')',
+                'data' => $role
             ];
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {
@@ -126,12 +130,13 @@ class SupplierController extends Controller
     public function destroy(string $id)
     {
         try {
-            $supplier = Supplier::find($id);
-            $supplier->delete();
+            $role = Role::find($id);
+            $role->delete();
+            
             $data_return = [
                 'status' => 'success',
-                'data'=> $supplier,
-                'message'=> 'Supplier '.$supplier->supplier.' successfully Deleted!',
+                'data'=> $role,
+                'message'=> 'Role '.$role->role.' successfully Deleted!',
             ];
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {
