@@ -24,6 +24,7 @@ Route::middleware(['auth'])->group(function () {
     
     Route::resource('user', App\Http\Controllers\UserController::class);
     Route::get('user-dtable', [App\Http\Controllers\UserController::class,'dtable'])->name('user.dtable');
+    Route::get('user/{user}/reset-password', [App\Http\Controllers\UserController::class,'reset_password'])->name('user.reset-password');
     
     Route::resource('color', App\Http\Controllers\ColorController::class);
     Route::get('color-dtable', [App\Http\Controllers\ColorController::class,'dtable'])->name('color.dtable');

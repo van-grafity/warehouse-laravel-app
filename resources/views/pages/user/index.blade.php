@@ -25,13 +25,13 @@
                     <table id="user_table" class="table table-bordered table-hover text-center">
                         <thead>
                             <tr>
-                                <th width="50">No</th>
-                                <th width="250">Name</th>
+                                <th width="25">No</th>
+                                <th width="">Name</th>
                                 <th width="">Email</th>
                                 <th width="">Department</th>
                                 <th width="">Role</th>
                                 <th width="">Created Date</th>
-                                <th width="150">Action</th>
+                                <th width="250">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -109,6 +109,7 @@
     const store_url = "{{ route('user.store') }}";
     const update_url = "{{ route('user.update',':id') }}";
     const delete_url = "{{ route('user.destroy',':id') }}";
+    const reset_password_url = "{{ route('user.reset-password',':id') }}";
     const dtable_url = "{{ route('user.dtable') }}";
 
     const show_modal_create = (modal_element_id) => {
@@ -186,7 +187,7 @@
                 
                 reload_dtable();
             } else {
-                swal_failed({ title: response.message })
+                swal_failed({ title: response.message, text: ' ' })
             }
 
             submit_btn.removeAttribute('disabled');
@@ -196,6 +197,37 @@
         }
 
         $(`#${modal_id}`).modal('hide');
+    }
+
+    const show_modal_reset_password = async (user_id) => {
+        swal_data = {
+            title: "Reset Password?",
+            text: "This account password will be changed to default",
+            icon: "warning",
+            confirmButton: "Reset",
+            confirmButtonClass: "btn-primary",
+            cancelButtonClass: "btn-secondary"
+        };
+        let confirm_delete = await swal_confirm(swal_data);
+        if(!confirm_delete) { return false; };
+
+        fetch_data = {
+            url: reset_password_url.replace(':id',user_id),
+            method: "GET",
+            token: token,
+        }
+        result = await using_fetch(fetch_data);
+
+        if(result.status == "success"){
+            swal_info({
+                title : result.message,
+            });
+
+            reload_dtable();
+            
+        } else {
+            swal_failed({ title: result.message });
+        }
     }
 
     const show_modal_delete = async (user_id) => {
