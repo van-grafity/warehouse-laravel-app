@@ -17,10 +17,21 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <div class="mb-3 text-right">
-                        <button id="reload_table_btn" class="btn btn-sm btn-info">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
+                    <div class="row  mb-3">
+                        <div class="col-sm-12 d-inline-flex justify-content-end">
+                            <div class="filter_wrapper mr-2" style="width:200px;">
+                                <select name="data_status" id="data_status" class="form-control select2 no-search-box">
+                                    <option value="">All Data</option>
+                                    <option value="1" selected> Active Only </option>
+                                    <option value="2"> Deleted Only </option>
+                                </select>
+                            </div>
+                            <div class="filter_wrapper text-right align-self-center">
+                                <button id="reload_table_btn" class="btn btn-sm btn-info">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <table id="user_table" class="table table-bordered table-hover text-center">
                         <thead>
@@ -74,15 +85,15 @@
                         <label for="department" class="form-label">Department</label>
                         <select class="form-control select2" id="department" name="department" style="width: 100%;" data-placeholder="Choose Department">
                             @foreach ($departments as $department)
-                                <option value="{{ $department->id }}">{{ $department->department }}</option>
+                            <option value="{{ $department->id }}">{{ $department->department }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="role" class="form-label">Role</label>
-                        <select class="form-control select2" id="role" name="role" style="width: 100%;" data-placeholder="Choose Role" required>
+                        <select class="form-control select2 validate-on-change" id="role" name="role" style="width: 100%;" data-placeholder="Choose Role" required>
                             @foreach ($roles as $role)
-                                <option value="{{ $role->name }}">{{ $role->title }}</option>
+                            <option value="{{ $role->name }}">{{ $role->title }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -101,15 +112,15 @@
 
 @section('js')
 <script type="text/javascript">
-
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    
+
     // ## URL List
     const show_url = "{{ route('user.show',':id') }}";
     const store_url = "{{ route('user.store') }}";
     const update_url = "{{ route('user.update',':id') }}";
     const delete_url = "{{ route('user.destroy',':id') }}";
     const reset_password_url = "{{ route('user.reset-password',':id') }}";
+    const restore_url = "{{ route('user.restore',':id') }}";
     const dtable_url = "{{ route('user.dtable') }}";
 
     const show_modal_create = (modal_element_id) => {
@@ -128,12 +139,12 @@
             modal_id : modal_element_id,
             title : "Edit User",
             btn_submit : "Save",
-            form_action_url : update_url.replace(':id',user_id),
+            form_action_url : update_url.replace(':id', user_id),
         }
         clear_form(modal_data);
         
         fetch_data = {
-            url: show_url.replace(':id',user_id),
+            url: show_url.replace(':id', user_id),
             method: "GET",
             token: token,
         }
@@ -154,7 +165,7 @@
             let modal = document.getElementById(modal_id);
             let submit_btn = modal.querySelector('.btn-submit');
             submit_btn.setAttribute('disabled', 'disabled');
-            
+
             let form = modal.querySelector('form');
             let formData = getFormData(form);
 
@@ -163,7 +174,7 @@
                 return false;
             }
 
-            if(!formData.edit_user_id) {
+            if (!formData.edit_user_id) {
                 // ## kalau tidak ada user id berarti STORE dan Method nya POST
                 fetch_data = {
                     url: store_url,
@@ -174,7 +185,7 @@
             } else {
                 // ## kalau ada user id berarti UPDATE dan Method nya PUT
                 fetch_data = {
-                    url: update_url.replace(':id',formData.edit_user_id),
+                    url: update_url.replace(':id', formData.edit_user_id),
                     method: "PUT",
                     data: formData,
                     token: token,
@@ -182,7 +193,7 @@
             }
 
             const response = await using_fetch(fetch_data);
-            if(response.status == 'success') {
+            if (response.status == 'success') {
                 swal_info({ title: response.message })
                 
                 reload_dtable();
@@ -209,10 +220,70 @@
             cancelButtonClass: "btn-secondary"
         };
         let confirm_delete = await swal_confirm(swal_data);
+        if (!confirm_delete) {
+            return false;
+        };
+
+        fetch_data = {
+            url: reset_password_url.replace(':id', user_id),
+            method: "GET",
+            token: token,
+        }
+        result = await using_fetch(fetch_data);
+
+        if (result.status == "success") {
+            swal_info({ title: result.message, });
+
+            reload_dtable();
+        } else {
+            swal_failed({ title: result.message });
+        }
+    }
+
+    const show_modal_delete = async (user_id) => {
+        swal_data = {
+            title: "Are you Sure?",
+            text: "Want to delete the user",
+            icon: "warning",
+            confirmButton: "Delete",
+            confirmButtonClass: "btn-danger",
+            cancelButtonClass: "btn-secondary"
+        };
+        let confirm_delete = await swal_confirm(swal_data);
+        if (!confirm_delete) {
+            return false;
+        };
+
+        fetch_data = {
+            url: delete_url.replace(':id', user_id),
+            method: "DELETE",
+            token: token,
+        }
+        result = await using_fetch(fetch_data);
+
+        if (result.status == "success") {
+            swal_info({ title: result.message });
+
+            reload_dtable();
+        } else {
+            swal_failed({ title: result.message });
+        }
+    }
+
+    const show_modal_restore = async (user_id) => {
+        swal_data = {
+            title: "Want to Restore this User?",
+            text: "This user will remove from user deleted list",
+            icon: "warning",
+            confirmButton: "Restore",
+            confirmButtonClass: "btn-info",
+            cancelButtonClass: "btn-secondary"
+        };
+        let confirm_delete = await swal_confirm(swal_data);
         if(!confirm_delete) { return false; };
 
         fetch_data = {
-            url: reset_password_url.replace(':id',user_id),
+            url: restore_url.replace(':id', user_id),
             method: "GET",
             token: token,
         }
@@ -230,10 +301,10 @@
         }
     }
 
-    const show_modal_delete = async (user_id) => {
+    const show_modal_delete_permanent = async (user_id) => {
         swal_data = {
-            title: "Are you Sure?",
-            text: "Want to delete the user",
+            title: "Permanently Delete?",
+            text: "User will be permanently deleted",
             icon: "warning",
             confirmButton: "Delete",
             confirmButtonClass: "btn-danger",
@@ -243,7 +314,7 @@
         if(!confirm_delete) { return false; };
 
         fetch_data = {
-            url: delete_url.replace(':id',user_id),
+            url: delete_url.replace(':id', user_id),
             method: "DELETE",
             token: token,
         }
@@ -264,7 +335,6 @@
     const reload_dtable = () => {
         $('#reload_table_btn').trigger('click');
     }
-
 </script>
 
 <script type="text/javascript">
@@ -273,6 +343,9 @@
         serverSide: true,
         ajax: {
             url: dtable_url,
+            data: function (d) {
+                d.data_status = $('#data_status').val();
+            },
             beforeSend: function() {
                 // ## Tambahkan kelas dimmed-table sebelum proses loading dimulai
                 $('#user_table').addClass('dimmed-table').append('<div class="datatable-overlay"></div>');
@@ -284,18 +357,17 @@
         },
         order: [],
         columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            { data: 'name', name: 'name'},
-            { data: 'email', name: 'email'},
-            { data: 'department', name: 'department'},
-            { data: 'role', name: 'role'},
-            { data: 'created_date', name: 'created_date'},
-            { data: 'action', name: 'action'},
+            { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+            { data: 'name', name: 'name' },
+            { data: 'email', name: 'email' },
+            { data: 'department', name: 'department' },
+            { data: 'role', name: 'role' },
+            { data: 'created_date', name: 'created_date' },
+            { data: 'action', name: 'action' },
         ],
         columnDefs: [
-            { targets: [0,-1], orderable: false, searchable: false },
+            { targets: [0, -1], orderable: false, searchable: false }, 
         ],
-        
         paging: true,
         responsive: true,
         lengthChange: true,
@@ -306,15 +378,15 @@
     })
 
     $('#reload_table_btn').on('click', function(event) {
-        $(this).addClass('loading').attr('disabled',true);
-        user_table.ajax.reload(function(json){
-            $('#reload_table_btn').removeClass('loading').attr('disabled',false);
+        $(this).addClass('loading').attr('disabled', true);
+        user_table.ajax.reload(function(json) {
+            $('#reload_table_btn').removeClass('loading').attr('disabled', false);
         });
     });
 
     let validator = $('#modal_user form').validate({
         errorElement: "span",
-        errorPlacement: function (error, element) {
+        errorPlacement: function(error, element) {
             error.addClass("invalid-feedback");
             element.closest(".form-group").append(error);
 
@@ -328,10 +400,10 @@
                 $(element).parent().find('.select2-container').addClass('select2-container--error');
             }
         },
-        highlight: function (element, errorClass, validClass) {
+        highlight: function(element, errorClass, validClass) {
             $(element).addClass("is-invalid");
         },
-        unhighlight: function (element, errorClass, validClass) {
+        unhighlight: function(element, errorClass, validClass) {
             $(element).removeClass("is-invalid");
         },
     });
@@ -340,5 +412,8 @@
         dropdownParent: $('#modal_user'),
     });
 
+    $('#data_status').change(function(event) {
+        reload_dtable();
+    });
 </script>
 @stop

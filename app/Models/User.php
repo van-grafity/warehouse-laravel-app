@@ -53,4 +53,9 @@ class User extends Authenticatable
         return $this->roles->pluck('title');
     }
 
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id', 'id');
+    }
+
 }

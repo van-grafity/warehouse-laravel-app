@@ -34,12 +34,9 @@ class UserController extends Controller
     /**
      * Show Datatable Data.
      */
-    public function dtable()
+    public function dtable(Request $request)
     {
-        $query = User::join('departments', 'departments.id' ,'=', 'users.department_id','left')
-            ->select('users.*','departments.department')
-            ->withTrashed()
-            ->get();
+        $query = User::withTrashed();
         
         return Datatables::of($query)
             ->addIndexColumn()
@@ -54,25 +51,39 @@ class UserController extends Controller
                     ";
                 } else {
                     $action_button .= "
-                        <a href='javascript:void(0)' class='btn btn-sm mb-1 bg-orange' onclick='show_modal_undo_delete($row->id)' >Undo Delete</a>
+                        <a href='javascript:void(0)' class='btn btn-sm mb-1 bg-orange' onclick='show_modal_restore($row->id)' >Restore</a>
                         <a href='javascript:void(0)' class='btn btn-sm mb-1 btn-danger' onclick='show_modal_delete_permanent($row->id)'>Delete Permanently  <i class='fas fa-exclamation-triangle'></i></a>
                     ";
                 }
                 return $action_button;
                 
             })
-            ->addColumn('role', function($data){
-                $roles = $data->getRoleTitles();
+            ->addColumn('department', function($row){
+                return $row->department->department;
+            })
+            ->addColumn('role', function($row){
+                $roles = $row->getRoleTitles();
 
                 $result = implode(' | ', $roles->toArray());
                 return $result;
+            })
+            ->filter(function ($query) {
+                if (request()->has('data_status')) {
+                    if (request('data_status') == 1) {
+                        $query->where('deleted_at', null);
+                    }
+                    if (request('data_status') == 2) {
+                        $query->where('deleted_at', '!=', null);
+                    }
+                }
+
             })
             ->addColumn('created_date', function($row){
                 $readable_datetime = Carbon::createFromFormat('Y-m-d H:i:s', $row->created_at);
                 $readable_datetime = $readable_datetime->format('d F y, H:m');
                 return $readable_datetime;
             })
-            ->make(true);
+            ->toJson();
     }
 
     /**
@@ -99,7 +110,7 @@ class UserController extends Controller
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully created user ' . $user->name,
+                'message' => 'Successfully create user ' . $user->name,
                 'data' => [
                     'user' => $user,
                 ]
@@ -157,7 +168,7 @@ class UserController extends Controller
             
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully updated user '. $user->name,
+                'message' => 'Successfully update user '. $user->name,
                 'data' => $user
             ];
             return response()->json($data_return, 200);
@@ -176,13 +187,20 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         try {
-            $user = User::find($id);
-            $user->delete();
+            $user = User::withTrashed()->find($id);
             $data_return = [
                 'status' => 'success',
                 'data'=> $user,
-                'message'=> 'User '.$user->user.' successfully Deleted!',
             ];
+
+            if($user->deleted_at) {
+                $user->forceDelete();
+                $data_return['message'] = 'Successfully Permanetly Delete user ' . $user->name . ' !';
+            } else {
+                $user->delete();
+                $data_return['message'] = 'Successfully Delete user ' . $user->name . ' !';
+            }
+
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {
             $data_return = [
@@ -215,4 +233,29 @@ class UserController extends Controller
             return response()->json($data_return);
         }
     }
+
+    public function restore(string $id)
+    {
+        try {
+            User::withTrashed()
+                ->where('id', $id)
+                ->restore();
+
+            $user = User::find($id);
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully Restore User ' . $user->name,
+                'data' => $user
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
+    }
+
+    
 }
