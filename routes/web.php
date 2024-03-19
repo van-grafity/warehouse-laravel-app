@@ -44,4 +44,6 @@ Route::middleware(['auth'])->group(function () {
     
     Route::resource('role', App\Http\Controllers\RoleController::class);
     Route::get('role-dtable', [App\Http\Controllers\RoleController::class,'dtable'])->name('role.dtable');
+    Route::get('role/{role}/manage-permission', [App\Http\Controllers\RoleController::class,'manage_permission'])->name('role.manage-permission');
+    Route::post('role/{role}/manage-permission', [App\Http\Controllers\RoleController::class,'manage_permission_update'])->name('role.manage-permission-update');
 });

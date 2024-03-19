@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use App\Models\PermissionCategory;
+use App\Models\Permission;
 
 
 use Illuminate\Support\Facades\DB;
@@ -37,7 +39,7 @@ class RoleController extends Controller
                 return '
                 <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_role\', '.$row->id.')">Edit</a>
                 <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>
-                <a href="" class="btn btn-info btn-sm">Permission</a>
+                <a href="'. route('role.manage-permission', $row->id) .'" class="btn btn-info btn-sm">Permission</a>
                 ';
             })
             ->make(true);
@@ -145,6 +147,66 @@ class RoleController extends Controller
                 'message' => $th->getMessage(),
             ];
             return response()->json($data_return);
+        }
+    }
+
+    public function manage_permission(String $id)
+    {
+        $role = Role::find($id);
+        $permission_categories = PermissionCategory::get();
+        $permission_by_categories = [];
+
+        foreach ($permission_categories as $key => $category) {
+            $permissions = Permission::where('permission_category_id',$category->id)->get();
+            
+            if($permissions){
+                $permission_checked_counter = 0;
+                foreach ($permissions as $key_permission => $permission) {
+                    
+                    $permission->is_role_has_permission = $role->hasPermissionTo($permission->name);
+                    if($permission->is_role_has_permission) { $permission_checked_counter++; }
+                    
+                }
+                $is_checked = (count($permissions) == $permission_checked_counter && count($permissions) > 0) ? true : false;
+            } else {
+                $is_checked = false;
+            }
+
+            $category_data = (object) [
+                'category_id' => $category->id,
+                'category_name' => $category->name,
+                'permissions' => $permissions,
+                'is_checked' => $is_checked,
+            ];
+            
+            $permission_by_categories[] = $category_data;
+        }
+
+        $data = [
+            'title' => 'Manage Permissions',
+            'page_title' => '',
+            'role' => $role,
+            'permission_by_categories' => $permission_by_categories,
+        ];
+
+        return view('pages.role.manage-permission', $data);
+    }
+
+    public function manage_permission_update(Request $request, String $id)
+    {
+        $selected_permission = $request->selected_permission;
+        try {
+            DB::beginTransaction();
+            $role = Role::find($id);
+            $permissions = Permission::whereIn('id', $selected_permission)->get()->pluck('name');
+            $role->syncPermissions($permissions);
+            DB::commit();
+
+            return redirect('role/'.$id.'/manage-permission')->with('success', 'Profile updated!');
+        } catch (\Throwable $th) {
+            
+            DB::rollBack();
+            return redirect()->back()->with('errors', $th->getMessage());
         }
     }
 }
