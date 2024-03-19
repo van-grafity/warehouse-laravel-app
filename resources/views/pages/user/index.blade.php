@@ -37,8 +37,8 @@
                         <thead>
                             <tr>
                                 <th width="25">No</th>
-                                <th width="">Name</th>
-                                <th width="">Email</th>
+                                <th width="" class="text-center">Name</th>
+                                <th width="" class="text-center">Email</th>
                                 <th width="">Department</th>
                                 <th width="">Role</th>
                                 <th width="">Created Date</th>
@@ -358,8 +358,8 @@
         order: [],
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-            { data: 'name', name: 'name' },
-            { data: 'email', name: 'email' },
+            { data: 'name', name: 'name', className:'text-left'},
+            { data: 'email', name: 'email', className:'text-left'},
             { data: 'department', name: 'department' },
             { data: 'role', name: 'role' },
             { data: 'created_date', name: 'created_date' },

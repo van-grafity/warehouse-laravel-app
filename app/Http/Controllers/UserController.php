@@ -76,8 +76,7 @@ class UserController extends Controller
                         $query->where('deleted_at', '!=', null);
                     }
                 }
-
-            })
+            }, true)
             ->addColumn('created_date', function($row){
                 $readable_datetime = Carbon::createFromFormat('Y-m-d H:i:s', $row->created_at);
                 $readable_datetime = $readable_datetime->format('d F y, H:m');
