@@ -345,6 +345,10 @@ return [
                     'text' => 'Permission Category',
                     'url' => 'permission-category',
                 ],
+                [
+                    'text' => 'Permission',
+                    'url' => 'permission',
+                ],
             ],
         ],
     ],
