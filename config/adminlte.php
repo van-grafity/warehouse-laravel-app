@@ -336,6 +336,17 @@ return [
                 ],
             ],
         ],
+        ['header' => 'Developer'],
+        [
+            'text' => 'Settings',
+            'icon' => 'fas fa-cog nav-icon',
+            'submenu' => [
+                [
+                    'text' => 'Permission Category',
+                    'url' => 'permission-category',
+                ],
+            ],
+        ],
     ],
 
     /*

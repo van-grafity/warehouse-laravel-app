@@ -35,4 +35,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('department', App\Http\Controllers\DepartmentController::class);
     Route::get('department-dtable', [App\Http\Controllers\DepartmentController::class,'dtable'])->name('department.dtable');
+    
+    Route::resource('permission-category', App\Http\Controllers\PermissionCategoryController::class);
+    Route::get('permission-category-dtable', [App\Http\Controllers\PermissionCategoryController::class,'dtable'])->name('permission-category.dtable');
 });
