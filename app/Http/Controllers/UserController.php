@@ -36,7 +36,7 @@ class UserController extends Controller
      */
     public function dtable()
     {
-        $query = User::join('departments', 'departments.id' ,'=', 'users.department_id')
+        $query = User::join('departments', 'departments.id' ,'=', 'users.department_id','left')
             ->select('users.*','departments.department')
             ->get();
         
@@ -69,13 +69,17 @@ class UserController extends Controller
     {
         try {
             $user = User::firstOrCreate([
-                'user' => $request->user,
-                'description' => $request->description,
+                'name' => $request->name,
+                'email' => $request->email,
+                'department_id' => $request->department,
+                'password' => env('DEFAULT_PASSWORD') ? env('DEFAULT_PASSWORD') : '123456789',
             ]);
+
+            $user->syncRoles($request->role);
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully added new user (' . $user->user . ')',
+                'message' => 'Successfully created user ' . $user->name,
                 'data' => [
                     'user' => $user,
                 ]
@@ -101,7 +105,7 @@ class UserController extends Controller
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully get user (' . $user->user . ')',
+                'message' => 'Successfully get user ' . $user->user,
                 'data' => [
                     'user' => $user,
                 ]
@@ -133,7 +137,7 @@ class UserController extends Controller
             
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully updated user ('. $user->name .')',
+                'message' => 'Successfully updated user '. $user->name,
                 'data' => $user
             ];
             return response()->json($data_return, 200);

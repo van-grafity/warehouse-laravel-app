@@ -72,7 +72,7 @@
                     </div>
                     <div class="form-group">
                         <label for="department" class="form-label">Department</label>
-                        <select class="form-control select2" id="department" name="department" style="width: 100%;" data-placeholder="Choose Department" required>
+                        <select class="form-control select2" id="department" name="department" style="width: 100%;" data-placeholder="Choose Department">
                             @foreach ($departments as $department)
                                 <option value="{{ $department->id }}">{{ $department->department }}</option>
                             @endforeach
