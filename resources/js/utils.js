@@ -98,7 +98,7 @@ const show_flash_message = (session = {}) => {
             icon: "success",
             title: session.success,
             showConfirmButton: false,
-            timer: 3000,
+            timer: 4000,
         });
     }
     if ("error" in session) {
@@ -259,3 +259,4 @@ window.using_fetch = using_fetch;
 window.swal_info = swal_info;
 window.swal_confirm = swal_confirm;
 window.swal_failed = swal_failed;
+window.show_flash_message = show_flash_message;

@@ -84,7 +84,7 @@
                     <div class="row mt-5">
                         <div class="col-sm-12">
                             <div class="text-right">
-                                <a href="{{ url('role')}}" type="button" class="btn btn-secondary">Cancel</a>
+                                <a href="{{ url('role')}}" type="button" class="btn btn-secondary">Back</a>
                                 <button type="submit" class="btn btn-success" id="btn_save_permission">Save</button>
                             </div>
                         </div>

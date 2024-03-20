@@ -198,13 +198,16 @@ class RoleController extends Controller
         try {
             DB::beginTransaction();
             $role = Role::find($id);
-            $permissions = Permission::whereIn('id', $selected_permission)->get()->pluck('name');
-            $role->syncPermissions($permissions);
+            if($selected_permission) {
+                $permissions = Permission::whereIn('id', $selected_permission)->get()->pluck('name');
+                $role->syncPermissions($permissions);
+            } else {
+                $role->syncPermissions([]);
+            }
             DB::commit();
-
-            return redirect('role/'.$id.'/manage-permission')->with('success', 'Profile updated!');
-        } catch (\Throwable $th) {
             
+            return redirect()->route('role.manage-permission', ['role' => $id])->with('success', 'Profile updated!');
+        } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->back()->with('errors', $th->getMessage());
         }

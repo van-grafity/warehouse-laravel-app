@@ -17,4 +17,12 @@
 
 @push('js')
     @vite(['resources/js/utils.js'])
+    
+    <script>
+        $(document).ready(function() {
+            // ## Show Flash Message
+            let session = <?= json_encode(session()->all()) ?>;
+            show_flash_message(session);
+        });
+    </script>
 @endpush
