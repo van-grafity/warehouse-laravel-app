@@ -206,7 +206,7 @@ class RoleController extends Controller
             }
             DB::commit();
             
-            return redirect()->route('role.manage-permission', ['role' => $id])->with('success', 'Profile updated!');
+            return redirect()->route('role.manage-permission', ['role' => $id])->with('success', 'Succesfully set permissions for '. $role->title);
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->back()->with('errors', $th->getMessage());
