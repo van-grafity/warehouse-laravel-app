@@ -57,6 +57,9 @@ Route::group([
     ]
 ],function() {
     Route::resource('home', App\Http\Controllers\HomeController::class);
+
+    Route::get('profile', [App\Http\Controllers\UserController::class,'profile'])->name('profile.index');
+    Route::post('profile/change_password', [App\Http\Controllers\UserController::class,'change_password'])->name('profile.change-password');
     
     Route::resource('color', App\Http\Controllers\ColorController::class);
     Route::get('color-dtable', [App\Http\Controllers\ColorController::class,'dtable'])->name('color.dtable');

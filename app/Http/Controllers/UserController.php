@@ -8,6 +8,7 @@ use App\Models\Department;
 use Spatie\Permission\Models\Role;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
@@ -256,5 +257,46 @@ class UserController extends Controller
         }
     }
 
+    public function profile()
+    {
+        $user = User::find(auth()->user()->id);
+        $user->role = $user->roles[0]->title;
+        
+        $data = [
+            'title' => 'Profile',
+            'page_title' => 'User Profile',
+            'user' => $user,
+        ];
+        return view('pages.profile.index', $data);
+    }
+
+    public function change_password(Request $request)
+    {
+        try {
+            $user = auth()->user();
+            if(!Hash::check($request->old_password, $user->password)) {
+                $date_return = [
+                    'status' => 'failed',
+                    'message'=> 'Incorrect old Password!',
+                ];
+                return response()->json($date_return, 200);
+            }
+
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+
+            $date_return = [
+                'status' => 'success',
+                'message'=> 'your password has changed',
+            ];
+            return response()->json($date_return, 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
     
 }
