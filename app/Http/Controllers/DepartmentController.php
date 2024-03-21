@@ -5,11 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Department;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
 
 class DepartmentController extends Controller
 {
+    public function __construct()
+    {
+        Gate::define('manage', function ($user) {
+            return $user->hasPermissionTo('department.access');
+        });
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -17,7 +25,8 @@ class DepartmentController extends Controller
     {
         $data = [
             'title' => 'Department',
-            'page_title' => 'Department List'
+            'page_title' => 'Department List',
+            'can_manage' => auth()->user()->can('manage'),
         ];
         return view('pages.department.index', $data);
     }

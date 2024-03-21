@@ -5,11 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Supplier;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
 
 class SupplierController extends Controller
 {
+    public function __construct()
+    {
+        Gate::define('manage', function ($user) {
+            return $user->hasPermissionTo('supplier.access');
+        });
+    }
+    
     /**
      * Display a listing of the resource.
      */
@@ -17,7 +25,8 @@ class SupplierController extends Controller
     {
         $data = [
             'title' => 'Supplier',
-            'page_title' => 'Supplier List'
+            'page_title' => 'Supplier List',
+            'can_manage' => auth()->user()->can('manage'),
         ];
         return view('pages.supplier.index', $data);
     }

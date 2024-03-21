@@ -310,25 +310,33 @@ return [
         [
             'text' => 'Master Data',
             'icon' => 'fas fa-server nav-icon',
+            'can'   => 'master-data.access',
             'submenu' => [
                 [
                     'text' => 'Color',
                     'url' => 'color',
+                    'can'   => 'color.access',
                 ],
                 [
                     'text' => 'Supplier',
                     'url' => 'supplier',
+                    'can'   => 'supplier.access',
                 ],
                 [
                     'text' => 'Department',
                     'url' => 'department',
+                    'can'   => 'department.access',
                 ],
             ],
         ],
-        ['header' => 'Admin'],
+        [
+            'header' => 'Admin',
+            'can'   => 'admin-menu', 
+        ],
         [
             'text' => 'User Management',
             'icon' => 'fas fa-users nav-icon',
+            'can'   => 'admin-menu',
             'submenu' => [
                 [
                     'text' => 'User',

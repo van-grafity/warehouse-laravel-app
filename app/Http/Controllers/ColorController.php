@@ -5,11 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Color;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
 
 class ColorController extends Controller
 {
+    public function __construct()
+    {
+        Gate::define('manage', function ($user) {
+            return $user->hasPermissionTo('color.access');
+        });
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -17,7 +25,8 @@ class ColorController extends Controller
     {
         $data = [
             'title' => 'Color',
-            'page_title' => 'Color List'
+            'page_title' => 'Color List',
+            'can_manage' => auth()->user()->can('manage'),
         ];
         return view('pages.color.index', $data);
     }

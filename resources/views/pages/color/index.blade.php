@@ -12,7 +12,9 @@
                     <h3 class="card-title p-3 my-auto"> Color List </h3>
 
                     <div class="ml-auto p-3">
-                        <a href="javascript:void(0)" class="btn btn-success " id="btn_modal_create" onclick="show_modal_create('modal_color')">Create</a>
+                        @can('manage')
+                            <a href="javascript:void(0)" class="btn btn-success " id="btn_modal_create" onclick="show_modal_create('modal_color')">Create</a>
+                        @endcan
                     </div>
                 </div>
                 <!-- /.card-header -->
@@ -79,6 +81,7 @@
 <script type="text/javascript">
 
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const column_visible = '{{ $can_manage }}';
     
     // ## URL List
     const show_url = "{{ route('color.show',':id') }}";
@@ -229,7 +232,7 @@
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
             { data: 'color', name: 'color'},
             { data: 'code', name: 'code'},
-            { data: 'action', name: 'action'},
+            { data: 'action', name: 'action', visible: column_visible},
         ],
         columnDefs: [
             { targets: [0,-1], orderable: false, searchable: false },

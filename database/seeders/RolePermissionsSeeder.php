@@ -75,13 +75,18 @@ class RolePermissionsSeeder extends Seeder
                 'permission_category_id' => '2',
             ],
             [
+                'name' => 'color.access',
+                'description' => 'Can access color features.',
+                'permission_category_id' => '2',
+            ],
+            [
                 'name' => 'supplier.access',
                 'description' => 'Can access supplier features.',
                 'permission_category_id' => '2',
             ],
             [
-                'name' => 'color.access',
-                'description' => 'Can access color features.',
+                'name' => 'department.access',
+                'description' => 'Can access department features.',
                 'permission_category_id' => '2',
             ],
         ];
