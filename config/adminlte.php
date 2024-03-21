@@ -336,10 +336,14 @@ return [
                 ],
             ],
         ],
-        ['header' => 'Developer'],
+        [
+            'header' => 'Developer',
+            'can'   => 'developer-menu', 
+        ],
         [
             'text' => 'Settings',
             'icon' => 'fas fa-cog nav-icon',
+            'can' => 'developer-menu',
             'submenu' => [
                 [
                     'text' => 'Permission Category',

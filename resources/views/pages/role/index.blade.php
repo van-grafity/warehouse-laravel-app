@@ -8,7 +8,9 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header d-flex p-0">
-                <h3 class="card-title p-3 my-auto"> Role List </h3>
+                @can('admin')
+                    <h3 class="card-title p-3 my-auto"> Role List </h3>
+                @endcan
 
                 <div class="ml-auto p-3">
                     <a href="javascript:void(0)" class="btn btn-success " id="btn_modal_create" onclick="show_modal_create('modal_role')">Create</a>
