@@ -14,7 +14,7 @@ class ColorController extends Controller
     public function __construct()
     {
         Gate::define('manage', function ($user) {
-            return $user->hasPermissionTo('color.access');
+            return $user->hasPermissionTo('color.manage');
         });
     }
 

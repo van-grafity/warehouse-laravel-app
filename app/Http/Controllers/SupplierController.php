@@ -14,7 +14,7 @@ class SupplierController extends Controller
     public function __construct()
     {
         Gate::define('manage', function ($user) {
-            return $user->hasPermissionTo('supplier.access');
+            return $user->hasPermissionTo('supplier.manage');
         });
     }
     

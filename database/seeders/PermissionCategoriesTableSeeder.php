@@ -26,6 +26,11 @@ class PermissionCategoriesTableSeeder extends Seeder
             ],
             [
                 'id' => 3,
+                'name' => 'Master Data Manage',
+                'description' => 'Permission Category for Manage Master Data.',
+            ],
+            [
+                'id' => 4,
                 'name' => 'General Menu',
                 'description' => 'Permission Category for Master Data Menu.',
             ],

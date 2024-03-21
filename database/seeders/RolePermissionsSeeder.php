@@ -89,6 +89,21 @@ class RolePermissionsSeeder extends Seeder
                 'description' => 'Can access department features.',
                 'permission_category_id' => '2',
             ],
+            [
+                'name' => 'color.manage',
+                'description' => 'Can manage color features.',
+                'permission_category_id' => '3',
+            ],
+            [
+                'name' => 'supplier.manage',
+                'description' => 'Can manage supplier features.',
+                'permission_category_id' => '3',
+            ],
+            [
+                'name' => 'department.manage',
+                'description' => 'Can manage department features.',
+                'permission_category_id' => '3',
+            ],
         ];
         foreach ($permission_list as $key => $permission) {
             Permission::create($permission);

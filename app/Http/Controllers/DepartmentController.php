@@ -14,7 +14,7 @@ class DepartmentController extends Controller
     public function __construct()
     {
         Gate::define('manage', function ($user) {
-            return $user->hasPermissionTo('department.access');
+            return $user->hasPermissionTo('department.manage');
         });
     }
 
