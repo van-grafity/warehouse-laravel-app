@@ -327,6 +327,11 @@ return [
                     'url' => 'department',
                     'can'   => 'department.access',
                 ],
+                [
+                    'text' => 'Location',
+                    'url' => 'location',
+                    'can'   => 'location.access',
+                ],
             ],
         ],
         [

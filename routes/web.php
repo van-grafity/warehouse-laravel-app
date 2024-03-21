@@ -66,4 +66,8 @@ Route::group([
 
     Route::resource('department', App\Http\Controllers\DepartmentController::class);
     Route::get('department-dtable', [App\Http\Controllers\DepartmentController::class,'dtable'])->name('department.dtable');
+
+    Route::resource('location', App\Http\Controllers\LocationController::class);
+    Route::get('location-dtable', [App\Http\Controllers\LocationController::class,'dtable'])->name('location.dtable');
+
 });
