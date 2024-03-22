@@ -72,7 +72,7 @@ const using_fetch = async ({ url = "", data = {}, method = "GET", token = null }
         url = `${url}?${queryString}`;
     }
 
-    if (["POST", "PUT","DELETE"].includes(method)) {
+    if (["POST", "PUT", "DELETE"].includes(method)) {
         headers["X-CSRF-TOKEN"] = token;
         fetchOptions.body = JSON.stringify(data);
     }

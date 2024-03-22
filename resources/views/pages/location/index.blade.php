@@ -65,11 +65,11 @@
                         <label for="location" class="col-form-label">Location</label>
                         <input type="text" class="form-control" id="location" name="location" required>
                     </div>
-                </div>
                  <div class="form-group">
                         <label for="description" class="col-form-label">Description</label>
                         <textarea class="form-control" name="description" id="description" cols="30" rows="2" required></textarea>
                     </div>
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary btn-submit" onclick="submitForm('modal_location')">Save</button>
