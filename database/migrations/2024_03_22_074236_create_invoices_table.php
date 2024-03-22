@@ -14,15 +14,15 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->string('invoice_number', 100);
-            $table->string('container_number', 50);
-            $table->date('incoming_date');
+            $table->string('container_number', 50)->nullable();
+            $table->date('incoming_date')->nullable();
             $table->date('offloaded_date')->nullable();
             $table->foreignId('supplier_id')->constrained('suppliers');
             $table->enum('flag_opened',['Y','N'])->default('N');
             $table->enum('flag_loaded',['Y','N'])->default('N');
             $table->datetime('received_at')->nullable();
-            $table->foreignId('created_by')->constrained('users');
-            $table->foreignId('updated_by')->constrained('users');
+            $table->foreignId('created_by')->nullable()->constrained('users');
+            $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->foreignId('deleted_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
