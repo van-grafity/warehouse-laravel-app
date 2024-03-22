@@ -27,7 +27,7 @@
                     <table id="supplier_table" class="table table-bordered table-hover text-center">
                         <thead>
                             <tr>
-                                <th width="50">No</th>
+                                <th width="25">No</th>
                                 <th width="250">Supplier</th>
                                 <th width="">Description</th>
                                 <th width="150">Action</th>

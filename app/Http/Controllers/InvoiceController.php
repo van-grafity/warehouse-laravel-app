@@ -57,15 +57,15 @@ class InvoiceController extends Controller
                 return 'oke';
             })
             ->editColumn('incoming_date', function($row){
-                $readable_datetime = Carbon::createFromFormat('Y-m-d H:i:s', $row->created_at);
-                $readable_datetime = $readable_datetime->format('d F y, H:m');
+                $readable_datetime = Carbon::createFromFormat('Y-m-d', $row->incoming_date);
+                $readable_datetime = $readable_datetime->format('d F Y');
                 return $readable_datetime;
             })
             ->filter(function ($query) {
-                if (request()->has('incoming_date_start_filter') && request()->query('incoming_date_start_filter')) {
+                if (request()->query('incoming_date_start_filter')) {
                     $query->where('incoming_date','>=', request()->incoming_date_start_filter);
                 }
-                if (request()->has('incoming_date_end_filter') && request()->query('incoming_date_end_filter')) {
+                if (request()->query('incoming_date_end_filter')) {
                     $query->where('incoming_date','<=', request()->incoming_date_end_filter);
                 }
             }, true)

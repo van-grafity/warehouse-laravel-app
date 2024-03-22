@@ -46,13 +46,13 @@
                 <table id="invoice_table" class="table table-bordered table-hover text-center">
                     <thead>
                         <tr>
-                            <th width="50">No</th>
-                            <th width="250">Invoice Number</th>
-                            <th width="250">Container No</th>
-                            <th width="250">Supplier</th>
-                            <th width="250">Incoming Date</th>
-                            <th width="250">Offloaded Date</th>
-                            <th width="150">Action</th>
+                            <th width="25">No</th>
+                            <th width="">Invoice Number</th>
+                            <th width="">Container No</th>
+                            <th width="">Supplier</th>
+                            <th width="">Incoming Date</th>
+                            <th width="">Offloaded Date</th>
+                            <th width="100">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -422,5 +422,6 @@
         dropdownParent: $('#modal_invoice'),
     });
 
+    reload_dtable();
 </script>
 @stop

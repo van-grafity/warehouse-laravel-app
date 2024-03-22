@@ -25,7 +25,7 @@
                     <table id="permission_category_table" class="table table-bordered table-hover text-center">
                         <thead>
                             <tr>
-                                <th width="50">No</th>
+                                <th width="25">No</th>
                                 <th width="250">Name</th>
                                 <th width="">Description</th>
                                 <th width="150">Action</th>

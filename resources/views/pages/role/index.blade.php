@@ -26,7 +26,7 @@
                 <table id="role_table" class="table table-bordered table-hover text-center">
                     <thead>
                         <tr>
-                            <th width="50">No</th>
+                            <th width="25">No</th>
                             <th width="" class="text-center">Name</th>
                             <th width="" class="text-center">Title</th>
                             <th width="" class="text-center">Description</th>
