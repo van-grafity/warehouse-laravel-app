@@ -61,6 +61,7 @@ Route::group([
     Route::get('profile', [App\Http\Controllers\UserController::class,'profile'])->name('profile.index');
     Route::post('profile/change_password', [App\Http\Controllers\UserController::class,'change_password'])->name('profile.change-password');
     
+    // ## Master Data
     Route::resource('color', App\Http\Controllers\ColorController::class);
     Route::get('color-dtable', [App\Http\Controllers\ColorController::class,'dtable'])->name('color.dtable');
     
@@ -76,4 +77,11 @@ Route::group([
     Route::resource('rack', App\Http\Controllers\RackController::class);
     Route::get('rack-dtable', [App\Http\Controllers\RackController::class,'dtable'])->name('rack.dtable');
 
+
+    
+    Route::resource('invoice', App\Http\Controllers\InvoiceController::class);
+    Route::get('invoice-dtable', [App\Http\Controllers\InvoiceController::class,'dtable'])->name('invoice.dtable');
+    
+    Route::resource('packinglist', App\Http\Controllers\PackinglistController::class);
+    Route::get('packinglist-dtable', [App\Http\Controllers\PackinglistController::class,'dtable'])->name('packinglist.dtable');
 });

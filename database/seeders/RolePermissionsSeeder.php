@@ -80,19 +80,14 @@ class RolePermissionsSeeder extends Seeder
                 'permission_category_id' => '2',
             ],
             [
-                'name' => 'supplier.access',
-                'description' => 'Can access supplier features.',
-                'permission_category_id' => '2',
-            ],
-            [
-                'name' => 'department.access',
-                'description' => 'Can access department features.',
-                'permission_category_id' => '2',
-            ],
-            [
                 'name' => 'color.manage',
                 'description' => 'Can manage color features.',
                 'permission_category_id' => '3',
+            ],
+            [
+                'name' => 'supplier.access',
+                'description' => 'Can access supplier features.',
+                'permission_category_id' => '2',
             ],
             [
                 'name' => 'supplier.manage',
@@ -100,8 +95,33 @@ class RolePermissionsSeeder extends Seeder
                 'permission_category_id' => '3',
             ],
             [
+                'name' => 'department.access',
+                'description' => 'Can access department features.',
+                'permission_category_id' => '2',
+            ],
+            [
                 'name' => 'department.manage',
                 'description' => 'Can manage department features.',
+                'permission_category_id' => '3',
+            ],
+            [
+                'name' => 'invoice.access',
+                'description' => 'Can access invoice features.',
+                'permission_category_id' => '2',
+            ],
+            [
+                'name' => 'invoice.manage',
+                'description' => 'Can manage invoice features.',
+                'permission_category_id' => '3',
+            ],
+            [
+                'name' => 'packinglist.access',
+                'description' => 'Can access packinglist features.',
+                'permission_category_id' => '2',
+            ],
+            [
+                'name' => 'packinglist.manage',
+                'description' => 'Can manage packinglist features.',
                 'permission_category_id' => '3',
             ],
         ];
@@ -116,6 +136,8 @@ class RolePermissionsSeeder extends Seeder
             'admin.access',
             'user.access',
             'master-data.access',
+            'invoice.access',
+            'packinglist.access',
         ]);
 
         $admin_role = Role::findByName('admin');
