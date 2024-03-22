@@ -114,6 +114,16 @@ class RolePermissionsSeeder extends Seeder
                 'description' => 'Can manage invoice features.',
                 'permission_category_id' => '3',
             ],
+            [
+                'name' => 'packinglist.access',
+                'description' => 'Can access packinglist features.',
+                'permission_category_id' => '2',
+            ],
+            [
+                'name' => 'packinglist.manage',
+                'description' => 'Can manage packinglist features.',
+                'permission_category_id' => '3',
+            ],
         ];
         foreach ($permission_list as $key => $permission) {
             Permission::create($permission);
@@ -127,6 +137,7 @@ class RolePermissionsSeeder extends Seeder
             'user.access',
             'master-data.access',
             'invoice.access',
+            'packinglist.access',
         ]);
 
         $admin_role = Role::findByName('admin');

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Invoice;
+use App\Models\Packinglist;
 use App\Models\Supplier;
 
 use Illuminate\Support\Facades\Gate;
@@ -12,12 +12,12 @@ use Illuminate\Support\Carbon;
 use Yajra\Datatables\Datatables;
 
 
-class InvoiceController extends Controller
+class PackinglistController extends Controller
 {
     public function __construct()
     {
         Gate::define('manage', function ($user) {
-            return $user->hasPermissionTo('invoice.manage');
+            return $user->hasPermissionTo('packinglist.manage');
         });
     }
 
@@ -29,12 +29,12 @@ class InvoiceController extends Controller
         $suppliers = Supplier::get();
 
         $data = [
-            'title' => 'Invoice',
-            'page_title' => 'Invoice List',
+            'title' => 'Packinglist',
+            'page_title' => 'Packinglist',
             'suppliers' => $suppliers,
             'can_manage' => auth()->user()->can('manage'),
         ];
-        return view('pages.invoice.index', $data);
+        return view('pages.packinglist.index', $data);
     }
 
     /**
@@ -42,32 +42,27 @@ class InvoiceController extends Controller
      */
     public function dtable()
     {
-        $query = Invoice::query();
+        $query = Packinglist::query();
         
         return DataTables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
             ->addColumn('action', function($row){
                 return '
-                <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_invoice\', '.$row->id.')">Edit</a>
+                <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_packinglist\', '.$row->id.')">Edit</a>
                 <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>';
             })
-            ->addColumn('supplier', function($row){
-                return $row->supplier->supplier;
+            ->addColumn('invoice', function($row){
+                return $row->invoice->invoice;
             })
-            ->editColumn('incoming_date', function($row){
-                $readable_datetime = Carbon::createFromFormat('Y-m-d', $row->incoming_date);
-                $readable_datetime = $readable_datetime->format('d F Y');
-                return $readable_datetime;
+            ->addColumn('color', function($row){
+                return $row->color->color;
             })
-            ->filter(function ($query) {
-                if (request()->query('incoming_date_start_filter')) {
-                    $query->where('incoming_date','>=', request()->incoming_date_start_filter);
-                }
-                if (request()->query('incoming_date_end_filter')) {
-                    $query->where('incoming_date','<=', request()->incoming_date_end_filter);
-                }
-            }, true)
+            ->addColumn('roll_qty', function($row){
+                // $roll_qty = $this->FabricRollModel->where('packinglist_id', $row->id)->findAll();
+                // return count($roll_qty);
+                return 0;
+            })
             ->toJson();
     }
 
@@ -78,8 +73,8 @@ class InvoiceController extends Controller
     {
         
         try {
-            $invoice = Invoice::firstOrCreate([
-                'invoice_number' => $request->invoice_number,
+            $packinglist = Packinglist::firstOrCreate([
+                'packinglist_number' => $request->packinglist_number,
                 'container_number' => $request->container_number,
                 'incoming_date' => $request->incoming_date_input,
                 'supplier_id' => $request->supplier,
@@ -87,9 +82,9 @@ class InvoiceController extends Controller
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully added new invoice (' . $invoice->invoice_number . ')',
+                'message' => 'Successfully added new packinglist (' . $packinglist->packinglist_number . ')',
                 'data' => [
-                    'invoice' => $invoice,
+                    'packinglist' => $packinglist,
                 ]
             ];
             return response()->json($data_return, 200);
@@ -108,13 +103,13 @@ class InvoiceController extends Controller
     public function show(string $id)
     {
         try {
-            $invoice = Invoice::find($id);
+            $packinglist = Packinglist::find($id);
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully get invoice (' . $invoice->invoice . ')',
+                'message' => 'Successfully get packinglist (' . $packinglist->packinglist . ')',
                 'data' => [
-                    'invoice' => $invoice,
+                    'packinglist' => $packinglist,
                 ]
             ];
             return response()->json($data_return, 200);
@@ -133,17 +128,17 @@ class InvoiceController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $invoice = Invoice::find($id);
-            $invoice->invoice_number = $request->invoice_number;
-            $invoice->container_number = $request->container_number;
-            $invoice->incoming_date = $request->incoming_date_input;
-            $invoice->supplier_id = $request->supplier;
-            $invoice->save();
+            $packinglist = Packinglist::find($id);
+            $packinglist->packinglist_number = $request->packinglist_number;
+            $packinglist->container_number = $request->container_number;
+            $packinglist->incoming_date = $request->incoming_date_input;
+            $packinglist->supplier_id = $request->supplier;
+            $packinglist->save();
             
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully updated invoice ('. $invoice->invoice_number .')',
-                'data' => $invoice
+                'message' => 'Successfully updated packinglist ('. $packinglist->packinglist_number .')',
+                'data' => $packinglist
             ];
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {
@@ -161,12 +156,12 @@ class InvoiceController extends Controller
     public function destroy(string $id)
     {
         try {
-            $invoice = Invoice::find($id);
-            $invoice->delete();
+            $packinglist = Packinglist::find($id);
+            $packinglist->delete();
             $data_return = [
                 'status' => 'success',
-                'data'=> $invoice,
-                'message'=> 'Invoice '.$invoice->invoice.' successfully Deleted!',
+                'data'=> $packinglist,
+                'message'=> 'Packinglist '.$packinglist->packinglist.' successfully Deleted!',
             ];
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {

@@ -336,6 +336,12 @@ return [
             'can'   => 'invoice.access',
         ],
         [
+            'text' => 'Packinglist',
+            'icon' => 'far fa-list-alt nav-icon',
+            'url' => 'packinglist',
+            'can'   => 'packinglist.access',
+        ],
+        [
             'header' => 'Admin',
             'can'   => 'admin-menu', 
         ],
