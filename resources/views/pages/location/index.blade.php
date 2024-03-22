@@ -4,47 +4,44 @@
 @section('page_title', $page_title)
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex p-0">
-                    <h3 class="card-title p-3 my-auto"> Location List </h3>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex p-0">
+                <h3 class="card-title p-3 my-auto"> Location List </h3>
 
-                    <div class="ml-auto p-3">
-                        @can('manage')
-                            <a href="javascript:void(0)" class="btn btn-success " id="btn_modal_create" onclick="show_modal_create('modal_location')">Create</a>
-                        @endcan
-                    </div>
+                <div class="ml-auto p-3">
+                    @can('manage')
+                        <a href="javascript:void(0)" class="btn btn-success " id="btn_modal_create" onclick="show_modal_create('modal_location')">Create</a>
+                    @endcan
                 </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                    <div class="mb-3 text-right">
-                        <button id="reload_table_btn" class="btn btn-sm btn-info">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
-                    </div>
-                    <table id="location_table" class="table table-bordered table-hover text-center">
-                        <thead>
-                            <tr>
-                                <th width="50">No</th>
-                                <th width="250">Location</th>
-                                <th width="">Description</th>
-                                <th width="150">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.card-body -->
             </div>
-            <!-- /.card -->
-
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="mb-3 text-right">
+                    <button id="reload_table_btn" class="btn btn-sm btn-info">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <table id="location_table" class="table table-bordered table-hover text-center">
+                    <thead>
+                        <tr>
+                            <th width="50">No</th>
+                            <th width="250">Location</th>
+                            <th width="">Description</th>
+                            <th width="150">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.card-body -->
         </div>
-        <!-- /.col -->
-    </div>
+        <!-- /.card -->
 
+    </div>
+    <!-- /.col -->
 </div>
 
 <!-- Modal Add and Edit Product Detail -->
