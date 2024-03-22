@@ -330,6 +330,12 @@ return [
             ],
         ],
         [
+            'text' => 'Invoice',
+            'icon' => 'fas fa-file-invoice nav-icon',
+            'url' => 'invoice',
+            'can'   => 'invoice.access',
+        ],
+        [
             'header' => 'Admin',
             'can'   => 'admin-menu', 
         ],
@@ -440,15 +446,46 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'vendor/select2/js/select2.min.js',
+                    'location' => 'vendor/select2/js/select2.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
                     'location' => 'vendor/select2/css/select2.css',
                 ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css',
+                ],
             ],
         ],
+        'Moment' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/moment/moment.min.js',
+                ],
+            ],
+        ],
+        'DateRangePicker' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/daterangepicker/daterangepicker.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/daterangepicker/daterangepicker.css',
+                ],
+            ],
+        ],
+        
         'Chartjs' => [
             'active' => false,
             'files' => [

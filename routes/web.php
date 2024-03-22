@@ -69,4 +69,7 @@ Route::group([
 
     Route::resource('department', App\Http\Controllers\DepartmentController::class);
     Route::get('department-dtable', [App\Http\Controllers\DepartmentController::class,'dtable'])->name('department.dtable');
+
+    Route::resource('invoice', App\Http\Controllers\InvoiceController::class);
+    Route::get('invoice-dtable', [App\Http\Controllers\InvoiceController::class,'dtable'])->name('invoice.dtable');
 });
