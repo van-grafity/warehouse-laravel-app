@@ -73,4 +73,7 @@ Route::group([
     Route::resource('location', App\Http\Controllers\LocationController::class);
     Route::get('location-dtable', [App\Http\Controllers\LocationController::class,'dtable'])->name('location.dtable');
 
+    Route::resource('rack', App\Http\Controllers\RackController::class);
+    Route::get('rack-dtable', [App\Http\Controllers\RackController::class,'dtable'])->name('rack.dtable');
+
 });

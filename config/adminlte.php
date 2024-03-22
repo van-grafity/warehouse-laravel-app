@@ -332,6 +332,11 @@ return [
                     'url' => 'location',
                     'can'   => 'location.access',
                 ],
+                [
+                    'text' => 'rack',
+                    'url' => 'rack',
+                    'can'   => 'rack.access',
+                ],
             ],
         ],
         [
