@@ -260,3 +260,4 @@ window.swal_info = swal_info;
 window.swal_confirm = swal_confirm;
 window.swal_failed = swal_failed;
 window.show_flash_message = show_flash_message;
+window.swal_warning = swal_warning;

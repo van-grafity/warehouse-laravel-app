@@ -58,4 +58,19 @@ class User extends Authenticatable
         return $this->belongsTo(Department::class, 'department_id', 'id');
     }
 
+    public function adminlte_image()
+    {
+        return url('').'/images/user-profile-default.png';
+    }
+
+    public function adminlte_desc()
+    {
+        return $this->department ? $this->department->department : '-';
+    }
+
+    public function adminlte_profile_url()
+    {
+        return route('profile.index');
+    }
+
 }
