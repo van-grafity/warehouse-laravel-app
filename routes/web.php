@@ -86,3 +86,17 @@ Route::group([
     Route::get('packinglist-dtable', [App\Http\Controllers\PackinglistController::class,'dtable'])->name('packinglist.dtable');
     Route::post('packinglist/import', [App\Http\Controllers\PackinglistController::class,'import'])->name('packinglist.import');
 });
+
+Route::group([
+    'middleware' => [
+        'auth',
+        'can:user-menu',
+    ],
+    'controller' => App\Http\Controllers\FetchSelectController::class,
+    'prefix' => 'fetch-select',
+    'as' => 'fetch-select.',
+],function() {
+    Route::get('', 'index')->name('index');
+    Route::get('invoice', 'select_invoice')->name('invoice');
+    Route::get('color', 'select_color')->name('color');
+});

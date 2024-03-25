@@ -187,6 +187,8 @@
     const update_url = "{{ route('packinglist.update',':id') }}";
     const delete_url = "{{ route('packinglist.destroy',':id') }}";
     const dtable_url = "{{ route('packinglist.dtable') }}";
+    const fetch_select_invoice_url = "{{ route('fetch-select.invoice') }}";
+    const fetch_select_color_url = "{{ route('fetch-select.color') }}";
 
     const show_modal_create = (modal_element_id) => {
         let modal_data = {
@@ -521,8 +523,44 @@
         },
     });
 
-    $('#supplier.select2').select2({
+    $('#invoice.select2').select2({
         dropdownParent: $('#modal_packinglist'),
+        ajax: {
+            url: fetch_select_invoice_url,
+            dataType: 'json',
+            delay: 500,
+            data: function (params) {
+                var query = {
+                    search: params.term,
+                }
+                return query;
+            },
+            processResults: function (fetch_result) {
+                return {
+                    results: fetch_result.data.items,
+                };
+            },
+        }
+    });
+
+    $('#color.select2').select2({
+        dropdownParent: $('#modal_packinglist'),
+        ajax: {
+            url: fetch_select_color_url,
+            dataType: 'json',
+            delay: 500,
+            data: function (params) {
+                var query = {
+                    search: params.term,
+                }
+                return query;
+            },
+            processResults: function (fetch_result) {
+                return {
+                    results: fetch_result.data.items,
+                };
+            },
+        }
     });
 
     reload_dtable();
