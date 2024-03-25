@@ -84,4 +84,5 @@ Route::group([
     
     Route::resource('packinglist', App\Http\Controllers\PackinglistController::class);
     Route::get('packinglist-dtable', [App\Http\Controllers\PackinglistController::class,'dtable'])->name('packinglist.dtable');
+    Route::post('packinglist/import', [App\Http\Controllers\PackinglistController::class,'import'])->name('packinglist.import');
 });

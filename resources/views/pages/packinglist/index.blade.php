@@ -12,6 +12,7 @@
 
                 <div class="ml-auto p-3">
                     @can('manage')
+                        <button type="button" class="btn btn-default mr-2" onclick="show_import_modal()"><i class="fas fa-upload"></i> Upload Packinglist</button>
                         <a href="javascript:void(0)" class="btn btn-success " id="btn_modal_create" onclick="show_modal_create('modal_packinglist')">Create</a>
                     @endcan
                 </div>
@@ -20,22 +21,6 @@
             <div class="card-body">
                 <div class="row mb-3">
                     <div class="col-sm-12 d-inline-flex justify-content-end">
-                        <div class="filter_wrapper mr-2 align-self-center d-inline-flex" style="width:350px;">
-                            <label for="incoming_date_filter" class="mb-0 align-self-center col-form-label col-form-label-sm" style="width:150px;">Incoming Date</label>
-                            
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="far fa-calendar"></i></span>
-                                </div>
-                                <input type="text" class="form-control daterangepicker-select" id="incoming_date_filter" name="incoming_date_filter" autocomplete="off" placeholder="Incoming Date Filter">
-                            </div>
-
-                            <input type="hidden" id="incoming_date_start_filter" name="incoming_date_start_filter">
-                            <input type="hidden" id="incoming_date_end_filter" name="incoming_date_end_filter">
-                        </div>
-
-
-
                         <div class="filter_wrapper text-right align-self-center">
                             <button id="reload_table_btn" class="btn btn-sm btn-info"> 
                                 <i class="fas fa-sync-alt"></i> 
@@ -114,6 +99,47 @@
     </div>
 </div>
 <!-- End Modal Add and Edit Product Detail -->
+
+
+<!-- Modal Import Purchase Order -->
+<div class="modal fade" id="modal_import_excel" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="{{ route('packinglist.import') }}" method="post" id="import_form" enctype="multipart/form-data">
+                <?= csrf_field(); ?>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel">Add <?= $title ? $title : '' ?> via Import Excel</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="file_excel">Upload <?= $title ? $title : '' ?> on Excel Format</label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="file_excel" name="file_excel">
+                                        <label class="custom-file-label" for="file_excel">Choose Excel file</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success ld-ext-right" id="btn_submit_form">
+                        Upload <?= $title ? $title : '' ?>
+                        <div class="ld ld-ring ld-spin"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End Modal Import Purchase Order -->
 @endsection
 
 @section('js')
@@ -284,6 +310,53 @@
             },
         };
     }
+
+    
+</script>
+
+<script>
+    // ## JS for Modal Import
+    const show_import_modal = () => {
+        $('#modal_import_excel').modal('show');
+    }
+
+    $(document).ready(function() {
+        bsCustomFileInput.init();
+    })
+
+    let import_validator = $("#import_form").validate({
+        rules: {
+            file_excel: {
+                required: true,
+                extension: "xlsx|xls|csv"
+            },
+        },
+        messages: {
+            file_excel: {
+                required: "Please enter the File",
+                extension: "Please provide Excel or CSV files",
+            }
+        },
+        errorElement: "span",
+        errorPlacement: function (error, element) {
+            error.addClass("invalid-feedback");
+            element.closest(".form-group").append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass("is-invalid");
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass("is-invalid");
+        },
+    });
+
+    // ## Avoid double submit
+    $('#import_form').on('submit', function (event) {
+        $(this).find('button:submit').addClass('running').prop("disabled", true);
+        if(!$(this).valid()){
+            $(this).find('button:submit').removeClass('running').prop("disabled", false);
+        }
+    })
 
 </script>
 
