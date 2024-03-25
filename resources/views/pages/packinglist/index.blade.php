@@ -54,9 +54,9 @@
     <!-- /.col -->
 </div>
 
-<!-- Modal Add and Edit Product Detail -->
+<!-- Modal Add and Edit Packinglist -->
 <div class="modal fade" id="modal_packinglist" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form action="" method="post" onsubmit="stopFormSubmission(event)">
                 <input type="hidden" name="edit_packinglist_id" value="" id="edit_packinglist_id">
@@ -68,26 +68,59 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="packinglist_number" class="col-form-label">Packinglist Number</label>
-                        <input type="text" class="form-control" id="packinglist_number" name="packinglist_number" required>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="invoice" class="col-form-label">Invoice</label>
+                                <select name="invoice" id="invoice" class="form-control select2" required>
+                                    <option value=""> Select Invoice </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="buyer" class="col-form-label">Buyer</label>
+                                <input type="text" class="form-control" id="buyer" name="buyer" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="gl_number" class="col-form-label">GL Number</label>
+                                <input type="text" class="form-control" id="gl_number" name="gl_number" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="po_number" class="col-form-label">PO Number</label>
+                                <input type="text" class="form-control" id="po_number" name="po_number" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="color" class="col-form-label">Color</label>
+                                <select name="color" id="color" class="form-control select2" required>
+                                    <option value=""> Select Color </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="batch_number" class="col-form-label">Batch</label>
+                                <input type="text" class="form-control" id="batch_number" name="batch_number" required>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="container_number" class="col-form-label">Container Number</label>
-                        <input type="text" class="form-control" id="container_number" name="container_number" required>
+                        <label for="style" class="col-form-label">Style</label>
+                        <textarea class="form-control" name="style" id="style" cols="30" rows="3"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="incoming_date" class="col-form-label">Incoming Date</label>
-                        <input type="text" class="form-control" id="incoming_date" name="incoming_date" required autocomplete="off">
-                        <input type="hidden" id="incoming_date_input" name="incoming_date_input">
-                    </div>
-                    <div class="form-group">
-                        <label for="supplier">Supplier</label>
-                        <select name="supplier" id="supplier" class="form-control select2 validate-on-change" data-placeholder="Select Supplier" required>
-                            @foreach ($suppliers as $supplier)
-                                <option value="{{ $supplier->id }}"> {{ $supplier->supplier }} </option>
-                            @endforeach
-                        </select>
+                        <label for="fabric_content" class="col-form-label">Fabric Content</label>
+                        <textarea class="form-control" name="fabric_content" id="fabric_content" cols="30" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -98,7 +131,7 @@
         </div>
     </div>
 </div>
-<!-- End Modal Add and Edit Product Detail -->
+<!-- End Modal Add and Edit Packinglist -->
 
 
 <!-- Modal Import Purchase Order -->
@@ -183,7 +216,6 @@
         result = await using_fetch(fetch_data);
         packinglist_data = result.data.packinglist
 
-        $('#packinglist_number').val(packinglist_data.packinglist_number);
         $('#container_number').val(packinglist_data.container_number);
         $('#incoming_date').val(moment(packinglist_data.incoming_date,'YYYY-MM-DD').format('DD/MM/YYYY'));
         $('#incoming_date_input').val(packinglist_data.incoming_date);
@@ -280,9 +312,6 @@
 
     const getValidationRules = () => {
         return {
-            packinglist_number: {
-                required: true,
-            },
             container_number: {
                 required: true,
             },
@@ -296,9 +325,6 @@
     }
     const getValidationMessages = () => {
         return {
-            packinglist_number: {
-                required: "Please enter Packinglist Number",
-            },
             container_number: {
                 required: "Please enter Container Number",
             },

@@ -46,7 +46,7 @@
 
 </div>
 
-<!-- Modal Add and Edit Product Detail -->
+<!-- Modal Add and Edit Permission -->
 <div class="modal fade" id="modal_permission" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -85,7 +85,7 @@
         </div>
     </div>
 </div>
-<!-- End Modal Add and Edit Product Detail -->
+<!-- End Modal Add and Edit Permission -->
 @endsection
 
 @section('js')
