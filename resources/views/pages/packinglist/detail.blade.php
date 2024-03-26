@@ -73,6 +73,13 @@
     <!-- /.col -->
 </div>
 
+<div class="row text-right mb-5">
+    <div class="col-12">
+        @php $back_url = (url()->previous() == url()->current()) ? url('packinglist') : url()->previous() @endphp
+        <a href="<?= $back_url ?>" class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left mr-1"></i>Back</a>
+    </div>
+</div>
+
 <!-- Modal Add and Edit Fabric Roll -->
 <div class="modal fade" id="modal_fabric_roll" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -120,20 +127,20 @@
 @section('js')
 <script type="text/javascript">
 
-    const token = document.querySelector('meta[name="X-CSRF-TOKEN"]').getAttribute('content');
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     
     const packinglist_id = '{{ $packinglist->id }}';
     const column_visible = '{{ $can_manage }}';
     
     
     // ## URL List
-    const show_url = "{{ route('packinglist.show',':id') }}";
-    const store_url = "{{ route('packinglist.store') }}";
-    const update_url = "{{ route('packinglist.update',':id') }}";
-    const delete_url = "{{ route('packinglist.destroy',':id') }}";
-    const dtable_url = "{{ route('packinglist.dtable') }}";
+    const show_url = "{{ route('fabric-roll.show',':id') }}";
+    const store_url = "{{ route('fabric-roll.store') }}";
+    const update_url = "{{ route('fabric-roll.update',':id') }}";
+    const delete_url = "{{ route('fabric-roll.destroy',':id') }}";
+    const mass_delete_url = "{{ route('fabric-roll.mass_delete') }}";
+    const dtable_url = "{{ route('fabric-roll.dtable') }}";
     
-
     const show_modal_create = (modal_element_id) => {
         let modal_data = {
             modal_id : modal_element_id,
@@ -153,15 +160,13 @@
             modal_id : modal_element_id,
             title : "Edit Roll",
             btn_submit : "Save",
-            form_action_url : update_url,
+            form_action_url : update_url.replace(':id',fabric_roll_id),
         }
         clear_form(modal_data);
 
-        params_data = { id : fabric_roll_id };
         fetch_data = {
-            url: detail_url,
+            url: show_url.replace(':id',fabric_roll_id),
             method: "GET",
-            data: params_data,
             token: token,
         }
         result = await using_fetch(fetch_data);
@@ -194,7 +199,7 @@
             
             let fetch_data = {};
             if(!formData.edit_fabric_roll_id) {
-                // ## kalau tidak ada packinglist id berarti STORE dan Method nya POST
+                // ## kalau tidak ada fabric roll id berarti STORE dan Method nya POST
                 fetch_data = {
                     url: store_url,
                     method: "POST",
@@ -202,9 +207,9 @@
                     token: token,
                 }
             } else {
-                // ## kalau ada packinglist id berarti UPDATE dan Method nya PUT
+                // ## kalau ada fabric roll id berarti UPDATE dan Method nya PUT
                 fetch_data = {
-                    url: update_url,
+                    url: update_url.replace(':id',formData.edit_fabric_roll_id),
                     method: "PUT",
                     data: formData,
                     token: token,
@@ -248,7 +253,7 @@
 
         params_data = { id : fabric_roll_id };
         fetch_data = {
-            url: delete_url,
+            url: delete_url.replace(':id',fabric_roll_id),
             method: "DELETE",
             data: params_data,
             token: token,
@@ -271,13 +276,13 @@
         
         let is_card_collapsed = $('#packinglist_information_card').hasClass("collapsed-card");
         
-        load_component({
-            url : packinglist_information_url,
-            container_element_id : 'packinglist_information_container',
-            data : {
-                collapsed_card_class : is_card_collapsed ? 'collapsed-card' : '',
-            }
-        })
+        // load_component({
+        //     url : packinglist_information_url,
+        //     container_element_id : 'packinglist_information_container',
+        //     data : {
+        //         collapsed_card_class : is_card_collapsed ? 'collapsed-card' : '',
+        //     }
+        // })
     }
 
     const getValidationRules = () => {
@@ -400,7 +405,7 @@
         processing: true,
         serverSide: true,
         ajax: {
-            url: dtable_list_url,
+            url: dtable_url,
             data: function (d) {
                 d.packinglist_id = packinglist_id;
             },

@@ -88,6 +88,12 @@ Route::group([
         Route::post('import', [App\Http\Controllers\PackinglistController::class,'import'])->name('import');
     });
     Route::resource('packinglist', App\Http\Controllers\PackinglistController::class);
+    
+    Route::prefix('fabric-roll')->name('fabric-roll.')->group(function () {
+        Route::get('dtable', [App\Http\Controllers\FabricRollController::class,'dtable'])->name('dtable');
+        Route::delete('mass_delete', [App\Http\Controllers\FabricRollController::class,'mass_delete'])->name('mass_delete');
+    });
+    Route::resource('fabric-roll', App\Http\Controllers\FabricRollController::class);
 });
 
 Route::group([
