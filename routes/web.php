@@ -82,9 +82,12 @@ Route::group([
     Route::resource('invoice', App\Http\Controllers\InvoiceController::class);
     Route::get('invoice-dtable', [App\Http\Controllers\InvoiceController::class,'dtable'])->name('invoice.dtable');
     
+    Route::prefix('packinglist')->name('packinglist.')->group(function () {
+        Route::get('dtable', [App\Http\Controllers\PackinglistController::class,'dtable'])->name('dtable');
+        Route::get('{packinglist}/detail', [App\Http\Controllers\PackinglistController::class,'detail'])->name('detail');
+        Route::post('import', [App\Http\Controllers\PackinglistController::class,'import'])->name('import');
+    });
     Route::resource('packinglist', App\Http\Controllers\PackinglistController::class);
-    Route::get('packinglist-dtable', [App\Http\Controllers\PackinglistController::class,'dtable'])->name('packinglist.dtable');
-    Route::post('packinglist/import', [App\Http\Controllers\PackinglistController::class,'import'])->name('packinglist.import');
 });
 
 Route::group([

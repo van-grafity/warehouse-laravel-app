@@ -54,7 +54,7 @@ class PackinglistController extends Controller
             ->addIndexColumn()
             ->escapeColumns([])
             ->editColumn('serial_number', function($row){
-                $serial_number = "<a href='". route('packinglist.show',$row->id)."' class='' data-toggle='tooltip' data-placement='top' title='Click for Detail'>$row->serial_number</a>";
+                $serial_number = "<a href='". route('packinglist.detail',$row->id)."' class='' data-toggle='tooltip' data-placement='top' title='Click for Detail'>$row->serial_number</a>";
                 return $serial_number;
             })
             ->addColumn('action', function($row){
@@ -198,6 +198,22 @@ class PackinglistController extends Controller
             ];
             return response()->json($data_return);
         }
+    }
+
+    /**
+     * Display a detail of this resource.
+     */
+    public function detail(int $id)
+    {
+        $packinglist = Packinglist::find($id);
+
+        $data = [
+            'title' => 'Packinglist Detail',
+            'page_title' => 'Packinglist Detail',
+            'packinglist' => $packinglist,
+            'can_manage' => auth()->user()->can('manage'),
+        ];
+        return view('pages.packinglist.detail', $data);
     }
 
     public function import(Request $request)
