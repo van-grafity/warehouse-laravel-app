@@ -80,18 +80,32 @@ class PackinglistController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $color = Color::find($request->color);
+        if(!$color){ 
+            $data_return = [
+                'status' => 'error',
+                'message' => 'Color Not Found!',
+            ];
+            return response()->json($data_return, 200);
+        }
+
         try {
+            $packinglist_model = new Packinglist;
             $packinglist = Packinglist::firstOrCreate([
-                'packinglist_number' => $request->packinglist_number,
-                'container_number' => $request->container_number,
-                'incoming_date' => $request->incoming_date_input,
-                'supplier_id' => $request->supplier,
+                'serial_number' => $packinglist_model->generate_serial_number($color->code),
+                'invoice_id' => $request->invoice,
+                'buyer' => $request->buyer,
+                'gl_number' => $request->gl_number,
+                'po_number' => $request->po_number,
+                'color_id' => $request->color,
+                'batch_number' => $request->batch_number,
+                'style' => $request->style,
+                'fabric_content' => $request->fabric_content,
             ]);
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully added new packinglist (' . $packinglist->packinglist_number . ')',
+                'message' => 'Successfully added new packinglist (' . $packinglist->serial_number . ')',
                 'data' => [
                     'packinglist' => $packinglist,
                 ]
@@ -138,15 +152,19 @@ class PackinglistController extends Controller
     {
         try {
             $packinglist = Packinglist::find($id);
-            $packinglist->packinglist_number = $request->packinglist_number;
-            $packinglist->container_number = $request->container_number;
-            $packinglist->incoming_date = $request->incoming_date_input;
-            $packinglist->supplier_id = $request->supplier;
+            $packinglist->invoice_id = $request->invoice;
+            $packinglist->buyer = $request->buyer;
+            $packinglist->gl_number = $request->gl_number;
+            $packinglist->po_number = $request->po_number;
+            $packinglist->color_id = $request->color;
+            $packinglist->batch_number = $request->batch_number;
+            $packinglist->style = $request->style;
+            $packinglist->fabric_content = $request->fabric_content;
             $packinglist->save();
             
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully updated packinglist ('. $packinglist->packinglist_number .')',
+                'message' => 'Successfully updated packinglist ('. $packinglist->serial_number .')',
                 'data' => $packinglist
             ];
             return response()->json($data_return, 200);

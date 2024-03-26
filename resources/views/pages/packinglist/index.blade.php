@@ -218,23 +218,62 @@
         result = await using_fetch(fetch_data);
         packinglist_data = result.data.packinglist
 
-        $('#container_number').val(packinglist_data.container_number);
-        $('#incoming_date').val(moment(packinglist_data.incoming_date,'YYYY-MM-DD').format('DD/MM/YYYY'));
-        $('#incoming_date_input').val(packinglist_data.incoming_date);
-        $('#supplier').val(packinglist_data.supplier_id).trigger('change');
+        $('#buyer').val(packinglist_data.buyer);
+        $('#gl_number').val(packinglist_data.gl_number);
+        $('#po_number').val(packinglist_data.po_number);
+        $('#batch_number').val(packinglist_data.batch_number);
+        $('#style').val(packinglist_data.style);
+        $('#fabric_content').val(packinglist_data.fabric_content);
         $('#edit_packinglist_id').val(packinglist_data.id);
-        
+
+        // ## Kasus spesial untuk memberikan data pada select2 yang datanya diambil menggunakan ajax ( serverside )
+        let preselect_color = {
+            select2_selector: '#color.select2',
+            select2_url: fetch_select_color_url,
+            option_id: packinglist_data.color_id,
+        };
+        preselecting_option(preselect_color);
+
+        let preselect_invoice = {
+            select2_selector: '#invoice.select2',
+            select2_url: fetch_select_invoice_url,
+            option_id: packinglist_data.invoice_id,
+        };
+        await preselecting_option(preselect_invoice);
+        /*
+         * NOTE :
+         * karena proses preselecting ini menggunakan async maka tunggu sampai data selesai terpilih baru modal di munculkan. 
+         * karena kalau tidak ada await nya maka modal akan langsung muncil meski preselecting belum selesai di load.
+        */
+
         $(`#${modal_element_id}`).modal('show');
     }
 
+    const preselecting_option = async ({ select2_selector, select2_url, option_id }) => {
+        let select2_element = $(select2_selector);
+
+        params_data = { id : option_id };
+        fetch_data = {
+            url: select2_url,
+            method: "GET",
+            data: params_data,
+        }
+        result_invoice = await using_fetch(fetch_data);
+        invoice_select_data = result_invoice.data.items;
+        
+        let option = new Option(invoice_select_data.text, invoice_select_data.id, true, true);
+        select2_element.append(option).trigger('change');
+    }
+
     const submitForm = async (modal_id) => {
+        let modal = document.getElementById(modal_id);
+        let submit_btn = modal.querySelector('.btn-submit');
+        submit_btn.setAttribute('disabled', 'disabled');
+        
+        let form = modal.querySelector('form');
+        let formData = getFormData(form);
+
         try {
-            let modal = document.getElementById(modal_id);
-            let submit_btn = modal.querySelector('.btn-submit');
-            submit_btn.setAttribute('disabled', 'disabled');
-            
-            let form = modal.querySelector('form');
-            let formData = getFormData(form);
 
             if (!$(form).valid()) {
                 submit_btn.removeAttribute('disabled');
@@ -268,13 +307,13 @@
                 swal_failed({ title: response.message })
             }
 
-            submit_btn.removeAttribute('disabled');
-
+            $(`#${modal_id}`).modal('hide');
+            
         } catch (error) {
             console.error("Error:", error);
         }
 
-        $(`#${modal_id}`).modal('hide');
+        submit_btn.removeAttribute('disabled');
     }
 
     const show_modal_delete = async (packinglist_id) => {
