@@ -52,7 +52,7 @@
                             <th width="">Supplier</th>
                             <th width="">Incoming Date</th>
                             <th width="">Offloaded Date</th>
-                            <th width="100">Action</th>
+                            <th width="150">Action</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -32,14 +32,14 @@
                     <thead>
                         <tr>
                             <th width="25">No</th>
-                            <th width="">Packinglist No</th>
+                            <th width="" class="text-center">Packinglist No</th>
                             <th width="">Invoice</th>
                             <th width="">Buyer</th>
-                            <th width="">GL Number</th>
+                            <th width="">GL</th>
                             <th width="">Color</th>
                             <th width="">Batch</th>
                             <th width="">Roll Qty</th>
-                            <th width="100">Action</th>
+                            <th width="150">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -449,7 +449,7 @@
         order: [],
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            { data: 'serial_number', name: 'serial_number'},
+            { data: 'serial_number', name: 'serial_number', className: 'text-left'},
             { data: 'invoice', name: 'invoice'},
             { data: 'buyer', name: 'buyer'},
             { data: 'gl_number', name: 'gl_number'},
