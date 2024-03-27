@@ -311,11 +311,17 @@ const swal_confirm_loader = (data = {}) => {
                 icon: icon,
                 showCancelButton: true,
                 reverseButtons: true,
+                allowOutsideClick: false,
                 preConfirm: () => {
                     if (data.loader) {
+                        // Menonaktifkan tombol delete dan menampilkan loader
                         const deleteButton = document.querySelector('.swal2-confirm');
-                        deleteButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...';
-                        deleteButton.disabled = true; // Menonaktifkan tombol delete selama proses penghapusan berlangsung
+                        if (deleteButton) {
+                            deleteButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...';
+                            setTimeout(() => {
+                                deleteButton.disabled = true;
+                            }, 10);
+                        }
                     }
 
                     using_fetch(data.fetch_data).then((result) => {
