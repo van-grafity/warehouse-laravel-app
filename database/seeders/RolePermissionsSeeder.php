@@ -124,6 +124,36 @@ class RolePermissionsSeeder extends Seeder
                 'description' => 'Can manage packinglist features.',
                 'permission_category_id' => '3',
             ],
+            [
+                'name' => 'fabric-offloading.access',
+                'description' => 'Can access fabric offloading features.',
+                'permission_category_id' => '2',
+            ],
+            [
+                'name' => 'fabric-offloading.manage',
+                'description' => 'Can manage fabric offloading features.',
+                'permission_category_id' => '3',
+            ],
+            [
+                'name' => 'stock-in.access',
+                'description' => 'Can access stock in features.',
+                'permission_category_id' => '2',
+            ],
+            [
+                'name' => 'stock-in.manage',
+                'description' => 'Can manage stock in features.',
+                'permission_category_id' => '3',
+            ],
+            [
+                'name' => 'fabric-request.access',
+                'description' => 'Can access fabric request features.',
+                'permission_category_id' => '2',
+            ],
+            [
+                'name' => 'fabric-request.manage',
+                'description' => 'Can manage fabric request features.',
+                'permission_category_id' => '3',
+            ],
         ];
         foreach ($permission_list as $key => $permission) {
             Permission::create($permission);

@@ -352,6 +352,28 @@ return [
             'can'   => 'packinglist.access',
         ],
         [
+            'text' => 'Manage Fabric',
+            'icon' => 'fas fa-shapes nav-icon',
+            'can'   => 'manage-fabric.access',
+            'submenu' => [
+                [
+                    'text' => 'Fabric Offloading',
+                    'url' => 'fabric-offloading',
+                    'can'   => 'fabric-offloading.access',
+                ],
+                [
+                    'text' => 'Stock In',
+                    'url' => 'stock-in',
+                    'can'   => 'stock-in.access',
+                ],
+                [
+                    'text' => 'Fabric Request',
+                    'url' => 'fabric-request',
+                    'can'   => 'fabric-request.access',
+                ],
+            ],
+        ],
+        [
             'header' => 'Admin',
             'can'   => 'admin-menu', 
         ],
