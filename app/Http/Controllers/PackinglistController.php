@@ -53,7 +53,7 @@ class PackinglistController extends Controller
                 <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>';
             })
             ->addColumn('invoice', function($row){
-                return $row->invoice->invoice;
+                return $row->invoice->invoice_number;
             })
             ->addColumn('color', function($row){
                 return $row->color->color;
