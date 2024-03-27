@@ -94,6 +94,12 @@ Route::group([
         Route::delete('mass_delete', [App\Http\Controllers\FabricRollController::class,'mass_delete'])->name('mass_delete');
     });
     Route::resource('fabric-roll', App\Http\Controllers\FabricRollController::class);
+    
+    
+    Route::prefix('fabric-offloading')->name('fabric-offloading.')->group(function () {
+        Route::get('dtable', [App\Http\Controllers\FabricOffloadingController::class,'dtable'])->name('dtable');
+    });
+    Route::resource('fabric-offloading', App\Http\Controllers\FabricOffloadingController::class);
 });
 
 Route::group([

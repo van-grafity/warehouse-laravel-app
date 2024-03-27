@@ -1,0 +1,165 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\FabricRoll;
+use App\Models\FabricRollRack;
+use App\Models\Packinglist;
+use App\Models\Rack;
+
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
+use Yajra\Datatables\Datatables;
+
+
+class FabricOffloadingController extends Controller
+{
+    public function __construct()
+    {
+        Gate::define('manage', function ($user) {
+            return $user->hasPermissionTo('fabric-offloading.manage');
+        });
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $data = [
+            'title' => 'Fabric Offloading',
+            'page_title' => 'Fabric Offloading',
+            'can_manage' => auth()->user()->can('manage'),
+        ];
+        return view('pages.fabric-offloading.index', $data);
+    }
+
+    /**
+     * Show Datatable Data.
+     */
+    public function dtable()
+    {
+        $query = Packinglist::get();
+        
+        return Datatables::of($query)
+            ->addIndexColumn()
+            ->escapeColumns([])
+            ->addColumn('action', function($row){
+                return '
+                <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_color\', '.$row->id.')">Edit</a>
+                <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>';
+            })
+            ->addColumn('invoice', function($row){
+                return $row->invoice->invoice_number;
+            })
+            ->addColumn('color', function($row){
+                return $row->color->color;
+            })
+            ->addColumn('roll_qty', function($row){
+                return $row->fabric_rolls->count();
+            })
+            ->toJson();
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        try {
+            $color = Color::firstOrCreate([
+                'color' => $request->color,
+            ]);
+
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully added new color (' . $color->color . ')',
+                'data' => [
+                    'color' => $color,
+                ]
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        try {
+            $color = Color::find($id);
+
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully get color (' . $color->color . ')',
+                'data' => [
+                    'color' => $color,
+                ]
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        try {
+            $color = Color::find($id);
+            $color->color = $request->color;
+            $color->save();
+            
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully updated color ('. $color->color .')',
+                'data' => $color
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        try {
+            $color = Color::find($id);
+            $color->delete();
+            $data_return = [
+                'status' => 'success',
+                'data'=> $color,
+                'message'=> 'Color '.$color->color.' successfully Deleted!',
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
+    }
+}
