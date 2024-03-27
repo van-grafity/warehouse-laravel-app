@@ -92,6 +92,78 @@ const using_fetch = async ({ url = "", data = {}, method = "GET", token = null }
 }
 
 
+const using_fetch_with_loader = async ({ url = "", data = {}, method = "GET", token = null, loader = false }) => {
+
+    /*
+        * --------------------------------------------------------------------
+        * Params Example
+        * --------------------------------------------------------------------
+        data = {
+            url: "https://example.com/api",
+            method: "POST",
+            data: { key: "value" },
+            token: "your_token",
+        }
+        * --------------------------------------------------------------------
+    */
+
+    const headers = {
+        "Content-Type": "application/json",
+    };
+
+    const fetchOptions = {
+        method,
+        headers,
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        redirect: "follow",
+        referrerPolicy: "no-referrer",
+    };
+
+    if (["GET"].includes(method)) {
+        const queryString = new URLSearchParams(data).toString();
+        url = `${url}?${queryString}`;
+    }
+
+    if (["POST", "PUT", "DELETE"].includes(method)) {
+        headers["X-CSRF-TOKEN"] = token;
+        fetchOptions.body = JSON.stringify(data);
+    }
+
+    try {
+        if (loader) {
+
+            // ## Show loading spinner
+            Swal.fire({
+                title: 'Loading..',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        }
+
+        const response = await fetch(url, fetchOptions);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        if (loader) {
+            // Hide loading spinner
+            Swal.close();
+        }
+
+        return response.json();
+    } catch (error) {
+        console.error("Fetch error:", error);
+        throw error;
+    }
+}
+
+
 const show_flash_message = (session = {}) => {
     if ("success" in session) {
         Swal.fire({
@@ -198,6 +270,82 @@ const swal_confirm = (data = {}) => {
     });
 }
 
+const swal_confirm_loader = (data = {}) => {
+
+    /*
+        * --------------------------------------------------------------------
+        * Params Example
+        * --------------------------------------------------------------------
+        const result = await swal_confirm({
+            title: "Custom Title",
+            text: "Custom Text",
+            icon: "info",
+            confirmButton: "Save"
+            confirmButtonClass: "btn-primary",
+            cancelButtonClass: "btn-secondary"
+            loader: true,
+            fetch_data: fetch_data,
+        });
+        * --------------------------------------------------------------------
+    */
+
+
+    const swalComponent = Swal.mixin({
+        customClass: {
+            confirmButton: `btn ${data.confirmButtonClass || "btn-primary"} m-2`,
+            cancelButton: `btn ${data.cancelButtonClass || "btn-secondary"} m-2`,
+        },
+        buttonsStyling: false,
+    });
+
+    const title = data.title || "Are you sure?";
+    const confirmButton = data.confirmButton || "Save";
+    const icon = data.icon || "question";
+
+    return new Promise((resolve, reject) => {
+        swalComponent
+            .fire({
+                title: title,
+                text: data.text,
+                confirmButtonText: confirmButton,
+                icon: icon,
+                showCancelButton: true,
+                reverseButtons: true,
+                preConfirm: () => {
+                    if (data.loader) {
+                        const deleteButton = document.querySelector('.swal2-confirm');
+                        deleteButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...';
+                        deleteButton.disabled = true; // Menonaktifkan tombol delete selama proses penghapusan berlangsung
+                    }
+
+                    using_fetch(data.fetch_data).then((result) => {
+                        if(result.status == "success"){
+                            swal_info({
+                                title : result.message,
+                            });
+
+                            reload_dtable();
+                        } else {
+                            swal_failed({ title: result.message });
+                        }
+                    })
+
+                    return false;
+                },
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+}
+
 const using_axios = async ({ url = "", data = {}, method = "GET", token = null }) => {
 
     /*
@@ -258,6 +406,7 @@ window.getFormData = getFormData;
 window.using_fetch = using_fetch;
 window.swal_info = swal_info;
 window.swal_confirm = swal_confirm;
+window.swal_confirm_loader = swal_confirm_loader;
 window.swal_failed = swal_failed;
 window.show_flash_message = show_flash_message;
 window.swal_warning = swal_warning;

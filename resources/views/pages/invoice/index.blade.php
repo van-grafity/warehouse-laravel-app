@@ -216,34 +216,43 @@
     }
 
     const show_modal_delete = async (invoice_id) => {
+
+        const fetch_data = {
+            url: delete_url.replace(':id',invoice_id),
+            method: "DELETE",
+            token: token,
+        }
+
         swal_data = {
             title: "Are you Sure?",
             text: "Want to delete the invoice",
             icon: "warning",
             confirmButton: "Delete",
             confirmButtonClass: "btn-danger",
-            cancelButtonClass: "btn-secondary"
+            cancelButtonClass: "btn-secondary",
+            loader: true,
+            fetch_data: fetch_data,
         };
-        let confirm_delete = await swal_confirm(swal_data);
+        let confirm_delete = await swal_confirm_loader(swal_data);
         if(!confirm_delete) { return false; };
 
-        fetch_data = {
-            url: delete_url.replace(':id',invoice_id),
-            method: "DELETE",
-            token: token,
-        }
-        result = await using_fetch(fetch_data);
+        // fetch_data = {
+        //     url: delete_url.replace(':id',invoice_id),
+        //     method: "DELETE",
+        //     token: token,
+        // }
+        // result = await using_fetch(fetch_data);
 
-        if(result.status == "success"){
-            swal_info({
-                title : result.message,
-            });
+        // if(result.status == "success"){
+        //     swal_info({
+        //         title : result.message,
+        //     });
 
-            reload_dtable();
+        //     reload_dtable();
             
-        } else {
-            swal_failed({ title: result.message });
-        }
+        // } else {
+        //     swal_failed({ title: result.message });
+        // }
     }
 
     const reload_dtable = () => {
