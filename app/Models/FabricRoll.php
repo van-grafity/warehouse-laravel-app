@@ -28,7 +28,7 @@ class FabricRoll extends Model
 
     public function packinglist()
     {
-        return $this->belongsTo(Invoice::class, 'invoice_id', 'id');
+        return $this->belongsTo(Packinglist::class, 'packinglist_id', 'id');
     }
 
     public static function is_roll_number_exist($packinglist_id, $roll_number)
