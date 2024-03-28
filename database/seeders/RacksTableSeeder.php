@@ -6,7 +6,6 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Rack;
 
-
 class RacksTableSeeder extends Seeder
 {
     /**
@@ -14,7 +13,7 @@ class RacksTableSeeder extends Seeder
      */
     public function run(): void
     {
-         $data = [
+        $data = [
             [
                 'rack' => 'RCK-A001',
                 'description' => 'RCK-A001',

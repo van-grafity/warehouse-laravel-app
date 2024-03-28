@@ -104,7 +104,7 @@ class RolePermissionsSeeder extends Seeder
                 'description' => 'Can manage department features.',
                 'permission_category_id' => '3',
             ],
-                        [
+            [
                 'name' => 'location.access',
                 'description' => 'Can access location features.',
                 'permission_category_id' => '2',
