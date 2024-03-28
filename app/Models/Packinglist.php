@@ -25,6 +25,15 @@ class Packinglist extends Model
         'remark',
     ];
 
+    protected static function booted(): void
+    {
+        static::deleted(function (Packinglist $packinglist) {
+            $fabric_rolls = $packinglist->fabric_rolls;
+            foreach ($fabric_rolls as $key => $roll) {
+                $roll->delete();
+            }
+        });
+    }
 
     public function invoice()
     {
@@ -34,6 +43,65 @@ class Packinglist extends Model
     public function color()
     {
         return $this->belongsTo(Color::class, 'color_id', 'id');
+    }
+
+    public function fabric_rolls()
+    {
+        return $this->hasMany(FabricRoll::class,'packinglist_id','id');
+    }
+    
+
+    public function countPackinglistThisMonth($year_filter = null, $month_filter = null)
+    {
+        $month_filter = $month_filter ? $month_filter : date('m');
+        $year_filter = $year_filter ? $year_filter : date('Y');
+
+        $result = Packinglist::select('id')
+                ->whereYear("created_at", $year_filter)
+                ->whereMonth("created_at", $month_filter)
+                ->withTrashed()
+                ->get();
+
+        return $result->count();
+    }
+
+    public function generate_serial_number($color_code)
+    {
+        // ## GET total Packinglist this month
+        $packinglist_this_month = $this->countPackinglistThisMonth();
+        $next_number = $packinglist_this_month + 1;
+        
+        $serial_number = 'WHA-PL-' . generateRandomString(4). '-' . $color_code . '-' . date('ym') . '-' . str_pad($next_number, 3, '0', STR_PAD_LEFT);
+        return $serial_number;
+    }
+
+    public function getOrCreateDataByName(Array $data_to_insert)
+    {
+        $builder = $this;
+        $batch = $data_to_insert['batch'];
+        $color_id = Color::where('color',$data_to_insert['color'])->first()->id;
+        
+        $get_packinglist = $builder->where('batch_number', $batch)->where('color_id', $color_id)->first();
+        if(!$get_packinglist){
+            $invoice = Invoice::where('invoice_number',$data_to_insert['invoice'])->first();
+            $color = Color::where('color',$data_to_insert['color'])->first();
+
+            $packinglist_model = Packinglist::create([
+                'serial_number' => $this->generate_serial_number($color->code),
+                'invoice_id'=> $invoice->id,
+                'buyer'=> $data_to_insert['buyer'],
+                'gl_number'=> $data_to_insert['gl_number'],
+                'po_number'=> $data_to_insert['po_number'],
+                'batch_number'=> $data_to_insert['batch'],
+                'style'=> $data_to_insert['style'],
+                'fabric_content'=> $data_to_insert['fabric_content'],
+                'color_id'=> $color->id,
+            ]);
+            $packinglist_id = $packinglist_model->id;
+        } else {
+            $packinglist_id = $get_packinglist->id;
+        }
+        return $packinglist_id;
     }
     
 }

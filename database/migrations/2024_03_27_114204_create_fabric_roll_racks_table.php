@@ -11,18 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('packinglists', function (Blueprint $table) {
+        Schema::create('fabric_roll_racks', function (Blueprint $table) {
             $table->id();
-            $table->string('serial_number', 100)->unique();
-            $table->foreignId('invoice_id')->constrained('invoices');
-            $table->string('buyer');
-            $table->string('gl_number', 20);
-            $table->string('po_number', 50);
-            $table->foreignId('color_id')->constrained('colors');
-            $table->string('batch_number', 50);
-            $table->string('style')->nullable();
-            $table->string('fabric_content')->nullable();
-            $table->text('remark')->nullable();
+            $table->foreignId('fabric_roll_id')->constrained('fabric_rolls');
+            $table->foreignId('rack_id')->constrained('racks');
+            $table->datetime('stock_in_at');
+            $table->foreignId('stock_in_by')->nullable()->constrained('users');
+            $table->datetime('stock_out_at');
+            $table->foreignId('stock_out_by')->nullable()->constrained('users');
             $table->foreignId('created_by')->nullable()->constrained('users');
             $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->foreignId('deleted_by')->nullable()->constrained('users');
@@ -36,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('packinglists');
+        Schema::dropIfExists('fabric_roll_racks');
     }
 };

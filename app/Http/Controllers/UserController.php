@@ -80,7 +80,7 @@ class UserController extends Controller
             }, true)
             ->addColumn('created_date', function($row){
                 $readable_datetime = Carbon::createFromFormat('Y-m-d H:i:s', $row->created_at);
-                $readable_datetime = $readable_datetime->format('d F y, H:m');
+                $readable_datetime = $readable_datetime->format('d F y, H:i');
                 return $readable_datetime;
             })
             ->toJson();

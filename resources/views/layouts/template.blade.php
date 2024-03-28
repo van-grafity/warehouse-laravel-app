@@ -5,12 +5,9 @@
 @stop
 
 @section('content_header')
-    <!-- Scripts -->
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">@yield('page_title')</h1>
-            </div>
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1 class="m-0">@yield('page_title')</h1>
         </div>
     </div>
 @stop

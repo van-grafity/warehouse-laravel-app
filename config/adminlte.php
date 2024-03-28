@@ -346,10 +346,32 @@ return [
             'can'   => 'invoice.access',
         ],
         [
-            'text' => 'Packinglist',
+            'text' => 'Packing List',
             'icon' => 'far fa-list-alt nav-icon',
             'url' => 'packinglist',
             'can'   => 'packinglist.access',
+        ],
+        [
+            'text' => 'Manage Fabric',
+            'icon' => 'fas fa-shapes nav-icon',
+            'can'   => 'manage-fabric.access',
+            'submenu' => [
+                [
+                    'text' => 'Fabric Offloading',
+                    'url' => 'fabric-offloading',
+                    'can'   => 'fabric-offloading.access',
+                ],
+                [
+                    'text' => 'Stock In',
+                    'url' => 'stock-in',
+                    'can'   => 'stock-in.access',
+                ],
+                [
+                    'text' => 'Fabric Request',
+                    'url' => 'fabric-request',
+                    'can'   => 'fabric-request.access',
+                ],
+            ],
         ],
         [
             'header' => 'Admin',
@@ -454,6 +476,11 @@ return [
                     'asset' => true,
                     'location' => 'vendor/jquery-validation/jquery.validate.js',
                 ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/jquery-validation/additional-methods.min.js',
+                ],
             ],
         ],
         'Select2' => [
@@ -486,6 +513,21 @@ return [
                 ],
             ],
         ],
+        'Toastr' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/toastr/toastr.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/toastr/toastr.min.css',
+                ],
+            ],
+        ],
         'DateRangePicker' => [
             'active' => true,
             'files' => [
@@ -498,6 +540,16 @@ return [
                     'type' => 'css',
                     'asset' => true,
                     'location' => 'vendor/daterangepicker/daterangepicker.css',
+                ],
+            ],
+        ],
+        'BsCustomFileInput' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/bs-custom-file-input/bs-custom-file-input.min.js',
                 ],
             ],
         ],

@@ -82,6 +82,38 @@ Route::group([
     Route::resource('invoice', App\Http\Controllers\InvoiceController::class);
     Route::get('invoice-dtable', [App\Http\Controllers\InvoiceController::class,'dtable'])->name('invoice.dtable');
     
+    Route::prefix('packinglist')->name('packinglist.')->group(function () {
+        Route::get('dtable', [App\Http\Controllers\PackinglistController::class,'dtable'])->name('dtable');
+        Route::get('{packinglist}/detail', [App\Http\Controllers\PackinglistController::class,'detail'])->name('detail');
+        Route::post('import', [App\Http\Controllers\PackinglistController::class,'import'])->name('import');
+    });
     Route::resource('packinglist', App\Http\Controllers\PackinglistController::class);
-    Route::get('packinglist-dtable', [App\Http\Controllers\PackinglistController::class,'dtable'])->name('packinglist.dtable');
+    
+    Route::prefix('fabric-roll')->name('fabric-roll.')->group(function () {
+        Route::get('dtable', [App\Http\Controllers\FabricRollController::class,'dtable'])->name('dtable');
+        Route::delete('mass_delete', [App\Http\Controllers\FabricRollController::class,'mass_delete'])->name('mass_delete');
+    });
+    Route::resource('fabric-roll', App\Http\Controllers\FabricRollController::class);
+    
+    
+    Route::prefix('fabric-offloading')->name('fabric-offloading.')->group(function () {
+        Route::get('dtable', [App\Http\Controllers\FabricOffloadingController::class,'dtable'])->name('dtable');
+        Route::get('dtable-roll-list', [App\Http\Controllers\FabricOffloadingController::class,'dtable_roll_list'])->name('dtable-roll-list');
+        Route::get('{packinglist_id}/detail', [App\Http\Controllers\FabricOffloadingController::class,'detail'])->name('detail');
+    });
+    Route::resource('fabric-offloading', App\Http\Controllers\FabricOffloadingController::class);
+});
+
+Route::group([
+    'middleware' => [
+        'auth',
+        'can:user-menu',
+    ],
+    'controller' => App\Http\Controllers\FetchSelectController::class,
+    'prefix' => 'fetch-select',
+    'as' => 'fetch-select.',
+],function() {
+    Route::get('', 'index')->name('index');
+    Route::get('invoice', 'select_invoice')->name('invoice');
+    Route::get('color', 'select_color')->name('color');
 });

@@ -30,7 +30,7 @@ class InvoiceController extends Controller
 
         $data = [
             'title' => 'Invoice',
-            'page_title' => 'Invoice List',
+            'page_title' => 'Invoice',
             'suppliers' => $suppliers,
             'can_manage' => auth()->user()->can('manage'),
         ];

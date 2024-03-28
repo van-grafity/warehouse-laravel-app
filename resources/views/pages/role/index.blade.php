@@ -30,7 +30,7 @@
                             <th width="" class="text-center">Name</th>
                             <th width="" class="text-center">Title</th>
                             <th width="" class="text-center">Description</th>
-                            <th width="200">Action</th>
+                            <th width="250">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,7 +45,7 @@
     <!-- /.col -->
 </div>
 
-<!-- Modal Add and Edit Product Detail -->
+<!-- Modal Add and Edit Role -->
 <div class="modal fade" id="modal_role" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -80,7 +80,7 @@
         </div>
     </div>
 </div>
-<!-- End Modal Add and Edit Product Detail -->
+<!-- End Modal Add and Edit Role -->
 @endsection
 
 @section('js')
