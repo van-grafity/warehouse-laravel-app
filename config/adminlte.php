@@ -346,7 +346,7 @@ return [
             'can'   => 'invoice.access',
         ],
         [
-            'text' => 'Packinglist',
+            'text' => 'Packing List',
             'icon' => 'far fa-list-alt nav-icon',
             'url' => 'packinglist',
             'can'   => 'packinglist.access',

@@ -98,6 +98,8 @@ Route::group([
     
     Route::prefix('fabric-offloading')->name('fabric-offloading.')->group(function () {
         Route::get('dtable', [App\Http\Controllers\FabricOffloadingController::class,'dtable'])->name('dtable');
+        Route::get('dtable-roll-list', [App\Http\Controllers\FabricOffloadingController::class,'dtable_roll_list'])->name('dtable-roll-list');
+        Route::get('{packinglist_id}/detail', [App\Http\Controllers\FabricOffloadingController::class,'detail'])->name('detail');
     });
     Route::resource('fabric-offloading', App\Http\Controllers\FabricOffloadingController::class);
 });

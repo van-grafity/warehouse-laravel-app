@@ -423,11 +423,11 @@
         order: [],
         columns: [
             { data: 'checkbox', orderable: false, searchable: false, visible: column_visible },
-            { data: 'roll_number', name: 'CAST(fabric_rolls.roll_number AS SIGNED)'},
-            { data: 'serial_number', name: 'fabric_rolls.serial_number'},
-            { data: 'kgs', name: 'fabric_rolls.kgs'},
-            { data: 'lbs', name: 'fabric_rolls.lbs'},
-            { data: 'yds', name: 'fabric_rolls.yds'},
+            { data: 'roll_number', name: 'roll_number'},
+            { data: 'serial_number', name: 'serial_number'},
+            { data: 'kgs', name: 'kgs'},
+            { data: 'lbs', name: 'lbs'},
+            { data: 'yds', name: 'yds'},
             { data: 'action', name: 'action', orderable: false, searchable: false, visible: column_visible },
         ],
         paging: true,
@@ -436,6 +436,7 @@
         searching: true,
         autoWidth: false,
         orderCellsTop: true,
+        searchDelay: 500,
     });
 
     $('#reload_table_btn').on('click', function(event) {

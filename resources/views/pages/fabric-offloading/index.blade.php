@@ -18,7 +18,7 @@
                         <i class="fas fa-sync-alt"></i>
                     </button>
                 </div>
-                <table id="permission_category_table" class="table table-bordered table-hover text-center">
+                <table id="packinglist_table" class="table table-bordered table-hover text-center">
                     <thead>
                         <tr class="">
                             <th width="30">No</th>
@@ -56,18 +56,19 @@
 </script>
 
 <script type="text/javascript">
-    let permission_category_table = $('#permission_category_table').DataTable({
+    let packinglist_table = $('#packinglist_table').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
             url: dtable_url,
             beforeSend: function() {
                 // ## Tambahkan kelas dimmed-table sebelum proses loading dimulai
-                $('#permission_category_table').addClass('dimmed-table').append('<div class="datatable-overlay"></div>');
+                $('#packinglist_table').addClass('dimmed-table').append('<div class="datatable-overlay"></div>');
             },
             complete: function() {
                 // ## Hapus kelas dimmed-table setelah proses loading selesai
-                $('#permission_category_table').removeClass('dimmed-table').find('.datatable-overlay').remove();
+                $('#packinglist_table').removeClass('dimmed-table').find('.datatable-overlay').remove();
+                $('[data-toggle="tooltip"]').tooltip();
             },
         },
         order: [],
@@ -97,24 +98,9 @@
 
     $('#reload_table_btn').on('click', function(event) {
         $(this).addClass('loading').attr('disabled',true);
-        permission_category_table.ajax.reload(function(json){
+        packinglist_table.ajax.reload(function(json){
             $('#reload_table_btn').removeClass('loading').attr('disabled',false);
         });
     });
-
-    let validator = $('#modal_permission_category form').validate({
-        errorElement: "span",
-        errorPlacement: function (error, element) {
-            error.addClass("invalid-feedback");
-            element.closest(".form-group").append(error);
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).addClass("is-invalid");
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass("is-invalid");
-        },
-    });
-
 </script>
 @stop
