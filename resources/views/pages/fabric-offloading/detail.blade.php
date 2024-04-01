@@ -116,7 +116,8 @@
     // ## URL List
     const dtable_roll_list_url = "{{ route('fabric-offloading.dtable-roll-list') }}";
     const store_url = "{{ route('fabric-offloading.store') }}";
-    const packinglist_information_url = "";
+    const packinglist_information_url = "{{ route('packinglist.information-card', ':id') }}";
+
 
 
     const reload_dtable = () => {
@@ -124,13 +125,13 @@
 
         let is_card_collapsed = $('#packinglist_information_card').hasClass("collapsed-card");
         
-        // load_component({
-        //     url : packinglist_information_url,
-        //     container_element_id : 'packinglist_information_container',
-        //     data : {
-        //         collapsed_card_class : is_card_collapsed ? 'collapsed-card' : '',
-        //     }
-        // })
+        load_component({
+            url : packinglist_information_url.replace(':id',packinglist_id),
+            container_element_id : 'packinglist_information_container',
+            data : {
+                collapsed_card_class : is_card_collapsed ? 'collapsed-card' : '',
+            }
+        })
     }
 
     const is_all_checked = () => {
@@ -305,7 +306,7 @@
         });
     });
 
-    reload_dtable();
+    setTimeout(reload_dtable, 500);
 </script>
 
 <script>

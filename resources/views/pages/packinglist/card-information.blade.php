@@ -9,7 +9,7 @@
             <div class="btn-group">
                 <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Related Page </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="{{ route('packinglist.show', $packinglist->id) }}">Packinglist</a>
+                    <a class="dropdown-item" href="{{ route('packinglist.detail', $packinglist->id) }}">Packinglist</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('fabric-offloading.detail', $packinglist->id) }}">Fabric Offloading</a>
                     <div class="dropdown-divider"></div>
