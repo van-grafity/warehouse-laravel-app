@@ -140,6 +140,8 @@
     const delete_url = "{{ route('fabric-roll.destroy',':id') }}";
     const mass_delete_url = "{{ route('fabric-roll.mass_delete') }}";
     const dtable_url = "{{ route('fabric-roll.dtable') }}";
+    const packinglist_information_url = "{{ route('packinglist.information-card', ':id') }}";
+
     
     const show_modal_create = (modal_element_id) => {
         let modal_data = {
@@ -276,13 +278,13 @@
         
         let is_card_collapsed = $('#packinglist_information_card').hasClass("collapsed-card");
         
-        // load_component({
-        //     url : packinglist_information_url,
-        //     container_element_id : 'packinglist_information_container',
-        //     data : {
-        //         collapsed_card_class : is_card_collapsed ? 'collapsed-card' : '',
-        //     }
-        // })
+        load_component({
+            url : packinglist_information_url.replace(':id',packinglist_id),
+            container_element_id : 'packinglist_information_container',
+            data : {
+                collapsed_card_class : is_card_collapsed ? 'collapsed-card' : '',
+            }
+        })
     }
 
     const getValidationRules = () => {
@@ -464,7 +466,7 @@
         },
     });
 
-    reload_dtable();
+    setTimeout(reload_dtable, 500);
 </script>
 
 <script>

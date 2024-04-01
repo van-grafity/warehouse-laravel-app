@@ -406,6 +406,18 @@ const using_axios = async ({ url = "", data = {}, method = "GET", token = null }
     }
 }
 
+const load_component = async ({ url = "", data = {}, token = null, container_element_id }) => {
+    let fetch_data = {
+        url: url,
+        method: "GET",
+        data: data,
+        token: token,
+    }
+    let result = await using_fetch(fetch_data);
+    document.getElementById(container_element_id).innerHTML = result.component;
+}
+
+
 window.stopFormSubmission = stopFormSubmission;
 window.clear_form = clear_form;
 window.getFormData = getFormData;
@@ -416,3 +428,4 @@ window.swal_confirm_loader = swal_confirm_loader;
 window.swal_failed = swal_failed;
 window.show_flash_message = show_flash_message;
 window.swal_warning = swal_warning;
+window.load_component = load_component;

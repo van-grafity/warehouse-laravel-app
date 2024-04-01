@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use App\Traits\UserRecords;
 
 
@@ -102,6 +103,30 @@ class Packinglist extends Model
             $packinglist_id = $get_packinglist->id;
         }
         return $packinglist_id;
+    }
+
+    public function getRollSummaryInPackinglist($packinglist_id, $summary_option = null)
+    {
+        $result = DB::table('packinglists')->join('fabric_rolls','fabric_rolls.packinglist_id' ,'=', 'packinglists.id')
+            ->when($summary_option, function ($query, string $summary_option) {
+                if($summary_option == 'stock_in') {
+                    $query->join('fabric_roll_racks','fabric_roll_racks.fabric_roll_id','=','fabric_rolls.id');
+                }
+                if($summary_option == 'loaded'){
+                    $query->where('fabric_rolls.offloaded_at', '!=', null);
+                }
+            })
+            ->where('fabric_rolls.deleted_at', null)
+            ->where('packinglists.id', $packinglist_id)
+            ->groupBy('packinglists.id')
+            ->select(DB::raw('
+                count(fabric_rolls.id) as total_roll, 
+                SUM(fabric_rolls.yds) as total_length_yds, 
+                SUM(fabric_rolls.kgs) as total_weight_kgs
+            '))
+            ->first();
+
+        return $result;
     }
     
 }

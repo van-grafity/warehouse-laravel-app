@@ -372,4 +372,53 @@ class PackinglistController extends Controller
             exit($e->getMessage());
         }
     }
+
+    public function information_card(string $id)
+    {
+        $packinglist = Packinglist::find($id);
+        $collapsed_card_class = request()->collapsed_card_class;
+        
+        $PackinglistModel = new Packinglist;
+        $roll_summary_in_packinglist = $PackinglistModel->getRollSummaryInPackinglist($packinglist->id);
+        $stock_in_summary = $PackinglistModel->getRollSummaryInPackinglist($packinglist->id, 'stock_in');
+
+        if($roll_summary_in_packinglist) {
+            $roll_data = (object)[];
+            $roll_data->category = 'Roll';
+            $roll_data->packinglist_qty = $roll_summary_in_packinglist->total_roll;
+            $roll_data->stock_in = ($stock_in_summary ? $stock_in_summary->total_roll : '0' );
+            $roll_data->stock_out = '0';
+            $roll_data->balance = ($stock_in_summary ? $stock_in_summary->total_roll : '0' );
+            
+            $length_data = (object)[];
+            $length_data->category = 'Length (YDs)';
+            $length_data->packinglist_qty = $roll_summary_in_packinglist->total_length_yds . ' yds';
+            $length_data->stock_in = ($stock_in_summary ? $stock_in_summary->total_length_yds : '0' ) . ' yds';
+            $length_data->stock_out = '0 yds';
+            $length_data->balance = ($stock_in_summary ? $stock_in_summary->total_length_yds : '0' ) . ' yds';
+            
+            $weight_data = (object)[];
+            $weight_data->category = 'Weight (KGs)';
+            $weight_data->packinglist_qty = $roll_summary_in_packinglist->total_weight_kgs . ' kgs';
+            $weight_data->stock_in = ($stock_in_summary ? $stock_in_summary->total_weight_kgs : '0' ) . ' kgs';
+            $weight_data->stock_out = '0 kgs';
+            $weight_data->balance = ($stock_in_summary ? $stock_in_summary->total_weight_kgs : '0' ) . ' kgs';
+            
+            $roll_summary = [
+                $roll_data,
+                $length_data,
+                $weight_data,
+            ];
+        } else {
+            $roll_summary = [];
+        }
+
+        $data = [
+            'packinglist' => $packinglist,
+            'roll_summary' => $roll_summary,
+            'collapsed_card_class' => $collapsed_card_class,
+        ];
+        $component = view('pages.packinglist.card-information', $data)->render();
+        return response()->json(['component' => $component], 200);
+    }
 }
