@@ -363,8 +363,8 @@ return [
                 ],
                 [
                     'text' => 'Stock In',
-                    'url' => 'stock-in',
-                    'can'   => 'stock-in.access',
+                    'url' => 'fabric-stock-in',
+                    'can'   => 'fabric-stock-in.access',
                 ],
                 [
                     'text' => 'Fabric Request',

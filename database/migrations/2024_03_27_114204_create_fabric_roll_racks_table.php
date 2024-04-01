@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('rack_id')->constrained('racks');
             $table->datetime('stock_in_at');
             $table->foreignId('stock_in_by')->nullable()->constrained('users');
-            $table->datetime('stock_out_at');
+            $table->datetime('stock_out_at')->nullable();
             $table->foreignId('stock_out_by')->nullable()->constrained('users');
             $table->foreignId('created_by')->nullable()->constrained('users');
             $table->foreignId('updated_by')->nullable()->constrained('users');

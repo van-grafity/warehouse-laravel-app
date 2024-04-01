@@ -13,7 +13,7 @@
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('fabric-offloading.detail', $packinglist->id) }}">Fabric Offloading</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Fabric Stock in</a>
+                    <a class="dropdown-item" href="{{ route('fabric-stock-in.detail', $packinglist->id) }}">Fabric Stock in</a>
                 </div>
             </div>
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">

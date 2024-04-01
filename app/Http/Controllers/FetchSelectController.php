@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Color;
 use App\Models\Invoice;
+use App\Models\Rack;
 
 
 class FetchSelectController extends Controller
@@ -30,6 +31,11 @@ class FetchSelectController extends Controller
                     'title' => 'Get Color for select2',
                     'description' => 'Ambil semua warna yang ada untuk list di select2 form',
                     'url' => route('fetch-select.color'),
+                ],
+                'fetch-select.rack' => [
+                    'title' => 'Get Rack for select2',
+                    'description' => 'Ambil semua warna yang ada untuk list di select2 form',
+                    'url' => route('fetch-select.rack'),
                 ],
             ];
             $data_return = [
@@ -148,6 +154,61 @@ class FetchSelectController extends Controller
                         'items' => $invoice_list,
                     ],
                     'message'=> 'Invoice List',
+                ];
+                return response()->json($data_return);
+            }
+
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ];
+            return response()->json($data_return);
+        }
+    }
+
+    public function select_rack()
+    {
+        try {
+            $id = request()->id;
+            if($id) {
+                $rack = Rack::
+                    select('id','racks.rack as text')
+                    ->find($id);
+
+                if($rack) {
+                    $data_return = [
+                        'status' => 'success',
+                        'data'=> [
+                            'items' => $rack,
+                        ],
+                        'message'=> 'Rack Found',
+                    ];
+                } else {
+                    $data_return = [
+                        'status' => 'error',
+                        'data'=> [],
+                        'message'=> 'Rack Not Found',
+                    ];
+                }
+                return response()->json($data_return);
+                
+            } else {
+                $rack = request()->search;
+                $rack_list = Rack::
+                    when($rack, static function ($query, $rack) {
+                        $query->where('rack','LIKE','%'.$rack.'%');
+
+                    })
+                    ->select('id','racks.rack as text')
+                    ->get();
+                
+                $data_return = [
+                    'status' => 'success',
+                    'data'=> [
+                        'items' => $rack_list,
+                    ],
+                    'message'=> 'Rack List',
                 ];
                 return response()->json($data_return);
             }
