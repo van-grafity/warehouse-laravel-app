@@ -25,11 +25,11 @@
                             <th width="" class="text-center">Packinglist No</th>
                             <th width="">Invoice</th>
                             <th width="">Buyer</th>
-                            <th width="">GL</th>
+                            <th width="50">GL</th>
                             <th width="">Color</th>
                             <th width="">Batch</th>
                             <th width="">Offloaded Roll</th>
-                            <th width="200">Action</th>
+                            <th width="100">Action</th>
                         </tr>
                     </thead>
                     <tbody>
