@@ -3,6 +3,8 @@ import '../css/loading.css';
 import '../css/spinner.css';
 import '../css/main.css';
 
+import axios from 'axios';
+window.axios = axios;
 
 $('.select2.no-search-box').select2({
     minimumResultsForSearch: Infinity

@@ -69,6 +69,13 @@
     <!-- /.col -->
 </div>
 
+<!-- Back Button -->
+<div class="row text-right mb-5">
+    <div class="col-12">
+        @php $back_url = (url()->previous() == url()->current()) ? url('fabric-offloading') : url()->previous() @endphp
+        <a href="<?= $back_url ?>" class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left mr-1"></i>Back</a>
+    </div>
+</div>
 
 
 <!-- Modal Fabric Offloading from container -->

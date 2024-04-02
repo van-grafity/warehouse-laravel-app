@@ -71,6 +71,14 @@
 </div>
 <!-- /.row -->
 
+<!-- Back Button -->
+<div class="row text-right mb-5">
+    <div class="col-12">
+        @php $back_url = (url()->previous() == url()->current()) ? url('fabric-stock-in') : url()->previous() @endphp
+        <a href="<?= $back_url ?>" class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left mr-1"></i>Back</a>
+    </div>
+</div>
+
 
 <!-- Modal Put Fabric to Rack -->
 <div class="modal fade" id="modal_fabric_roll_rack" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
