@@ -73,6 +73,7 @@
     <!-- /.col -->
 </div>
 
+<!-- Back Button -->
 <div class="row text-right mb-5">
     <div class="col-12">
         @php $back_url = (url()->previous() == url()->current()) ? url('packinglist') : url()->previous() @endphp

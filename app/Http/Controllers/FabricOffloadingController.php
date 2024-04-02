@@ -41,7 +41,7 @@ class FabricOffloadingController extends Controller
      */
     public function dtable()
     {
-        $query = Packinglist::get();
+        $query = Packinglist::query();
         
         return Datatables::of($query)
             ->addIndexColumn()

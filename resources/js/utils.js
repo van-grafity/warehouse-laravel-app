@@ -429,3 +429,4 @@ window.swal_failed = swal_failed;
 window.show_flash_message = show_flash_message;
 window.swal_warning = swal_warning;
 window.load_component = load_component;
+window.using_axios = using_axios;

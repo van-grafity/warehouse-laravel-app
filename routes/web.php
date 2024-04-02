@@ -112,6 +112,13 @@ Route::group([
     });
     Route::resource('fabric-stock-in', App\Http\Controllers\FabricStockInController::class);
 
+    Route::prefix('fabric-request')->name('fabric-request.')->group(function () {
+        Route::get('dtable', [App\Http\Controllers\FabricRequestController::class,'dtable'])->name('dtable');
+        Route::get('{packinglist_id}/detail', [App\Http\Controllers\FabricRequestController::class,'detail'])->name('detail');
+        Route::post('sync', [App\Http\Controllers\FabricRequestController::class,'sync'])->name('sync');
+    });
+    Route::resource('fabric-request', App\Http\Controllers\FabricRequestController::class);
+
 });
 
 Route::group([
