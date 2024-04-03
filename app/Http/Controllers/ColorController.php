@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Color;
+use App\Models\Packinglist;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
@@ -131,21 +132,31 @@ class ColorController extends Controller
      */
     public function destroy(string $id)
     {
-        try {
-            $color = Color::find($id);
+    try {
+        $color = Color::find($id);
+        $is_packinglist_exists = Packinglist::where('color_id', $id)->exists();
+
+        // ##Periksa apakah ada packinglist yang menggunakan color dengan id yang diberikan
+        if ($is_packinglist_exists){
+            $data_return = [
+                'status' => 'error',
+                'message' => 'Failed to Delete Color '.$color->color.'!'
+            ];
+        } else {
             $color->delete();
             $data_return = [
                 'status' => 'success',
-                'data'=> $color,
-                'message'=> 'Color '.$color->color.' successfully Deleted!',
+                'message' => 'Color '.$color->color.' Successfully Deleted!'
             ];
-            return response()->json($data_return, 200);
+        }
+
+        return response()->json($data_return, 200);
         } catch (\Throwable $th) {
-            $data_return = [
-                'status' => 'error',
-                'message' => $th->getMessage(),
-            ];
-            return response()->json($data_return);
+        $data_return = [
+            'status' => 'error',
+            'message' => $th->getMessage(),
+        ];
+        return response()->json($data_return);
         }
     }
 }
