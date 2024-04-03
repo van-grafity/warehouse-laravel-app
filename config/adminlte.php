@@ -328,6 +328,11 @@ return [
                     'can'   => 'department.access',
                 ],
                 [
+                    'text' => 'Location Row',
+                    'url' => 'locationrow',
+                    'can'   => 'locationrow.access',
+                ],
+                [
                     'text' => 'Location',
                     'url' => 'location',
                     'can'   => 'location.access',

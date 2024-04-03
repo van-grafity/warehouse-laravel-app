@@ -3,37 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Location;
 use App\Models\LocationRow;
 
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
 
-class LocationController extends Controller
+class LocationRowController extends Controller
 {
 
-    public function __construct()
-    {
-        Gate::define('manage', function ($user) {
-            return $user->hasPermissionTo('location.manage');
-        });
-    }
-
-        /**
+/**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $locationrows = LocationRow::get();
-
         $data = [
-            'title' => 'Location',
-            'page_title' => 'Location List',
-            'locationrows' => $locationrows,
+            'title' => 'Row',
+            'page_title' => 'Row List',
             'can_manage' => auth()->user()->can('manage'),
         ];
-        return view('pages.location.index', $data);
+        return view('pages.locationrow.index', $data);
     }
 
      /**
@@ -41,18 +30,17 @@ class LocationController extends Controller
      */
     public function dtable()
     {
-        $query = Location::get();
+        $query = LocationRow::get();
         
         return Datatables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
             ->addColumn('action', function($row){
-                return '
-                <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_location\', '.$row->id.')">Edit</a>
-                <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>';
-            })
-            ->addColumn('location_row', function($row){
-                return $row->location_row->row;
+                $return = '
+                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_locationrow\', '.$row->id.')">Edit</a>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>
+                ';
+                return $return; 
             })
             ->make(true);
     }
@@ -63,17 +51,16 @@ class LocationController extends Controller
     public function store(Request $request)
     {
         try {
-            $location = Location::firstOrCreate([
-                'location' => $request->location,
+            $row = LocationRow::firstOrCreate([
+                'row' => $request->row,
                 'description' => $request->description,
-                'location_row_id' => $request->locationrow,
             ]);
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully added new location (' . $location->location . ')',
+                'message' => 'Successfully added new row (' . $row->row . ')',
                 'data' => [
-                    'location' => $location,
+                    'row' => $row,
                 ]
             ];
             return response()->json($data_return, 200);
@@ -92,13 +79,13 @@ class LocationController extends Controller
     public function show(string $id)
     {
         try {
-            $location = Location::find($id);
+            $row = LocationRow::find($id);
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully get location (' . $location->location . ')',
+                'message' => 'Successfully added new row (' . $row->row . ')',
                 'data' => [
-                    'location' => $location,
+                    'row' => $row,
                 ]
             ];
             return response()->json($data_return, 200);
@@ -117,16 +104,15 @@ class LocationController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $location = Location::find($id);
-            $location->location = $request->location;
-            $location->description = $request->description;
-            $location->location_row_id = $request->locationrow;
-            $location->save();
+            $row = LocationRow::find($id);
+            $row->row = $request->row;
+            $row->description = $request->description;
+            $row->save();
             
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully updated location ('. $location->location .')',
-                'data' => $location
+                'message' => 'Successfully updated row ('. $row->row .')',
+                'data' => $row
             ];
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {
@@ -144,12 +130,12 @@ class LocationController extends Controller
     public function destroy(string $id)
     {
         try {
-            $location = Location::find($id);
-            $location->delete();
+            $row = LocationRow::find($id);
+            $row->delete();
             $data_return = [
                 'status' => 'success',
-                'data'=> $location,
-                'message'=> 'Location '.$location->location.' successfully Deleted!',
+                'data'=> $row,
+                'message'=> 'Row '.$row->row.' successfully Deleted!',
             ];
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {
@@ -161,3 +147,4 @@ class LocationController extends Controller
         }
     }
 }
+

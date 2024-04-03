@@ -8,11 +8,11 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header d-flex p-0">
-                <h3 class="card-title p-3 my-auto"> Location List </h3>
+                <h3 class="card-title p-3 my-auto"> Row List </h3>
 
                 <div class="ml-auto p-3">
                     @can('manage')
-                        <a href="javascript:void(0)" class="btn btn-success " id="btn_modal_create" onclick="show_modal_create('modal_location')">Create</a>
+                        <a href="javascript:void(0)" class="btn btn-success " id="btn_modal_create" onclick="show_modal_create('modal_locationrow')">Create</a>
                     @endcan
                 </div>
             </div>
@@ -23,13 +23,12 @@
                         <i class="fas fa-sync-alt"></i>
                     </button>
                 </div>
-                <table id="location_table" class="table table-bordered table-hover text-center">
+                <table id="locationrow_table" class="table table-bordered table-hover text-center">
                     <thead>
                         <tr>
                             <th width="50">No</th>
-                            <th width="250">Location</th>
+                            <th width="250">Row</th>
                             <th width="">Description</th>
-                            <th width="">Row</th>
                             <th width="150">Action</th>
                         </tr>
                     </thead>
@@ -45,65 +44,56 @@
     <!-- /.col -->
 </div>
 
-<!-- Modal Add and Edit Location -->
-<div class="modal fade" id="modal_location" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+<!-- Modal Add and Edit Row -->
+<div class="modal fade" id="modal_locationrow" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form action="" method="post" onsubmit="stopFormSubmission(event)">
-                <input type="hidden" name="edit_location_id" value="" id="edit_location_id">
+                <input type="hidden" name="edit_locationrow_id" value="" id="edit_locationrow_id">
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ModalLabel">Add New Location</h5>
+                    <h5 class="modal-title" id="ModalLabel">Add New Row</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="location" class="col-form-label">Location</label>
-                        <input type="text" class="form-control" id="location" name="location" required>
+                        <label for="row" class="col-form-label">Row</label>
+                        <input type="text" class="form-control" id="row" name="row" required>
                     </div>
-                    <div class="form-group">
+                 <div class="form-group">
                         <label for="description" class="col-form-label">Description</label>
                         <textarea class="form-control" name="description" id="description" cols="30" rows="2" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="locationrow">Row</label>
-                        <select name="locationrow" id="locationrow" class="form-control select2 validate-on-change" data-placeholder="Select Row" required>
-                            @foreach ($locationrows as $locationrow)
-                                <option value="{{ $locationrow->id }}"> {{ $locationrow->row }} </option>
-                            @endforeach
-                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary btn-submit" onclick="submitForm('modal_location')">Save</button>
+                    <button type="submit" class="btn btn-primary btn-submit" onclick="submitForm('modal_locationrow')">Save</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<!-- End Modal Add and Edit Location -->
+<!-- End Modal Add and Edit Row -->
 @endsection
 
 @section('js')
 <script type="text/javascript">
-
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const column_visible = '{{ $can_manage }}';
     
     // ## URL List
-    const show_url = "{{ route('location.show',':id') }}";
-    const store_url = "{{ route('location.store') }}";
-    const update_url = "{{ route('location.update',':id') }}";
-    const delete_url = "{{ route('location.destroy',':id') }}";
-    const dtable_url = "{{ route('location.dtable') }}";
+    const show_url = "{{ route('locationrow.show',':id') }}";
+    const store_url = "{{ route('locationrow.store') }}";
+    const update_url = "{{ route('locationrow.update',':id') }}";
+    const delete_url = "{{ route('locationrow.destroy',':id') }}";
+    const dtable_url = "{{ route('locationrow.dtable') }}";
 
     const show_modal_create = (modal_element_id) => {
         let modal_data = {
             modal_id : modal_element_id,
-            title : "Add New Location",
+            title : "Add New Row",
             btn_submit : "Save",
             form_action_url : store_url,
         }
@@ -111,27 +101,26 @@
         $(`#${modal_element_id}`).modal('show');
     }
 
-    const show_modal_edit = async (modal_element_id, location_id) => {
+    const show_modal_edit = async (modal_element_id, locationrow_id) => {
         let modal_data = {
             modal_id : modal_element_id,
-            title : "Edit Location",
+            title : "Edit Row",
             btn_submit : "Save",
-            form_action_url : update_url.replace(':id',location_id),
+            form_action_url : update_url.replace(':id',locationrow_id),
         }
         clear_form(modal_data);
         
         fetch_data = {
-            url: show_url.replace(':id',location_id),
+            url: show_url.replace(':id',locationrow_id),
             method: "GET",
             token: token,
         }
         result = await using_fetch(fetch_data);
-        location_data = result.data.location
+        row_data = result.data.row
 
-        $('#location').val(location_data.location);
-        $('#description').val(location_data.description);
-        $('#locationrow').val(location_data.location_row_id).trigger('change');
-        $('#edit_location_id').val(location_data.id);
+        $('#row').val(row_data.row);
+        $('#description').val(row_data.description);
+        $('#edit_locationrow_id').val(row_data.id);
         
         $(`#${modal_element_id}`).modal('show');
     }
@@ -150,8 +139,8 @@
                 return false;
             }
 
-            if(!formData.edit_location_id) {
-                // ## kalau tidak ada location id berarti STORE dan Method nya POST
+            if(!formData.edit_locationrow_id) {
+                // ## kalau tidak ada row id berarti STORE dan Method nya POST
                 fetch_data = {
                     url: store_url,
                     method: "POST",
@@ -159,9 +148,9 @@
                     token: token,
                 }
             } else {
-                // ## kalau ada location id berarti UPDATE dan Method nya PUT
+                // ## kalau ada row id berarti UPDATE dan Method nya PUT
                 fetch_data = {
-                    url: update_url.replace(':id',formData.edit_location_id),
+                    url: update_url.replace(':id',formData.edit_locationrow_id),
                     method: "PUT",
                     data: formData,
                     token: token,
@@ -186,10 +175,10 @@
         $(`#${modal_id}`).modal('hide');
     }
 
-    const show_modal_delete = async (location_id) => {
+    const show_modal_delete = async (locationrow_id) => {
         swal_data = {
             title: "Are you Sure?",
-            text: "Want to delete the location",
+            text: "Want to delete the row",
             icon: "warning",
             confirmButton: "Delete",
             confirmButtonClass: "btn-danger",
@@ -199,7 +188,7 @@
         if(!confirm_delete) { return false; };
 
         fetch_data = {
-            url: delete_url.replace(':id', location_id),
+            url: delete_url.replace(':id', locationrow_id),
             method: "DELETE",
             token: token,
         }
@@ -220,30 +209,28 @@
     const reload_dtable = () => {
         $('#reload_table_btn').trigger('click');
     }
-
 </script>
 
 <script type="text/javascript">
-    let location_table = $('#location_table').DataTable({
+    let locationrow_table = $('#locationrow_table').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
             url: dtable_url,
             beforeSend: function() {
                 // ## Tambahkan kelas dimmed-table sebelum proses loading dimulai
-                $('#location_table').addClass('dimmed-table').append('<div class="datatable-overlay"></div>');
+                $('#locationrow_table').addClass('dimmed-table').append('<div class="datatable-overlay"></div>');
             },
             complete: function() {
                 // ## Hapus kelas dimmed-table setelah proses loading selesai
-                $('#location_table').removeClass('dimmed-table').find('.datatable-overlay').remove();
+                $('#locationrow_table').removeClass('dimmed-table').find('.datatable-overlay').remove();
             },
         },
         order: [],
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            { data: 'location', name: 'location'},
+            { data: 'row', name: 'row'},
             { data: 'description', name: 'description'},
-            { data: 'location_row', name: 'location_row'},
             { data: 'action', name: 'action', visible: column_visible},
         ],
         columnDefs: [
@@ -261,42 +248,12 @@
 
     $('#reload_table_btn').on('click', function(event) {
         $(this).addClass('loading').attr('disabled',true);
-        location_table.ajax.reload(function(json){
+        locationrow_table.ajax.reload(function(json){
             $('#reload_table_btn').removeClass('loading').attr('disabled',false);
         });
     });
 
-    
-const getValidationRules = () => {
-        return {
-            location: {
-                required: true,
-            },
-            description: {
-                required: true,
-            },
-            locationrow: {
-                required: true,
-            },
-        };
-    }
-    const getValidationMessages = () => {
-        return {
-            location: {
-                required: "Please enter Location",
-            },
-            description: {
-                required: "Please enter Description",
-            },
-            locationrow: {
-                required: "Please select Location Row",
-            },
-        };
-    }
-    // ## Form Validator
-    let validator = $('#modal_location form').validate({
-        rules: getValidationRules(),
-        messages: getValidationMessages(),
+    let validator = $('#modal_locationrow form').validate({
         errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("invalid-feedback");
@@ -320,9 +277,6 @@ const getValidationRules = () => {
         },
     });
 
-    $('#locationrow.select2').select2({
-        dropdownParent: $('#modal_location'),
-    });
 
 </script>
 @stop
