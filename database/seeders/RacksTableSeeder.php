@@ -17,27 +17,22 @@ class RacksTableSeeder extends Seeder
             [
                 'rack' => 'RCK-A001',
                 'description' => 'RCK-A001',
-                'location_id' => 1,
             ],
             [
                 'rack' => 'RCK-A002',
                 'description' => 'RCK-A002',
-                'location_id' => 1,
             ],
             [
                 'rack' => 'RCK-A003',
                 'description' => 'RCK-A003',
-                'location_id' => 1,
             ],
             [
                 'rack' => 'RCK-A004',
                 'description' => 'RCK-A004',
-                'location_id' => 1,
             ],
             [
                 'rack' => 'RCK-A005',
                 'description' => 'RCK-A005',
-                'location_id' => 1,
             ],
         ];
 

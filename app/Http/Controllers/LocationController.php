@@ -47,6 +47,9 @@ class LocationController extends Controller
                 <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_location\', '.$row->id.')">Edit</a>
                 <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>';
             })
+            ->addColumn('location_row', function($row){
+                return $row->location_row->row;
+            })
             ->make(true);
     }
 

@@ -15,24 +15,29 @@ class LocationsTableSeeder extends Seeder
     {
         $data = [
             [
-                'location' => 'Area A',
-                'description' => 'Area A',
+                'location' => 'A1',
+                'description' => 'Row A, Column 1',
+                'location_row_id' => '1',
             ],
             [
-                'location' => 'Area B',
-                'description' => 'Area B',
+                'location' => 'B1',
+                'description' => 'Row B, Column 1',
+                'location_row_id' => '2',
             ],
             [
-                'location' => 'Area C',
-                'description' => 'Area C',
+                'location' => 'C1',
+                'description' => 'Row C, Column 1',
+                'location_row_id' => '3',
             ],
             [
-                'location' => 'Area D',
-                'description' => 'Area D',
+                'location' => 'D1',
+                'description' => 'Row D, Column 1',
+                'location_row_id' => '4',
             ],
             [
-                'location' => 'Area E',
-                'description' => 'Area E',
+                'location' => 'E1',
+                'description' => 'Row E, Column 1',
+                'location_row_id' => '5',
             ],
         ];
 

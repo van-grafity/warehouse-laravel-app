@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Rack extends Model
+class LocationRow extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'rack',
+        'row',
         'description',
     ];
 }

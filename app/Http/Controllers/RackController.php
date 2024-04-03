@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Rack;
-use App\Models\Location;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
@@ -25,11 +24,9 @@ class RackController extends Controller
      */
     public function index()
     {
-        $locations = Location::get();
         $data = [
             'title' => 'Rack',
             'page_title' => 'Rack List',
-            'locations' => $locations,
             'can_manage' => auth()->user()->can('manage'),
         ];
         return view('pages.rack.index', $data);
@@ -46,13 +43,11 @@ class RackController extends Controller
             ->addIndexColumn()
             ->escapeColumns([])
             ->addColumn('action', function($row){
-                return '
-                <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_rack\', '.$row->id.')">Edit</a>
-                <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>';
-            })
-
-            ->addColumn('location', function($row){
-                return $row->location->location;
+                $return = '
+                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_rack\', '.$row->id.')">Edit</a>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>
+                ';
+                return $return; 
             })
             ->make(true);
     }
@@ -66,7 +61,6 @@ class RackController extends Controller
             $rack = Rack::firstOrCreate([
                 'rack' => $request->rack,
                 'description' => $request->description,
-                'location_id' => $request->location,
             ]);
 
             $data_return = [
@@ -120,7 +114,6 @@ class RackController extends Controller
             $rack = Rack::find($id);
             $rack->rack = $request->rack;
             $rack->description = $request->description;
-            $rack->location_id = $request->location;
             $rack->save();
             
             $data_return = [

@@ -29,6 +29,7 @@
                             <th width="50">No</th>
                             <th width="250">Location</th>
                             <th width="">Description</th>
+                            <th width="">Row</th>
                             <th width="150">Action</th>
                         </tr>
                     </thead>
@@ -233,6 +234,7 @@
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
             { data: 'location', name: 'location'},
             { data: 'description', name: 'description'},
+            { data: 'location_row', name: 'location_row'},
             { data: 'action', name: 'action', visible: column_visible},
         ],
         columnDefs: [

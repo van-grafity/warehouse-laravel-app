@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('racks', function (Blueprint $table) {
+        Schema::create('rack_location_placements', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('rack_id')->constrained('racks');
             $table->foreignId('location_id')->constrained('locations');
-            
+            $table->datetime('entry_at')->nullable();
+            $table->datetime('exit_at')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -22,9 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema:: table('racks', function (Blueprint $table) {
-            $table -> dropForeign(['location_id']);
-            $table -> dropColumn(['location_id']);
-        });
+        Schema::dropIfExists('rack_location_placements');
     }
 };

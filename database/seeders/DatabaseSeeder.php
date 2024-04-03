@@ -12,6 +12,7 @@ use Database\Seeders\UsersTableSeeder;
 use Database\Seeders\ColorsTableSeeder;
 use Database\Seeders\SuppliersTableSeeder;
 use Database\Seeders\InvoicesTableSeeder;
+use Database\Seeders\LocationRowsTableSeeder;
 use Database\Seeders\LocationsTableSeeder;
 use Database\Seeders\RacksTableSeeder;
 
@@ -38,6 +39,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ColorsTableSeeder::class);
         $this->call(SuppliersTableSeeder::class);
         $this->call(InvoicesTableSeeder::class);
+        $this->call(LocationRowsTableSeeder::class);
         $this->call(LocationsTableSeeder::class);
         $this->call(RacksTableSeeder::class);
     }

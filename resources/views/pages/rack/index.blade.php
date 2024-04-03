@@ -29,7 +29,6 @@
                             <th width="50">No</th>
                             <th width="250">Rack</th>
                             <th width="">Description</th>
-                            <th width="">Location</th>
                             <th width="150">Action</th>
                         </tr>
                     </thead>
@@ -66,14 +65,6 @@
                  <div class="form-group">
                         <label for="description" class="col-form-label">Description</label>
                         <textarea class="form-control" name="description" id="description" cols="30" rows="2" required></textarea>
-                    </div>
-                     <div class="form-group">
-                        <label for="department" class="form-label">Location</label>
-                        <select class="form-control select2" id="location" name="location" style="width: 100%;" data-placeholder="Choose Location">
-                            @foreach ($locations as $location)
-                            <option value="{{ $location->id }}">{{ $location->location }}</option>
-                            @endforeach
-                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -129,7 +120,6 @@
 
         $('#rack').val(rack_data.rack);
         $('#description').val(rack_data.description);
-        $('#location').val(rack_data.location_id).trigger('change');;
         $('#edit_rack_id').val(rack_data.id);
         
         $(`#${modal_element_id}`).modal('show');
@@ -242,7 +232,6 @@
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
             { data: 'rack', name: 'rack'},
             { data: 'description', name: 'description'},
-            { data: 'location', name: 'location'},
             { data: 'action', name: 'action', visible: column_visible},
         ],
         columnDefs: [
@@ -289,9 +278,6 @@
         },
     });
 
-        $('#location.select2').select2({
-        dropdownParent: $('#modal_rack'),
-    });
 
 </script>
 @stop

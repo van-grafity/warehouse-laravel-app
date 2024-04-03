@@ -13,5 +13,12 @@ class Location extends Model
     protected $fillable = [
         'location',
         'description',
+        'location_row_id',
     ];
+
+    
+    public function location_row()
+    {
+        return $this->belongsTo(LocationRow::class, 'location_row_id', 'id');
+    }
 }
