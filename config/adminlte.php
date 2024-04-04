@@ -329,8 +329,8 @@ return [
                 ],
                 [
                     'text' => 'Location Row',
-                    'url' => 'locationrow',
-                    'can'   => 'locationrow.access',
+                    'url' => 'location-row',
+                    'can'   => 'location-row.access',
                 ],
                 [
                     'text' => 'Location',

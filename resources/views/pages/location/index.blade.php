@@ -68,10 +68,10 @@
                         <textarea class="form-control" name="description" id="description" cols="30" rows="2" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="locationrow">Row</label>
-                        <select name="locationrow" id="locationrow" class="form-control select2 validate-on-change" data-placeholder="Select Row" required>
-                            @foreach ($locationrows as $locationrow)
-                                <option value="{{ $locationrow->id }}"> {{ $locationrow->row }} </option>
+                        <label for="location_row">Row</label>
+                        <select name="location_row" id="location_row" class="form-control select2 validate-on-change" data-placeholder="Select Row" required>
+                            @foreach ($location_rows as $location_row)
+                                <option value="{{ $location_row->id }}"> {{ $location_row->row }} </option>
                             @endforeach
                         </select>
                     </div>
@@ -130,7 +130,7 @@
 
         $('#location').val(location_data.location);
         $('#description').val(location_data.description);
-        $('#locationrow').val(location_data.location_row_id).trigger('change');
+        $('#location_row').val(location_data.location_row_id).trigger('change');
         $('#edit_location_id').val(location_data.id);
         
         $(`#${modal_element_id}`).modal('show');
@@ -275,7 +275,7 @@ const getValidationRules = () => {
             description: {
                 required: true,
             },
-            locationrow: {
+            location_row: {
                 required: true,
             },
         };
@@ -288,7 +288,7 @@ const getValidationRules = () => {
             description: {
                 required: "Please enter Description",
             },
-            locationrow: {
+            location_row: {
                 required: "Please select Location Row",
             },
         };
@@ -320,7 +320,7 @@ const getValidationRules = () => {
         },
     });
 
-    $('#locationrow.select2').select2({
+    $('#location_row.select2').select2({
         dropdownParent: $('#modal_location'),
     });
 

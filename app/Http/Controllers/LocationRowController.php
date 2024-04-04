@@ -22,7 +22,7 @@ class LocationRowController extends Controller
             'page_title' => 'Row List',
             'can_manage' => auth()->user()->can('manage'),
         ];
-        return view('pages.locationrow.index', $data);
+        return view('pages.location-row.index', $data);
     }
 
      /**

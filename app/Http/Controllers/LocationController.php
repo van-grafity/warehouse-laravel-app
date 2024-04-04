@@ -25,12 +25,12 @@ class LocationController extends Controller
      */
     public function index()
     {
-        $locationrows = LocationRow::get();
+        $location_rows = LocationRow::get();
 
         $data = [
             'title' => 'Location',
             'page_title' => 'Location List',
-            'locationrows' => $locationrows,
+            'location_rows' => $location_rows,
             'can_manage' => auth()->user()->can('manage'),
         ];
         return view('pages.location.index', $data);
@@ -66,7 +66,7 @@ class LocationController extends Controller
             $location = Location::firstOrCreate([
                 'location' => $request->location,
                 'description' => $request->description,
-                'location_row_id' => $request->locationrow,
+                'location_row_id' => $request->location_row,
             ]);
 
             $data_return = [
@@ -120,7 +120,7 @@ class LocationController extends Controller
             $location = Location::find($id);
             $location->location = $request->location;
             $location->description = $request->description;
-            $location->location_row_id = $request->locationrow;
+            $location->location_row_id = $request->location_row;
             $location->save();
             
             $data_return = [

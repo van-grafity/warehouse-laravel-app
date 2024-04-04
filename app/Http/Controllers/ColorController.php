@@ -136,11 +136,11 @@ class ColorController extends Controller
         $color = Color::find($id);
         $is_packinglist_exists = Packinglist::where('color_id', $id)->exists();
 
-        // ##Periksa apakah ada packinglist yang menggunakan color dengan id yang diberikan
+        // ## Periksa apakah ada packinglist yang menggunakan color dengan id yang diberikan
         if ($is_packinglist_exists){
             $data_return = [
                 'status' => 'error',
-                'message' => 'Failed to Delete Color '.$color->color.'!'
+                'message' => 'Failed to delete color '.$color->color.', because this color has been used on packing list!'
             ];
         } else {
             $color->delete();
