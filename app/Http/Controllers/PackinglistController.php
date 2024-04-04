@@ -11,6 +11,7 @@ use App\Models\FabricRoll;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Carbon;
 use Yajra\Datatables\Datatables;
 
@@ -33,7 +34,6 @@ class PackinglistController extends Controller
     public function index()
     {
         $suppliers = Supplier::get();
-
         $data = [
             'title' => 'Packinglist',
             'page_title' => 'Packinglist',
