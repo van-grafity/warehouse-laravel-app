@@ -56,7 +56,9 @@ Route::group([
         'can:user-menu',
     ]
 ],function() {
+    // !! delete soon 
     // Route::resource('home', App\Http\Controllers\HomeController::class);
+    
     Route::get('/', [App\Http\Controllers\HomeController::class,'index'])->name('home.index');
 
 

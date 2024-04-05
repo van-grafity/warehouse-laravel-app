@@ -10,7 +10,28 @@ class Rack extends Model
     use HasFactory;
 
     protected $fillable = [
-        'rack',
+        'serial_number',
+        'basic_number',
+        'rack_type',
         'description',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Rack $rack) {
+            $rack->serial_number = Static::generateRackSerialNumber($rack->rack_type, $rack->basic_number);
+        });
+    }
+
+    public static function generateRackSerialNumber($rack_type, $basic_number)
+    {
+        $normalize_number = normalizeNumber($basic_number, 2);
+        
+        if($rack_type == 'moveable') $code = 'MV';
+        if($rack_type == 'fixed') $code = 'FX';
+        if(!$rack_type) $code = 'UN';
+
+        $serial_number = 'WHA-RCK-'. $code . '-' . $normalize_number;
+        return $serial_number;
+    }
 }
