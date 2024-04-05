@@ -56,7 +56,13 @@ class RackController extends Controller
             })
             ->editColumn('rack_type', function($row){
                 return Str::ucfirst($row->rack_type);
-            })
+            })         
+            ->filter(function ($query) {
+                if (request()->has('rack_type_filter') && request('rack_type_filter')) {
+                    $rack_type = request('rack_type_filter');
+                    $query->where('rack_type', $rack_type);
+                }
+            }, true)
             ->toJson();
     }
 

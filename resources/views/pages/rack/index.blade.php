@@ -18,10 +18,21 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <div class="mb-3 text-right">
-                    <button id="reload_table_btn" class="btn btn-sm btn-info">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
+                <div class="row  mb-3">
+                    <div class="col-sm-12 d-inline-flex justify-content-end">
+                        <div class="filter_wrapper mr-2" style="width:200px;">
+                            <select name="rack_type_filter" id="rack_type_filter" class="form-control select2 no-search-box">
+                                <option value="" selected>All Data</option>
+                                <option value="moveable"> Moveable </option>
+                                <option value="fixed"> Fixed </option>
+                            </select>
+                        </div>
+                        <div class="filter_wrapper text-right align-self-center">
+                            <button id="reload_table_btn" class="btn btn-sm btn-info">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <table id="rack_table" class="table table-bordered table-hover text-center">
                     <thead>
@@ -228,6 +239,9 @@
         serverSide: true,
         ajax: {
             url: dtable_url,
+            data: function (d) {
+                d.rack_type_filter = $('#rack_type_filter').val();
+            },
             beforeSend: function() {
                 // ## Tambahkan kelas dimmed-table sebelum proses loading dimulai
                 $('#rack_table').addClass('dimmed-table').append('<div class="datatable-overlay"></div>');
@@ -290,5 +304,8 @@
         },
     });
 
+    $('#rack_type_filter').change(function(event) {
+        reload_dtable();
+    });
 </script>
 @stop
