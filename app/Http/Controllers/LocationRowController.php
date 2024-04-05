@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\LocationRow;
+use App\Models\Location;
 
 use Illuminate\Support\Facades\Gate;
 use Yajra\Datatables\Datatables;
@@ -131,19 +132,30 @@ class LocationRowController extends Controller
     {
         try {
             $row = LocationRow::find($id);
+            $is_location_exists = Location::where('location_row_id', $id)->exists();
+
+            // ## Periksa apakah ada location yang menggunakan row dengan id yang diberikan
+            if ($is_location_exists){
+            $data_return = [
+                'status' => 'error',
+                'message' => 'Failed to delete row '.$row->row.', because this row has been used on location!'
+            ];
+        } else {
             $row->delete();
             $data_return = [
                 'status' => 'success',
                 'data'=> $row,
                 'message'=> 'Row '.$row->row.' successfully Deleted!',
             ];
+        }
+
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {
-            $data_return = [
-                'status' => 'error',
-                'message' => 'Failed to delete row '.$row->row.', because this row has been used on location!',
-            ];
-            return response()->json($data_return);
+        $data_return = [
+            'status' => 'error',
+            'message' => $th->getMessage(),
+        ];
+        return response()->json($data_return);
         }
     }
 }
