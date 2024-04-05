@@ -132,31 +132,31 @@ class ColorController extends Controller
      */
     public function destroy(string $id)
     {
-    try {
-        $color = Color::find($id);
-        $is_packinglist_exists = Packinglist::where('color_id', $id)->exists();
+        try {
+            $color = Color::find($id);
+            $is_packinglist_exists = Packinglist::where('color_id', $id)->exists();
 
-        // ## Periksa apakah ada packinglist yang menggunakan color dengan id yang diberikan
-        if ($is_packinglist_exists){
+            // ## Periksa apakah ada packinglist yang menggunakan color dengan id yang diberikan
+            if ($is_packinglist_exists){
+                $data_return = [
+                    'status' => 'error',
+                    'message' => 'Failed to delete color '.$color->color.', because this color has been used on packing list!'
+                ];
+            } else {
+                $color->delete();
+                $data_return = [
+                    'status' => 'success',
+                    'message' => 'Color '.$color->color.' Successfully Deleted!'
+                ];
+            }
+
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
             $data_return = [
                 'status' => 'error',
-                'message' => 'Failed to delete color '.$color->color.', because this color has been used on packing list!'
+                'message' => $th->getMessage(),
             ];
-        } else {
-            $color->delete();
-            $data_return = [
-                'status' => 'success',
-                'message' => 'Color '.$color->color.' Successfully Deleted!'
-            ];
-        }
-
-        return response()->json($data_return, 200);
-        } catch (\Throwable $th) {
-        $data_return = [
-            'status' => 'error',
-            'message' => $th->getMessage(),
-        ];
-        return response()->json($data_return);
+            return response()->json($data_return);
         }
     }
 }
