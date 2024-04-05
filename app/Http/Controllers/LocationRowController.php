@@ -37,7 +37,7 @@ class LocationRowController extends Controller
             ->escapeColumns([])
             ->addColumn('action', function($row){
                 $return = '
-                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_locationrow\', '.$row->id.')">Edit</a>
+                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_location_row\', '.$row->id.')">Edit</a>
                     <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>
                 ';
                 return $return; 
@@ -141,7 +141,7 @@ class LocationRowController extends Controller
         } catch (\Throwable $th) {
             $data_return = [
                 'status' => 'error',
-                'message' => $th->getMessage(),
+                'message' => 'Failed to delete row '.$row->row.', because this row has been used on location!',
             ];
             return response()->json($data_return);
         }

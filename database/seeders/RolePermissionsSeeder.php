@@ -105,6 +105,16 @@ class RolePermissionsSeeder extends Seeder
                 'permission_category_id' => '3',
             ],
             [
+                'name' => 'location-row.access',
+                'description' => 'Can access location row features.',
+                'permission_category_id' => '2',
+            ],
+            [
+                'name' => 'location-row.manage',
+                'description' => 'Can manage location row features.',
+                'permission_category_id' => '3',
+            ],
+            [
                 'name' => 'location.access',
                 'description' => 'Can access location features.',
                 'permission_category_id' => '2',
@@ -198,8 +208,9 @@ class RolePermissionsSeeder extends Seeder
             'color.access',
             'supplier.access',
             'department.access',
-            'rack.access',
+            'location-row.access',
             'location.access',
+            'rack.access',
         ]);
 
         $user_role = Role::findByName('user');
