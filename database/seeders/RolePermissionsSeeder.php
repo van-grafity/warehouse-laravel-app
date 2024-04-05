@@ -140,6 +140,11 @@ class RolePermissionsSeeder extends Seeder
                 'permission_category_id' => '2',
             ],
             [
+                'name' => 'manage-fabric.access',
+                'description' => 'Can access Manage Fabric Menu.',
+                'permission_category_id' => '2',
+            ],
+            [
                 'name' => 'invoice.manage',
                 'description' => 'Can manage invoice features.',
                 'permission_category_id' => '3',
@@ -195,15 +200,13 @@ class RolePermissionsSeeder extends Seeder
             'developer.access',
             'admin.access',
             'user.access',
-            'master-data.access',
-            'invoice.access',
-            'packinglist.access',
         ]);
 
         $admin_role = Role::findByName('admin');
         $admin_role->syncPermissions([
             'admin.access',
             'user.access',
+            
             'master-data.access',
             'color.access',
             'supplier.access',
@@ -211,6 +214,14 @@ class RolePermissionsSeeder extends Seeder
             'location-row.access',
             'location.access',
             'rack.access',
+
+            'invoice.access',
+            'packinglist.access',
+
+            'manage-fabric.access',
+            'fabric-offloading.access',
+            'stock-in.access',
+            'fabric-request.access',
         ]);
 
         $user_role = Role::findByName('user');

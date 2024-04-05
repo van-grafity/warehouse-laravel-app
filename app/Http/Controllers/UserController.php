@@ -37,7 +37,16 @@ class UserController extends Controller
      */
     public function dtable(Request $request)
     {
-        $query = User::withTrashed();
+        if(auth()->user()->can('developer-menu')){
+            
+            $query = User::withTrashed();
+
+        } else {
+            
+            $query = User::withTrashed()->whereDoesntHave('roles', function ($query) {
+                $query->whereIn('name', ['developer','admin']);
+            });
+        }
         
         return Datatables::of($query)
             ->addIndexColumn()
