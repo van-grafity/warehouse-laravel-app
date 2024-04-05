@@ -414,6 +414,10 @@ return [
                     'text' => 'Role',
                     'url' => 'role',
                 ],
+                [
+                    'text' => 'Logs',
+                    'url' => 'logs',
+                ],
             ],
         ],
     ],

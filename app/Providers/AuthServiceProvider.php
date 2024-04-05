@@ -27,6 +27,12 @@ class AuthServiceProvider extends ServiceProvider
                return true;
            }
         });
+
+        Gate::define('viewLogViewer', function (?User $user) {
+            if ($user && $user->hasRole('developer')) {
+               return true;
+            }
+        });
         
         Gate::define('developer-menu', function (User $user) {
             if ($user->hasRole('developer')) {
