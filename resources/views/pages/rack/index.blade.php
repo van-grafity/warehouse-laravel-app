@@ -27,7 +27,9 @@
                     <thead>
                         <tr>
                             <th width="50">No</th>
-                            <th width="250">Rack</th>
+                            <th width="250">Serial Number</th>
+                            <th width="">Basic Number</th>
+                            <th width="">Type</th>
                             <th width="">Description</th>
                             <th width="150">Action</th>
                         </tr>
@@ -59,10 +61,17 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="rack" class="col-form-label">Rack</label>
-                        <input type="text" class="form-control" id="rack" name="rack" required>
+                        <label for="basic_number" class="col-form-label">Basic Number</label>
+                        <input type="number" class="form-control" id="basic_number" name="basic_number" required>
                     </div>
-                 <div class="form-group">
+                    <div class="form-group">
+                        <label for="rack_type">Row</label>
+                        <select name="rack_type" id="rack_type" class="form-control select2 no-search-box" data-placeholder="Select Rack Type" required>
+                            <option value="moveable"> Moveable </option>
+                            <option value="fixed"> Fixed </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="description" class="col-form-label">Description</label>
                         <textarea class="form-control" name="description" id="description" cols="30" rows="2" required></textarea>
                     </div>
@@ -118,7 +127,8 @@
         result = await using_fetch(fetch_data);
         rack_data = result.data.rack
 
-        $('#rack').val(rack_data.rack);
+        $('#basic_number').val(rack_data.basic_number);
+        $('#rack_type').val(rack_data.rack_type).trigger('change');
         $('#description').val(rack_data.description);
         $('#edit_rack_id').val(rack_data.id);
         
@@ -230,7 +240,9 @@
         order: [],
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            { data: 'rack', name: 'rack'},
+            { data: 'serial_number', name: 'serial_number'},
+            { data: 'basic_number', name: 'basic_number'},
+            { data: 'rack_type', name: 'rack_type'},
             { data: 'description', name: 'description'},
             { data: 'action', name: 'action', visible: column_visible},
         ],
@@ -277,7 +289,6 @@
             $(element).removeClass("is-invalid");
         },
     });
-
 
 </script>
 @stop

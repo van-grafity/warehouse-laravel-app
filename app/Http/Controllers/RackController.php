@@ -7,6 +7,8 @@ use App\Models\Rack;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
 use Yajra\Datatables\Datatables;
 
 class RackController extends Controller
@@ -37,7 +39,7 @@ class RackController extends Controller
      */
     public function dtable()
     {
-        $query = Rack::get();
+        $query = Rack::query();
         
         return Datatables::of($query)
             ->addIndexColumn()
@@ -49,7 +51,13 @@ class RackController extends Controller
                 ';
                 return $return; 
             })
-            ->make(true);
+            ->editColumn('basic_number', function($row){
+                return normalizeNumber($row->basic_number,2);
+            })
+            ->editColumn('rack_type', function($row){
+                return Str::ucfirst($row->rack_type);
+            })
+            ->toJson();
     }
 
         /**
@@ -59,13 +67,14 @@ class RackController extends Controller
     {
         try {
             $rack = Rack::firstOrCreate([
-                'rack' => $request->rack,
+                'basic_number' => $request->basic_number,
+                'rack_type' => $request->rack_type,
                 'description' => $request->description,
             ]);
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully added new rack (' . $rack->rack . ')',
+                'message' => 'Successfully added new rack (' . $rack->serial_number . ')',
                 'data' => [
                     'rack' => $rack,
                 ]
@@ -112,13 +121,14 @@ class RackController extends Controller
     {
         try {
             $rack = Rack::find($id);
-            $rack->rack = $request->rack;
+            $rack->basic_number = $request->basic_number;
+            $rack->rack_type = $request->rack_type;
             $rack->description = $request->description;
             $rack->save();
             
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully updated rack ('. $rack->rack .')',
+                'message' => 'Successfully updated rack ('. $rack->serial_number .')',
                 'data' => $rack
             ];
             return response()->json($data_return, 200);
@@ -142,7 +152,7 @@ class RackController extends Controller
             $data_return = [
                 'status' => 'success',
                 'data'=> $rack,
-                'message'=> 'Rack '.$rack->rack.' successfully Deleted!',
+                'message'=> 'Rack '.$rack->serial_number.' successfully Deleted!',
             ];
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {

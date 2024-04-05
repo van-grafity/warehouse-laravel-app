@@ -257,7 +257,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => '/',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -305,7 +305,7 @@ return [
         [
             'text' => 'Dashboard',
             'icon' => 'fas fa-home nav-icon',
-            'url' => '/home'
+            'url' => '/'
         ],
         [
             'text' => 'Master Data',
