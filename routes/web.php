@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Auth::routes();
 
@@ -56,7 +56,9 @@ Route::group([
         'can:user-menu',
     ]
 ],function() {
-    Route::resource('home', App\Http\Controllers\HomeController::class);
+    // Route::resource('home', App\Http\Controllers\HomeController::class);
+    Route::get('/', [App\Http\Controllers\HomeController::class,'index'])->name('home.index');
+
 
     Route::get('profile', [App\Http\Controllers\UserController::class,'profile'])->name('profile.index');
     Route::post('profile/change_password', [App\Http\Controllers\UserController::class,'change_password'])->name('profile.change-password');
