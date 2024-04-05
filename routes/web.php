@@ -140,3 +140,5 @@ Route::group([
     Route::get('color', 'select_color')->name('color');
     Route::get('rack', 'select_rack')->name('rack');
 });
+
+// test update
