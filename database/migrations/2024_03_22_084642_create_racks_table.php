@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('racks', function (Blueprint $table) {
             $table->id();
-            $table->string('rack');
+            $table->string('serial_number');
+            $table->integer('basic_number');
+            $table->enum('rack_type',['moveable','fixed'])->default('moveable');
             $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();

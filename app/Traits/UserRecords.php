@@ -6,7 +6,8 @@ trait UserRecords
 {
     public static function bootUserRecords()
     {
-        // updating created_by and updated_by when model is created
+        // ## updating created_by and updated_by when model is created
+        // ## Key Word of this feature => "Using Closures"
         static::creating(function ($model) {
             if (!$model->isDirty('created_by')) {
                 $model->created_by = auth()->user()->id;
