@@ -356,13 +356,11 @@ const using_axios = async ({ url = "", data = {}, method = "GET", token = null }
 
     /*
         * --------------------------------------------------------------------
-        * Params Example
+        * Example Parameters
         * --------------------------------------------------------------------
-        data = {
-            url: "https://example.com/api",
-            method: "POST",
-            data: { key: "value" },
-        }
+        * url: "https://example.com/api"
+        * method: "POST"
+        * data: { key: "value" }
         * --------------------------------------------------------------------
     */
     const axiosOption = {
@@ -370,22 +368,16 @@ const using_axios = async ({ url = "", data = {}, method = "GET", token = null }
         headers: {
             Authorization: `Bearer ${token}`
         },
-        validateStatus: function (status) {
-            // return status >= 200 && status < 300; // default
-            return status >= 200 && status <= 404; // default
-        },
+        validateStatus: (status) => status >= 200 && status <= 404,
     };
 
-    if (["GET"].includes(method)) {
+    if (method === "GET") {
         const queryString = new URLSearchParams(data).toString();
         url = `${url}?${queryString}`;
-        axiosOption.url = url;
-    }
-    if (["POST"].includes(method)) {
-        axiosOption.url = url;
-        axiosOption.data = data
     }
 
+    axiosOption.url = url;
+    axiosOption.data = data;
 
     try {
         const response = await axios(url, axiosOption);
@@ -393,15 +385,16 @@ const using_axios = async ({ url = "", data = {}, method = "GET", token = null }
             return response.data;
         }
 
-        if ([401].includes(response.status)) {
+        if (response.status === 401) {
             return {
                 status: response.status,
                 message: response.statusText,
             };
         }
+
         throw new Error(`Unknown! Status: ${response.status}`);
     } catch (error) {
-        console.error("Axios error :", error.message);
+        console.error("Axios error:", error.message);
         throw error;
     }
 }
