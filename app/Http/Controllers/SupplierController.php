@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Supplier;
+use App\Models\Invoice;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
@@ -136,12 +137,23 @@ class SupplierController extends Controller
     {
         try {
             $supplier = Supplier::find($id);
-            $supplier->delete();
-            $data_return = [
-                'status' => 'success',
-                'data'=> $supplier,
-                'message'=> 'Supplier '.$supplier->supplier.' successfully Deleted!',
-            ];
+            $is_invoice_exists = Invoice::where('supplier_id', $id)->exists();
+            
+            // ##Periksa apakah ada invoice yang menggunakan supplier dengan id yang diberikan
+            if ($is_invoice_exists){
+                $data_return = [
+                    'status' => 'error',
+                    'message' => 'Failed to delete supplier '.$supplier->supplier.', because this supplier has been used on invoice!'
+                ];
+            } else {
+                $supplier->delete();
+                $data_return = [
+                    'status' => 'success',
+                    'data'=> $supplier,
+                    'message'=> 'Supplier '.$supplier->supplier.' successfully Deleted!',
+                ];
+            }
+
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {
             $data_return = [
