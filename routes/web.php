@@ -81,7 +81,7 @@ Route::group([
 
     Route::resource('rack', App\Http\Controllers\RackController::class);
     Route::get('rack-dtable', [App\Http\Controllers\RackController::class,'dtable'])->name('rack.dtable');
-
+    Route::get('rack-barcode', [App\Http\Controllers\RackController::class,'rack_barcode'])->name('rack.barcode');
 
     
     Route::resource('invoice', App\Http\Controllers\InvoiceController::class);
