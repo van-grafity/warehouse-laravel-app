@@ -124,6 +124,11 @@ Route::group([
     });
     Route::resource('fabric-request', App\Http\Controllers\FabricRequestController::class);
 
+    
+    Route::prefix('fabric-status')->name('fabric-status.')->group(function () {
+        Route::get('dtable', [App\Http\Controllers\FabricStatusController::class,'dtable'])->name('dtable');
+    });
+    Route::resource('fabric-status', App\Http\Controllers\FabricStatusController::class);
 });
 
 Route::group([

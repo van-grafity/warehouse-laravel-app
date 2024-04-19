@@ -161,7 +161,7 @@ class RackController extends Controller
             'racks' => $racks,
         ];
 
-        $pdf = PDF::loadview('pages.rack.print-barcode', $data)->setPaper('a4', 'landscape');
+        $pdf = PDF::loadview('pages.rack.print-barcode', $data)->setPaper('a4', 'potrait');
         return $pdf->stream('rack-serial-number.pdf');
     }
 
