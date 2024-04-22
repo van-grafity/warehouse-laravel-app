@@ -45,9 +45,6 @@ class RackController extends Controller
         return Datatables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
-            ->addColumn('checkbox', function ($row) {
-                return '<input type="checkbox" class="checkbox-item" name="checkbox[]" value="' . $row->id . '">';
-            })
             ->addColumn('action', function($row){
                 $return = '
                     <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_rack\', '.$row->id.')">Edit</a>
@@ -67,6 +64,26 @@ class RackController extends Controller
                     $query->where('rack_type', $rack_type);
                 }
             }, true)
+            ->addColumn('checkbox', function ($row) {
+                if($row->print_rack_id) { return null; }
+                
+                $checkbox_element = '
+                    <div class="form-group mb-0">
+                        <div class="custom-control custom-checkbox">
+                            <input 
+                                id="print_checkbox_'. $row->id .'" 
+                                name="selected_print[]" 
+                                class="custom-control-input checkbox-print-control" 
+                                type="checkbox" 
+                                value="'. $row->id .'"
+                                onchange="checkbox_clicked()" 
+                            >
+                            <label for="print_checkbox_'. $row->id .'" class="custom-control-label"></label>
+                        </div>
+                    </div>
+                ';
+                return $checkbox_element;
+            })
             ->toJson();
     }
 
@@ -152,7 +169,7 @@ class RackController extends Controller
     }
 
     // ## Print Barcode
-    public function rack_barcode(Request $request)
+    public function print_barcode(Request $request)
     {
         $id = explode(',', $request->id);
         $racks = Rack::select('id', 'serial_number', 'basic_number')->whereIn('id', $id)->get();
