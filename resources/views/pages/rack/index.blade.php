@@ -14,6 +14,9 @@
                     @can('manage')
                         <a href="javascript:void(0)" class="btn btn-success " id="btn_modal_create" onclick="show_modal_create('modal_rack')">Create</a>
                     @endcan
+                        <button id="print_report_btn" class="btn btn-primary" style="display: none;">
+                            <i class="fas fa-print"></i> Print Barcode
+                        </button>
                 </div>
             </div>
             <!-- /.card-header -->
@@ -37,6 +40,7 @@
                 <table id="rack_table" class="table table-bordered table-hover text-center">
                     <thead>
                         <tr>
+                            <th width="2"><input type="checkbox" id="select-all"></th>
                             <th width="50">No</th>
                             <th width="250">Serial Number</th>
                             <th width="">Basic Number</th>
@@ -253,6 +257,7 @@
         },
         order: [],
         columns: [
+            { data: 'checkbox', name: 'checkbox', orderable: false, searchable: false },
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
             { data: 'serial_number', name: 'serial_number'},
             { data: 'basic_number', name: 'basic_number'},
@@ -306,6 +311,54 @@
 
     $('#rack_type_filter').change(function(event) {
         reload_dtable();
+    });    
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#rack_table').on('click', '.checkbox-item', function() {
+            if($('.checkbox-item:checked').length > 0) {
+                $('#print_report_btn').show();
+            } else {
+                $('#print_report_btn').hide();
+            }
+        });
+
+        // Select/deselect all checkboxes
+        $('#select-all').change(function() {
+            if(this.checked) {
+                $('.checkbox-item').prop('checked', true);
+                $('#print_report_btn').show();
+            } else {
+                $('.checkbox-item').prop('checked', false);
+                $('#print_report_btn').hide();
+            }
+        });
+
+        // Uncheck header checkbox if any checkbox in body is unchecked
+        $('.checkbox-item').change(function() {
+            if(this.checked == false) {
+                $('#select-all').prop('checked', false);
+            }
+        });
+
+        $('#print_report_btn').click(function() {
+            var selected = [];
+            $('.checkbox-item:checked').each(function() {
+                selected.push($(this).val());
+            });
+
+            if(selected.length > 0) {
+                window.open("{{ route('rack.barcode') }}?id=" + selected, '_blank');
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Please select at least one rack',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
     });
 </script>
 @stop

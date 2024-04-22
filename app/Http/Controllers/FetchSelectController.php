@@ -173,7 +173,7 @@ class FetchSelectController extends Controller
             $id = request()->id;
             if($id) {
                 $rack = Rack::
-                    select('id','racks.rack as text')
+                    select('id','racks.serial_number as text')
                     ->find($id);
 
                 if($rack) {
@@ -197,10 +197,10 @@ class FetchSelectController extends Controller
                 $rack = request()->search;
                 $rack_list = Rack::
                     when($rack, static function ($query, $rack) {
-                        $query->where('rack','LIKE','%'.$rack.'%');
+                        $query->where('serial_number','LIKE','%'.$rack.'%');
 
                     })
-                    ->select('id','racks.rack as text')
+                    ->select('id','racks.serial_number as text')
                     ->get();
                 
                 $data_return = [

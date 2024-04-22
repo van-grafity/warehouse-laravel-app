@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 use Yajra\Datatables\Datatables;
+use PDF;
 
 class RackController extends Controller
 {
@@ -44,6 +45,9 @@ class RackController extends Controller
         return Datatables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
+            ->addColumn('checkbox', function ($row) {
+                return '<input type="checkbox" class="checkbox-item" name="checkbox[]" value="' . $row->id . '">';
+            })
             ->addColumn('action', function($row){
                 $return = '
                     <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_rack\', '.$row->id.')">Edit</a>
@@ -145,6 +149,20 @@ class RackController extends Controller
             ];
             return response()->json($data_return);
         }
+    }
+
+    // ## Print Barcode
+    public function rack_barcode(Request $request)
+    {
+        $id = explode(',', $request->id);
+        $racks = Rack::select('id', 'serial_number', 'basic_number')->whereIn('id', $id)->get();
+        
+        $data = [
+            'racks' => $racks,
+        ];
+
+        $pdf = PDF::loadview('pages.rack.print-barcode', $data)->setPaper('a4', 'potrait');
+        return $pdf->stream('rack-serial-number.pdf');
     }
 
      /**
