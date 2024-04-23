@@ -21,7 +21,7 @@
                 <div class="row  mb-3">
                     <div class="col-sm-12 d-inline-flex justify-content-end">
                         <div class="action-wrapper mr-auto">
-                            @can('manage')
+                            @can('print')
                                 <button class="btn btn-primary" disabled="disabled" onclick="print_barcode_btn()">
                                     <i class="fas fa-print"></i> Print Barcode
                                 </button>
@@ -44,7 +44,7 @@
                 <table id="rack_table" class="table table-bordered table-hover text-center">
                     <thead>
                         <tr class="">
-                           <th width="30">
+                            <th width="30">
                                 <div class="form-group mb-0">
                                     <div class="custom-control custom-checkbox">
                                         <input 
@@ -121,7 +121,7 @@
 <script type="text/javascript">
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const column_visible = '{{ $can_manage }}';
-    
+
     // ## URL List
     const show_url = "{{ route('rack.show',':id') }}";
     const store_url = "{{ route('rack.store') }}";
@@ -273,7 +273,7 @@
         },
         order: [],
         columns: [
-            { data: 'checkbox', name: 'checkbox', visible: column_visible},
+            { data: 'checkbox', name: 'checkbox'},
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
             { data: 'serial_number', name: 'serial_number'},
             { data: 'basic_number', name: 'basic_number'},

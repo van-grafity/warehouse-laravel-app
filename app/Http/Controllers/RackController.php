@@ -20,6 +20,9 @@ class RackController extends Controller
         Gate::define('manage', function ($user) {
             return $user->hasPermissionTo('rack.manage');
         });
+        Gate::define('print', function ($user) {
+            return $user->hasPermissionTo('rack-barcode.print');
+        });
     }
 
         /**

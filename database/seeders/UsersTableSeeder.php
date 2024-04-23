@@ -43,5 +43,13 @@ class UsersTableSeeder extends Seeder
             'department_id' => '8',
         ]);
         $user->syncRoles('user');
+
+        $user = \App\Models\User::factory()->create([
+            'name' => 'FG Warehouse',
+            'email' => 'fg_warehouse@ghimli.com',
+            'password' => Hash::make('123456789'),
+            'department_id' => '3',
+        ]);
+        $user->syncRoles('fg_warehouse');
     }
 }

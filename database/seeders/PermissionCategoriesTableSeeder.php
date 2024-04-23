@@ -34,6 +34,11 @@ class PermissionCategoriesTableSeeder extends Seeder
                 'name' => 'General Menu',
                 'description' => 'Permission Category for Master Data Menu.',
             ],
+            [
+                'id' => 5,
+                'name' => 'Menu Print',
+                'description' => 'Permission Category for Print.',
+            ],
         ];
 
         foreach ($data as $key => $permissionCategory) {

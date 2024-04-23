@@ -78,7 +78,7 @@ Route::group([
 
     Route::resource('location', App\Http\Controllers\LocationController::class);
     Route::get('location-dtable', [App\Http\Controllers\LocationController::class,'dtable'])->name('location.dtable');
-
+    
     Route::get('rack/print-barcode', [App\Http\Controllers\RackController::class,'print_barcode'])->name('rack.print-barcode');
     Route::resource('rack', App\Http\Controllers\RackController::class);
     Route::get('rack-dtable', [App\Http\Controllers\RackController::class,'dtable'])->name('rack.dtable');
@@ -124,11 +124,6 @@ Route::group([
     });
     Route::resource('fabric-request', App\Http\Controllers\FabricRequestController::class);
 
-    
-    Route::prefix('fabric-stock')->name('fabric-stock.')->group(function () {
-        Route::get('dtable', [App\Http\Controllers\FabricStockController::class,'dtable'])->name('dtable');
-    });
-    Route::resource('fabric-stock', App\Http\Controllers\FabricStockController::class);
 });
 
 Route::group([

@@ -51,6 +51,14 @@ class AuthServiceProvider extends ServiceProvider
             $permmied_roles = [
                 'admin',
                 'user',
+                'fg_warehouse',
+            ];
+            if ($user->hasRole($permmied_roles)) { return true; }
+        });
+
+         Gate::define('fg_warehouse-menu', function (User $user) {
+            $permmied_roles = [
+                'fg_warehouse',
             ];
             if ($user->hasRole($permmied_roles)) { return true; }
         });
