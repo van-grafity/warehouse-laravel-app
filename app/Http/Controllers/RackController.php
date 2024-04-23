@@ -34,6 +34,7 @@ class RackController extends Controller
             'title' => 'Rack',
             'page_title' => 'Rack List',
             'can_manage' => auth()->user()->can('manage'),
+            'can_print' => auth()->user()->can('print'),
         ];
         return view('pages.rack.index', $data);
     }

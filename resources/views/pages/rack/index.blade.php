@@ -121,6 +121,7 @@
 <script type="text/javascript">
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const column_visible = '{{ $can_manage }}';
+    const column_checkbox = '{{ $can_print }}';
 
     // ## URL List
     const show_url = "{{ route('rack.show',':id') }}";
@@ -273,7 +274,7 @@
         },
         order: [],
         columns: [
-            { data: 'checkbox', name: 'checkbox'},
+            { data: 'checkbox', name: 'checkbox', visible: column_checkbox},
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
             { data: 'serial_number', name: 'serial_number'},
             { data: 'basic_number', name: 'basic_number'},
