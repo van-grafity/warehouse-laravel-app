@@ -90,6 +90,7 @@ Route::group([
     Route::prefix('packinglist')->name('packinglist.')->group(function () {
         Route::get('dtable', [App\Http\Controllers\PackinglistController::class,'dtable'])->name('dtable');
         Route::get('{packinglist}/detail', [App\Http\Controllers\PackinglistController::class,'detail'])->name('detail');
+        Route::get('qrcode', [App\Http\Controllers\PackinglistController::class,'print_qrcode'])->name('print-qrcode');
         Route::post('import', [App\Http\Controllers\PackinglistController::class,'import'])->name('import');
         Route::get('{packinglist}/information-card', [App\Http\Controllers\PackinglistController::class,'information_card'])->name('information-card');
     });

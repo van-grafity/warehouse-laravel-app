@@ -30,7 +30,13 @@
                             @can('manage')
                                 <button class="btn btn-sm btn-danger" disabled="disabled" onclick="mass_delete_roll()" ><i class="fas fa-trash-alt"></i></button>
                             @endcan
+                            @can('print')
+                                <button class="btn btn-sm btn-primary" disabled="disabled" onclick="print_qrcode_btn()">
+                                    <i class="fas fa-print"></i> Print QR Code
+                                </button>
+                            @endcan    
                         </div>
+                                                
                         <div class="filter-wrapper text-right ml-auto align-self-center">
                             <button id="reload_table_btn" class="btn btn-sm btn-info"> 
                                 <i class="fas fa-sync-alt"></i> 
@@ -131,8 +137,7 @@
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     
     const packinglist_id = '{{ $packinglist->id }}';
-    const column_visible = '{{ $can_manage }}';
-    
+    const column_visible = '{{ $can_manage }}';    
     
     // ## URL List
     const show_url = "{{ route('fabric-roll.show',':id') }}";
@@ -142,6 +147,7 @@
     const mass_delete_url = "{{ route('fabric-roll.mass_delete') }}";
     const dtable_url = "{{ route('fabric-roll.dtable') }}";
     const packinglist_information_url = "{{ route('packinglist.information-card', ':id') }}";
+    const print_qrcode_url = "{{ route('packinglist.print-qrcode') }}";
 
     
     const show_modal_create = (modal_element_id) => {
@@ -400,6 +406,22 @@
 
         $('#roll_checkbox_all').prop('checked', false);
     }
+
+    const print_qrcode_btn = async () => {
+        let selected_print = get_selected_item();
+
+        if(selected_print.length > 0) {
+            // window.open("{{ route('rack.print-barcode') }}?id=" + selected_print, '_blank');
+            window.open(print_qrcode_url + "?id=" + selected_print, '_blank');
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: 'Please select at least one fabric roll',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    };
 
 </script>
 

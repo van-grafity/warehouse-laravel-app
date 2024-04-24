@@ -17,7 +17,7 @@ use Yajra\Datatables\Datatables;
 
 use App\Imports\PackinglistsImport;
 use Maatwebsite\Excel\Facades\Excel;
-
+use PDF;
 
 class PackinglistController extends Controller
 {
@@ -420,5 +420,19 @@ class PackinglistController extends Controller
         ];
         $component = view('pages.packinglist.card-information', $data)->render();
         return response()->json(['component' => $component], 200);
+    }
+
+    // ## Print QRCode
+    public function print_qrcode(Request $request)
+    {
+        $id = explode(',', $request->id);
+        $fabricrolls = FabricRoll::select('id', 'serial_number', 'roll_number')->whereIn('id', $id)->get();
+        
+        $data = [
+            'fabricrolls' => $fabricrolls,
+        ];
+
+        $pdf = PDF::loadview('pages.packinglist.qrcode', $data)->setPaper('a4', 'potrait');
+        return $pdf->stream('fabric-roll.pdf');
     }
 }
