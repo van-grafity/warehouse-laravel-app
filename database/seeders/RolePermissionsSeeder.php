@@ -42,6 +42,11 @@ class RolePermissionsSeeder extends Seeder
                 'title' => 'Guest',
                 'description' => 'Guest User.',
             ],
+            [
+                'name' => 'fg_warehouse',
+                'title' => 'FG Warehouse',
+                'description' => 'FG Warehouse.',
+            ],
         ];
         foreach ($role_list as $key => $role) {
             Role::create($role);
@@ -67,6 +72,11 @@ class RolePermissionsSeeder extends Seeder
             [
                 'name' => 'guest.access',
                 'description' => 'Can access guest permissions.',
+                'permission_category_id' => '1',
+            ],
+            [
+                'name' => 'fg_warehouse.access',
+                'description' => 'Can access fg warehouse permissions.',
                 'permission_category_id' => '1',
             ],
             [
@@ -189,6 +199,11 @@ class RolePermissionsSeeder extends Seeder
                 'description' => 'Can manage fabric request features.',
                 'permission_category_id' => '3',
             ],
+            [
+                'name' => 'rack-barcode.print',
+                'description' => 'Can manage print barcode.',
+                'permission_category_id' => '5',
+            ],
         ];
         foreach ($permission_list as $key => $permission) {
             Permission::create($permission);
@@ -200,6 +215,7 @@ class RolePermissionsSeeder extends Seeder
             'developer.access',
             'admin.access',
             'user.access',
+            'fg_warehouse.access',
         ]);
 
         $admin_role = Role::findByName('admin');
@@ -227,6 +243,16 @@ class RolePermissionsSeeder extends Seeder
         $user_role = Role::findByName('user');
         $user_role->syncPermissions([
             'user.access',
+        ]);
+
+        $fg_warehouse_role = Role::findByName('fg_warehouse');
+        $fg_warehouse_role->syncPermissions([
+            'fg_warehouse.access',
+            'user.access',
+
+            'master-data.access',
+            'rack.access',
+            'rack-barcode.print',
         ]);
     }
 }
