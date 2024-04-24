@@ -117,6 +117,14 @@ Route::group([
     });
     Route::resource('fabric-stock-in', App\Http\Controllers\FabricStockInController::class);
 
+    Route::prefix('fabric-status')->name('fabric-status.')->group(function () {
+        Route::get('dtable', [App\Http\Controllers\FabricStatusController::class,'dtable'])->name('dtable');
+        Route::get('dtable-roll-list', [App\Http\Controllers\FabricStatusController::class,'dtable_roll_list'])->name('dtable-roll-list');
+        Route::get('{packinglist_id}/detail', [App\Http\Controllers\FabricStatusController::class,'detail'])->name('detail');
+
+    });
+    Route::resource('fabric-status', App\Http\Controllers\FabricStatusController::class);
+
     Route::prefix('fabric-request')->name('fabric-request.')->group(function () {
         Route::get('dtable', [App\Http\Controllers\FabricRequestController::class,'dtable'])->name('dtable');
         Route::get('{packinglist_id}/detail', [App\Http\Controllers\FabricRequestController::class,'detail'])->name('detail');
