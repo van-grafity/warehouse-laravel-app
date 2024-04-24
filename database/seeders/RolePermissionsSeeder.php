@@ -145,6 +145,11 @@ class RolePermissionsSeeder extends Seeder
                 'permission_category_id' => '3',
             ],
             [
+                'name' => 'rack.print-barcode',
+                'description' => 'Can manage print barcode.',
+                'permission_category_id' => '5',
+            ],
+            [
                 'name' => 'invoice.access',
                 'description' => 'Can access invoice features.',
                 'permission_category_id' => '2',
@@ -199,11 +204,6 @@ class RolePermissionsSeeder extends Seeder
                 'description' => 'Can manage fabric request features.',
                 'permission_category_id' => '3',
             ],
-            [
-                'name' => 'rack-barcode.print',
-                'description' => 'Can manage print barcode.',
-                'permission_category_id' => '5',
-            ],
         ];
         foreach ($permission_list as $key => $permission) {
             Permission::create($permission);
@@ -247,12 +247,12 @@ class RolePermissionsSeeder extends Seeder
 
         $fg_warehouse_role = Role::findByName('fg_warehouse');
         $fg_warehouse_role->syncPermissions([
-            'fg_warehouse.access',
             'user.access',
+            'fg_warehouse.access',
 
             'master-data.access',
             'rack.access',
-            'rack-barcode.print',
+            'rack.print-barcode',
         ]);
     }
 }

@@ -41,26 +41,26 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('admin-menu', function (User $user) {
-            $permmied_roles = [
+            $permitted_roles = [
                 'admin',
             ];
-            if ($user->hasRole($permmied_roles)) { return true; }
+            if ($user->hasRole($permitted_roles)) { return true; }
         });
 
         Gate::define('user-menu', function (User $user) {
-            $permmied_roles = [
+            $permitted_roles = [
                 'admin',
                 'user',
                 'fg_warehouse',
             ];
-            if ($user->hasRole($permmied_roles)) { return true; }
+            if ($user->hasRole($permitted_roles)) { return true; }
         });
 
          Gate::define('fg_warehouse-menu', function (User $user) {
-            $permmied_roles = [
+            $permitted_roles = [
                 'fg_warehouse',
             ];
-            if ($user->hasRole($permmied_roles)) { return true; }
+            if ($user->hasRole($permitted_roles)) { return true; }
         });
     }
 }
