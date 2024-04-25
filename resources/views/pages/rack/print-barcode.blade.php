@@ -13,18 +13,18 @@
 	</style>
 </head>
 @foreach ($racks as $rack)
-    <table style=" display: inline-table; border: 1px solid black; padding-top:3px; padding-bottom:3px; padding-left:10px; padding-right:10px; margin-top: 10px;">
+    <table style=" display: inline-table; border: 1px solid black; padding-top:2px; padding-bottom:2px; padding-left:5px; padding-right:5px; margin-top: 5px;">
         <tbody>
             <tr>
                 <td style="align: center;">
-                    {!! DNS1D::getBarcodeHTML($rack->serial_number, 'C128', 2.5, 110) !!}
+                    {!! DNS1D::getBarcodeHTML($rack->serial_number, 'C128', 2.5, 75) !!}
                 </td>
-                <td style="font-size: 90px; padding-left:20px;">
+                <td style="font-size: 65px; padding-left:15px;">
                     <b>{{ normalizeNumber($rack->basic_number,2) }}</b>
                 </td>
             </tr>
             <tr>
-                <td colspan="1" style="font-size: 15px; text-align: center;">{{ $rack->serial_number }}</td>
+                <td colspan="1" style="font-size: 12px; text-align: center;">{{ $rack->serial_number }}</td>
             </tr>
         </tbody>
     </table>
