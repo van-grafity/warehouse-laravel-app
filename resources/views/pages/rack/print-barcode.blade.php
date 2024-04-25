@@ -19,7 +19,7 @@
                 <td style="align: center;">
                     {!! DNS1D::getBarcodeHTML($rack->serial_number, 'C128', 2.5, 110) !!}
                 </td>
-                <td style="font-size: 100px; padding-left:20px;">
+                <td style="font-size: 90px; padding-left:20px;">
                     <b>{{ normalizeNumber($rack->basic_number,2) }}</b>
                 </td>
             </tr>
