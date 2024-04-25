@@ -357,6 +357,12 @@ return [
             'can'   => 'packinglist.access',
         ],
         [
+            'text' => 'Rack Dashboard',
+            'icon' => 'far fa-list-alt nav-icon',
+            'url' => 'rackdashboard',
+            'can'   => 'packinglist.access',
+        ],
+        [
             'text' => 'Manage Fabric',
             'icon' => 'fas fa-shapes nav-icon',
             'can'   => 'manage-fabric.access',
@@ -380,22 +386,17 @@ return [
         ],
         [
             'header' => 'Admin',
-            'can'   => 'admin-menu', 
+            'can'   => 'admin-menu',
         ],
         [
             'text' => 'User Management',
             'icon' => 'fas fa-users nav-icon',
+            'url'   => 'user',
             'can'   => 'admin-menu',
-            'submenu' => [
-                [
-                    'text' => 'User',
-                    'url' => 'user',
-                ],
-            ],
         ],
         [
             'header' => 'Developer',
-            'can'   => 'developer-menu', 
+            'can'   => 'developer-menu',
         ],
         [
             'text' => 'Settings',
@@ -562,7 +563,7 @@ return [
                 ],
             ],
         ],
-        
+
         'Chartjs' => [
             'active' => false,
             'files' => [
