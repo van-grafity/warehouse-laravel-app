@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use Yajra\Datatables\Datatables;
 
+use App\Exports\InstoreReportExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class FabricStatusController extends Controller
 {
     /**
@@ -110,5 +113,10 @@ class FabricStatusController extends Controller
         
         return Datatables::of($query)
             ->make(true);
+    }
+
+    public function export()
+    {
+        return Excel::download(new InstoreReportExport, 'Instore-Report.xlsx');
     }
 }

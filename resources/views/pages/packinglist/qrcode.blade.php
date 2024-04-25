@@ -14,18 +14,33 @@
 	</style>
 </head>
     @foreach ($fabricrolls as $fabricroll)
-        <table style=" display: inline-table; border: 1px solid black; padding-top:3px; padding-bottom:3px; padding-left:3px; padding-right:3px; margin-top: 10px;" width="80">
+        <table style=" display: inline-table; border: 1px solid black; padding-left:3px; margin-top: 10px;" cellpadding="5" cellspacing="0" width="105">
             <tbody>
                 <tr style="">
                     <td width="50">
                         <img src="data:image/png;base64, {!! base64_encode(QrCode::size(60)->generate($fabricroll->serial_number))!!} ">
                     </td>
-                    <td style="font-size: 20px; ">
+                    <td style="font-size: 35px; padding-left:10px;">
                         {{ $fabricroll->roll_number }}
                     </td>
                     <tr>
-                    <td colspan="2" style="font-size: 10px; text-align: center; ">
+                    <td  colspan="2" style="font-size: 9px; text-align: center; border: 1px solid black; ">
                         {{ $fabricroll->serial_number }}
+                    </td>
+                    </tr>
+                    <tr>
+                    <td  colspan="2" style="font-size: 10px; border: 1px solid black; ">
+                        GL Number :
+                    </td>
+                    </tr>
+                    <tr>
+                    <td  colspan="2" style="font-size: 10px; border: 1px solid black; ">
+                        Batch :
+                    </td>
+                    </tr>
+                    <tr>
+                    <td  colspan="2" style="font-size: 10px; border: 1px solid black; ">
+                        Color : 
                     </td>
                     </tr>
                 </tr>
