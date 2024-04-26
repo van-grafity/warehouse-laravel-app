@@ -426,12 +426,12 @@ class PackinglistController extends Controller
     public function print_qrcode(Request $request)
     {
         $id = explode(',', $request->id);
-        $fabricrolls = FabricRoll::select('id', 'serial_number', 'roll_number')->whereIn('id', $id)->get();
+        $fabricrolls = FabricRoll::with('packinglist.color')->whereIn('id', $id)->get();
         
         $data = [
             'fabricrolls' => $fabricrolls,
         ];
-
+        
         $pdf = PDF::loadview('pages.packinglist.qrcode', $data)->setPaper('a4', 'potrait');
         return $pdf->stream('fabric-roll.pdf');
     }

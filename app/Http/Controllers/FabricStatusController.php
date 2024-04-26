@@ -99,7 +99,7 @@ class FabricStatusController extends Controller
         $query = FabricRoll::leftJoin('fabric_roll_racks','fabric_roll_racks.fabric_roll_id','=','fabric_rolls.id')
             ->leftJoin('racks','racks.id','=','fabric_roll_racks.rack_id')
             ->where('fabric_rolls.packinglist_id', $packinglist_id)
-            ->where('fabric_roll_racks.fabric_roll_id','!=','NULL')
+            ->where('fabric_rolls.racked_by','!=', null)
             ->select(
                 'fabric_rolls.id', 
                 'fabric_rolls.roll_number', 
@@ -115,8 +115,8 @@ class FabricStatusController extends Controller
             ->make(true);
     }
 
-    public function export()
-    {
+    public function export(Request $request)
+    {   
         return Excel::download(new InstoreReportExport, 'Instore-Report.xlsx');
     }
 }

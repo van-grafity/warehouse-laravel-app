@@ -14,13 +14,13 @@
 	</style>
 </head>
     @foreach ($fabricrolls as $fabricroll)
-        <table style=" display: inline-table; border: 1px solid black; padding-left:3px; margin-top: 10px;" cellpadding="5" cellspacing="0" width="105">
+        <table style=" display: inline-table; border: 1px solid black; margin-left: 5px; margin-top: 10px;" cellpadding="8" cellspacing="0" width="105">
             <tbody>
                 <tr style="">
                     <td width="50">
                         <img src="data:image/png;base64, {!! base64_encode(QrCode::size(60)->generate($fabricroll->serial_number))!!} ">
                     </td>
-                    <td style="font-size: 35px; padding-left:10px;">
+                    <td style="font-size: 35px; padding-left:5px;">
                         {{ $fabricroll->roll_number }}
                     </td>
                     <tr>
@@ -30,17 +30,22 @@
                     </tr>
                     <tr>
                     <td  colspan="2" style="font-size: 10px; border: 1px solid black; ">
-                        GL Number :
+                        PO Number : {{ $fabricroll->packinglist->po_number }}
+                    </td>
+                    </tr>
+                     <tr>
+                    <td  colspan="2" style="font-size: 10px; border: 1px solid black; ">
+                        GL Number : {{ $fabricroll->packinglist->gl_number }}
                     </td>
                     </tr>
                     <tr>
                     <td  colspan="2" style="font-size: 10px; border: 1px solid black; ">
-                        Batch :
+                        Batch : {{ $fabricroll->packinglist->batch_number }}
                     </td>
                     </tr>
                     <tr>
                     <td  colspan="2" style="font-size: 10px; border: 1px solid black; ">
-                        Color : 
+                        Color : {{ $fabricroll->packinglist->color->color }}
                     </td>
                     </tr>
                 </tr>
