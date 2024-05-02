@@ -89,7 +89,7 @@ class FabricStatusController extends Controller
      * Show detail page of resource.
      */
     public function detail(string $id)
-    {
+    { 
         $packinglist = Packinglist::find($id);
         $data = [
             'title' => 'Fabric Status',
@@ -125,15 +125,13 @@ class FabricStatusController extends Controller
             ->make(true);
     }
     
-    public function export(Request $request)
-    {          
-        $query = Packinglist::query();
-        $packinglist = Packinglist::find($request->id);
-        dd ($packinglist);
-
-        // $PackinglistModel = new Packinglist;
-        // $roll_summary_in_packinglist = $PackinglistModel->getRollSummaryInPackinglist($packinglist->id);
-        // $stock_in_summary = $PackinglistModel->getRollSummaryInPackinglist($packinglist->id, 'stock_in');
+    public function export(Request $request, int $id)
+    {   
+        $packinglist = Packinglist::find($id);
+        dd($packinglist);
+        $PackinglistModel = new Packinglist;
+        $roll_summary_in_packinglist = $PackinglistModel->getRollSummaryInPackinglist($packinglist->id);
+        $stock_in_summary = $PackinglistModel->getRollSummaryInPackinglist($packinglist->id, 'stock_in');
         return Excel::download(new InstoreReportExport, 'Instore-Report.xlsx');
     }
 }

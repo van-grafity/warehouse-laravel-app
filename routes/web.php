@@ -125,7 +125,7 @@ Route::group([
         Route::get('dtable', [App\Http\Controllers\FabricStatusController::class,'dtable'])->name('dtable');
         Route::get('dtable-roll-list', [App\Http\Controllers\FabricStatusController::class,'dtable_roll_list'])->name('dtable-roll-list');
         Route::get('{packinglist_id}/detail', [App\Http\Controllers\FabricStatusController::class,'detail'])->name('detail');
-        Route::get('export', [App\Http\Controllers\FabricStatusController::class,'export'])->name('export');
+        Route::get('{packinglist_id}/export', [App\Http\Controllers\FabricStatusController::class,'export'])->name('export');
 
     });
     Route::resource('fabric-status', App\Http\Controllers\FabricStatusController::class);

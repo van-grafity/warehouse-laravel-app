@@ -14,9 +14,9 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class InstoreReportExport implements FromView, ShouldAutoSize, WithEvents, WithStyles
 {
-
     public function view(): View
-    {
+    { 
+        $packinglist = Packinglist::find();
         return view('pages.fabric-status.instore-report',[
             'packinglists' => Packinglist::all()
         ]);

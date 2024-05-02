@@ -435,7 +435,7 @@ class PackinglistController extends Controller
             'fabricrolls' => $fabricrolls,
         ];
         
-        $pdf = PDF::loadview('pages.packinglist.qrcode', $data)->setPaper('a4', 'potrait');
+        $pdf = PDF::loadview('pages.packinglist.qrcode', $data)->setPaper(array(0, 0, 209.76, 297.64), 'potrait');
         return $pdf->stream('fabric-roll.pdf');
     }
 }

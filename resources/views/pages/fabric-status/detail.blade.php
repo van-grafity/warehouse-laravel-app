@@ -19,7 +19,7 @@
                 </h3>
                  <div class="ml-auto p-3">
                     @can('print')
-                        <a href="{{ route('fabric-status.export') }}" class="btn btn-primary ">Report</a>
+                        <a href="{{ route('fabric-status.export', $packinglist->id) }}" class="btn btn-primary ">Report</a>
                     @endcan
                 </div>
             </div>
@@ -80,7 +80,6 @@
     // ## URL List
     const dtable_list_url = "{{ route('fabric-status.dtable-roll-list') }}";
     const packinglist_information_url = "{{ route('packinglist.information-card', ':id') }}";
-    const export_instore_report_url = "{{ route('fabric-status.export') }}";
 
     const reload_dtable = () => {
         $('#reload_table_btn').trigger('click');

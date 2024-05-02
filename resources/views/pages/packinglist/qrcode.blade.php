@@ -30,7 +30,7 @@
                     </tr>
                     <tr>
                     <td  colspan="2" style="font-size: 10px; border: 1px solid black; ">
-                        PO Number / GL Number : {{ $fabricroll->packinglist->po_number }} / {{ $fabricroll->packinglist->gl_number }}
+                        PO / GL : {{ $fabricroll->packinglist->po_number }} / {{ $fabricroll->packinglist->gl_number }}
                     </td>
                     </tr>
                 </tr>
