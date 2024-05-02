@@ -42,27 +42,27 @@ class FabricOffloadingController extends Controller
     public function dtable()
     {
         $query = Packinglist::query();
-        
+
         return Datatables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
-            ->addColumn('action', function($row){
+            ->addColumn('action', function ($row) {
                 $action_button = "
-                    <a href='". route('fabric-offloading.detail',$row->id)."' class='btn btn-primary btn-sm' >Offloading</a>
+                    <a href='" . route('fabric-offloading.detail', $row->id) . "' class='btn btn-primary btn-sm' >Offloading</a>
                 ";
                 return $action_button;
             })
-            ->addColumn('serial_number', function($row){
-                $serial_number = "<a href='". route('packinglist.detail',$row->id)."' class='' data-toggle='tooltip' data-placement='top' title='Click for Detail'>$row->serial_number</a>";
+            ->addColumn('serial_number', function ($row) {
+                $serial_number = "<a href='" . route('packinglist.detail', $row->id) . "' class='' data-toggle='tooltip' data-placement='top' title='Click for Detail'>$row->serial_number</a>";
                 return $serial_number;
             })
-            ->addColumn('invoice', function($row){
+            ->addColumn('invoice', function ($row) {
                 return $row->invoice->invoice_number;
             })
-            ->addColumn('color', function($row){
+            ->addColumn('color', function ($row) {
                 return $row->color->color;
             })
-            ->addColumn('roll_qty', function($row){
+            ->addColumn('roll_qty', function ($row) {
                 return $row->fabric_rolls->count();
             })
             ->toJson();
@@ -88,7 +88,7 @@ class FabricOffloadingController extends Controller
     public function store(Request $request)
     {
         try {
-            $selected_roll_ids = explode(',',$request->selected_roll_id);
+            $selected_roll_ids = explode(',', $request->selected_roll_id);
             $loaded_roll = [];
             foreach ($selected_roll_ids as $key => $roll_id) {
                 $data_update = [
@@ -104,7 +104,7 @@ class FabricOffloadingController extends Controller
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully loaded '. count($loaded_roll) .' Roll',
+                'message' => 'Successfully Offloaded ' . count($loaded_roll) . ' Roll',
                 'data' => [
                     'loaded_roll' => $loaded_roll
                 ]
@@ -127,60 +127,61 @@ class FabricOffloadingController extends Controller
         $packinglist_id = request()->packinglist_id;
 
         $query = FabricRoll::where('packinglist_id', $packinglist_id)->get();
-        
+
         return Datatables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
-            ->addColumn('action', function($row){
+            ->addColumn('action', function ($row) {
                 $action_button = "
                     <a href='javascript:void(0)' class='btn btn-primary btn-sm' onclick='show_modal_edit(\"modal_fabric_roll\", $row->id)' >Edit</a>
                     <a href='javascript:void(0)' class='btn btn-danger btn-sm'  onclick='show_modal_delete($row->id)'>Delete</a>
                 ";
                 return $action_button;
             })
-            ->addColumn('checkbox', function($row){
-                if($row->offloaded_at) {
+            ->addColumn('checkbox', function ($row) {
+                if ($row->offloaded_at) {
                     $checkbox_element = '
                         <div class="form-group mb-0" data-toggle="tooltip" data-placement="top" title="Loaded">
                             <div class="custom-control custom-checkbox">
                                 <input 
-                                    id="roll_checkbox_'. $row->id .'" 
+                                    id="roll_checkbox_' . $row->id . '" 
                                     name="selected_roll[]" 
                                     class="custom-control-input checkbox-roll-control" 
                                     type="checkbox" 
-                                    value="'. $row->id .'"
-                                    data-roll-number="'. $row->roll_number .'"
+                                    value="' . $row->id . '"
+                                    data-roll-number="' . $row->roll_number . '"
                                     checked="checked"
                                     disabled
                                 >
-                                <label for="roll_checkbox_'. $row->id .'" class="custom-control-label"></label>
+                                <label for="roll_checkbox_' . $row->id . '" class="custom-control-label"></label>
                             </div>
                         </div>
                     ';
-
                 } else {
                     $checkbox_element = '
                         <div class="form-group mb-0">
                             <div class="custom-control custom-checkbox">
                                 <input 
-                                    id="roll_checkbox_'. $row->id .'" 
+                                    id="roll_checkbox_' . $row->id . '" 
                                     name="selected_roll[]" 
                                     class="custom-control-input checkbox-roll-control" 
                                     type="checkbox" 
-                                    value="'. $row->id .'"
-                                    data-roll-number="'. $row->roll_number .'"
+                                    value="' . $row->id . '"
+                                    data-roll-number="' . $row->roll_number . '"
                                     onchange="checkbox_clicked()"
                                 >
-                                <label for="roll_checkbox_'. $row->id .'" class="custom-control-label"></label>
+                                <label for="roll_checkbox_' . $row->id . '" class="custom-control-label"></label>
                             </div>
                         </div>
                     ';
                 }
-                
+
                 return $checkbox_element;
             })
-            ->editColumn('offloaded_at', function($row){
-                if(!$row->offloaded_at) { return null; }
+            ->editColumn('offloaded_at', function ($row) {
+                if (!$row->offloaded_at) {
+                    return null;
+                }
                 $offloaded_at = Carbon::createFromFormat('Y-m-d H:i:s', $row->offloaded_at);
                 $readable_offloaded_at = $offloaded_at->format('d F y, H:i');
                 return $readable_offloaded_at;

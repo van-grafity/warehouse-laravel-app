@@ -7,15 +7,15 @@
 
 <div class="row">
     <div class="col-12">
-        
+
         <!-- Load Card Packinglist Information Using Component -->
         <div id="packinglist_information_container"></div>
 
         <div class="card">
             <div class="card-header d-flex p-0">
-                <h3 class="card-title p-3 my-auto"> 
+                <h3 class="card-title p-3 my-auto">
                     <i class="fas fa-list-ol mr-1"></i>
-                    Fabric Roll List 
+                    Fabric Roll List
                 </h3>
                 <div class="ml-auto p-3">
                 </div>
@@ -25,11 +25,11 @@
                 <div class="row mb-3">
                     <div class="col-sm-12 d-flex">
                         <div class="action-wrapper mr-auto">
-                            <button class="btn btn-sm btn-info" disabled onclick="show_modal_offloading('modal_fabric_offloading')" >Offloading <i class="fas fa-sign-in-alt ml-1"></i> </button>
+                            <button class="btn btn-sm btn-info" disabled onclick="show_modal_offloading('modal_fabric_offloading')">Offloading <i class="fas fa-sign-in-alt ml-1"></i> </button>
                         </div>
                         <div class="filter-wrapper text-right ml-auto align-self-center">
-                            <button id="reload_table_btn" class="btn btn-sm btn-info"> 
-                                <i class="fas fa-sync-alt"></i> 
+                            <button id="reload_table_btn" class="btn btn-sm btn-info">
+                                <i class="fas fa-sync-alt"></i>
                             </button>
                         </div>
                     </div>
@@ -40,11 +40,7 @@
                             <th width="30">
                                 <div class="form-group mb-0">
                                     <div class="custom-control custom-checkbox">
-                                        <input 
-                                            id="roll_checkbox_all" 
-                                            class="custom-control-input checkbox-all-control" 
-                                            type="checkbox"
-                                        >
+                                        <input id="roll_checkbox_all" class="custom-control-input checkbox-all-control" type="checkbox">
                                         <label for="roll_checkbox_all" class="custom-control-label"></label>
                                     </div>
                                 </div>
@@ -54,7 +50,7 @@
                             <th width="">KGs</th>
                             <th width="">LBs</th>
                             <th width="">YDs</th>
-                            <th width="">Loaded at</th>
+                            <th width="">Offloaded on</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -115,11 +111,10 @@
 @section('js')
 
 <script type="text/javascript">
-
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    
+
     const packinglist_id = '{{ $packinglist->id }}';
-    
+
     // ## URL List
     const dtable_roll_list_url = "{{ route('fabric-offloading.dtable-roll-list') }}";
     const store_url = "{{ route('fabric-offloading.store') }}";
@@ -131,21 +126,25 @@
         $('#reload_table_btn').trigger('click');
 
         let is_card_collapsed = $('#packinglist_information_card').hasClass("collapsed-card");
-        
+
         load_component({
-            url : packinglist_information_url.replace(':id',packinglist_id),
-            container_element_id : 'packinglist_information_container',
-            data : {
-                collapsed_card_class : is_card_collapsed ? 'collapsed-card' : '',
+            url: packinglist_information_url.replace(':id', packinglist_id),
+            container_element_id: 'packinglist_information_container',
+            data: {
+                collapsed_card_class: is_card_collapsed ? 'collapsed-card' : '',
             }
         })
     }
 
     const is_all_checked = () => {
         let all_roll_checkbox = document.getElementsByClassName('checkbox-roll-control');
-        if(all_roll_checkbox.length <= 0) { return false; }
+        if (all_roll_checkbox.length <= 0) {
+            return false;
+        }
         for (let item of all_roll_checkbox) {
-            if(!item.checked) { return false; }
+            if (!item.checked) {
+                return false;
+            }
         }
         return true;
     }
@@ -153,8 +152,12 @@
     const is_any_checked = () => {
         let all_roll_checkbox = document.getElementsByClassName('checkbox-roll-control');
         for (let item of all_roll_checkbox) {
-            if(item.disabled) { continue; } // ## Abaikan yang disabled
-            if(item.checked) { return true; }
+            if (item.disabled) {
+                continue;
+            } // ## Abaikan yang disabled
+            if (item.checked) {
+                return true;
+            }
         }
         return false;
     }
@@ -194,19 +197,23 @@
 
     const show_modal_offloading = (modal_element_id) => {
         let modal_data = {
-            modal_id : modal_element_id,
-            title : "Fabric Offloading",
-            btn_submit : "Save",
+            modal_id: modal_element_id,
+            title: "Fabric Offloading",
+            btn_submit: "Save",
         }
         clear_form(modal_data);
 
         let selected_roll = get_selected_item();
-        if(selected_roll.item_id.length <= 0) {
-            swal_warning({title: "Please select at least one roll"});
+        if (selected_roll.item_id.length <= 0) {
+            swal_warning({
+                title: "Please select at least one roll"
+            });
             return false;
         }
 
-        let selected_roll_number = selected_roll.item_name.sort(function(a, b){return a-b});
+        let selected_roll_number = selected_roll.item_name.sort(function(a, b) {
+            return a - b
+        });
         let roll_number_element = '';
         selected_roll_number.forEach(roll_name => {
             roll_number_element += `<span class="badge bg-maroon mr-1">Roll ${roll_name}</span>`;
@@ -223,7 +230,7 @@
             let modal = document.getElementById(modal_id);
             let submit_btn = modal.querySelector('.btn-submit');
             submit_btn.setAttribute('disabled', 'disabled');
-            
+
             let form = modal.querySelector('form');
             let formData = getFormData(form);
 
@@ -231,7 +238,7 @@
                 submit_btn.removeAttribute('disabled');
                 return false;
             }
-            
+
             let fetch_data = {
                 url: store_url,
                 method: "POST",
@@ -240,9 +247,11 @@
             }
 
             const response = await using_fetch(fetch_data);
-            if(response.status == 'success') {
-                swal_info({ title: response.message })
-                
+            if (response.status == 'success') {
+                swal_info({
+                    title: response.message
+                })
+
                 reload_dtable();
                 disabled_action_wrapper(true); // ## disabled button inside action_wrapper
                 $(`#${modal_id}`).modal('hide');
@@ -254,13 +263,14 @@
 
         } catch (error) {
             console.error("Error:", error);
-            swal_failed({ title: "An error occurred while processing the form." });
+            swal_failed({
+                title: "An error occurred while processing the form."
+            });
             let modal = document.getElementById(modal_id);
             let submit_btn = modal.querySelector('.btn-submit');
             submit_btn.removeAttribute('disabled');
         }
     }
-
 </script>
 
 <script type="text/javascript">
@@ -269,7 +279,7 @@
         serverSide: true,
         ajax: {
             url: dtable_roll_list_url,
-            data: function (d) {
+            data: function(d) {
                 d.packinglist_id = packinglist_id;
             },
             beforeSend: function() {
@@ -284,19 +294,42 @@
             },
         },
         order: [],
-        columns: [
-            { data: 'checkbox', orderable: false, searchable: false },
-            { data: 'roll_number', name: 'roll_number'},
-            { data: 'serial_number', name: 'serial_number'},
-            { data: 'kgs', name: 'kgs'},
-            { data: 'lbs', name: 'lbs'},
-            { data: 'yds', name: 'yds'},
-            { data: 'offloaded_at', name: 'offloaded_at'},
+        columns: [{
+                data: 'checkbox',
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: 'roll_number',
+                name: 'roll_number'
+            },
+            {
+                data: 'serial_number',
+                name: 'serial_number'
+            },
+            {
+                data: 'kgs',
+                name: 'kgs'
+            },
+            {
+                data: 'lbs',
+                name: 'lbs'
+            },
+            {
+                data: 'yds',
+                name: 'yds'
+            },
+            {
+                data: 'offloaded_at',
+                name: 'offloaded_at'
+            },
         ],
-        columnDefs: [
-            { targets: [0], orderable: false, searchable: false },
-        ],
-        
+        columnDefs: [{
+            targets: [0],
+            orderable: false,
+            searchable: false
+        }, ],
+
         paging: true,
         responsive: true,
         lengthChange: true,
@@ -307,9 +340,9 @@
     });
 
     $('#reload_table_btn').on('click', function(event) {
-        $(this).addClass('loading').attr('disabled',true);
-        fabric_roll_table.ajax.reload(function(json){
-            $('#reload_table_btn').removeClass('loading').attr('disabled',false);
+        $(this).addClass('loading').attr('disabled', true);
+        fabric_roll_table.ajax.reload(function(json) {
+            $('#reload_table_btn').removeClass('loading').attr('disabled', false);
         });
     });
 
@@ -321,14 +354,13 @@
     $('.checkbox-all-control').on('click', function(e) {
         let is_checked = $(this).prop('checked');
         let table = $(this).parents('table');
-        table.find('.checkbox-roll-control:not([disabled])').prop('checked',is_checked);
+        table.find('.checkbox-roll-control:not([disabled])').prop('checked', is_checked);
     })
 
     $('#roll_checkbox_all').on('change', function(e) {
         checkbox_clicked();
     })
     checkbox_clicked();
-
 </script>
 
 @stop

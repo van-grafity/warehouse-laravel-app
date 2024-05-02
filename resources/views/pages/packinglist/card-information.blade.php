@@ -4,7 +4,7 @@
             <i class="fas fa-info-circle mr-1"></i>
             Packing List Information :
         </h3>
-                
+
         <div class="card-tools ml-auto p-3">
             <div class="btn-group">
                 <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Related Page </button>
@@ -75,7 +75,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Packinglist Qty</th>
+                                    <th>Packing List Qty</th>
                                     <th>Stock In</th>
                                     <th>Stock Out</th>
                                     <th>Balance</th>
@@ -87,15 +87,15 @@
                                     <td colspan="5">No Data</td>
                                 </tr>
                                 @else
-                                    @foreach ($roll_summary as $key => $roll)
-                                    <tr>
-                                        <td class="text-left"><?= $roll->category; ?></td>
-                                        <td><?= $roll->packinglist_qty; ?></td>
-                                        <td><?= $roll->stock_in; ?></td>
-                                        <td><?= $roll->stock_out; ?></td>
-                                        <td><?= $roll->balance; ?></td>
-                                    </tr>
-                                    @endforeach
+                                @foreach ($roll_summary as $key => $roll)
+                                <tr>
+                                    <td class="text-left"><?= $roll->category; ?></td>
+                                    <td><?= $roll->packinglist_qty; ?></td>
+                                    <td><?= $roll->stock_in; ?></td>
+                                    <td><?= $roll->stock_out; ?></td>
+                                    <td><?= $roll->balance; ?></td>
+                                </tr>
+                                @endforeach
                                 @endif
                             </tbody>
                         </table>
