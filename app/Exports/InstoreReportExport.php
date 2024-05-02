@@ -15,16 +15,13 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class InstoreReportExport implements FromView, ShouldAutoSize, WithEvents, WithStyles
 {
 
-     public function view(): View
+    public function view(): View
     {
         return view('pages.fabric-status.instore-report',[
             'packinglists' => Packinglist::all()
-            // 'packinglists' => Packinglist::with('fabric_rolls')->where('fabric_rolls.racked_by','!=', null)->get()
         ]);
     }
-
-
-     public function registerEvents(): array
+    public function registerEvents(): array
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
@@ -41,11 +38,16 @@ class InstoreReportExport implements FromView, ShouldAutoSize, WithEvents, WithS
                         ],
                     ],
                 ]);
+                $event->sheet->getDelegate()
+                                ->getStyle('A1:Q1', 'A2:Q2')
+                                ->getAlignment()
+                                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+                                ->setVertical (\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
             }
         ];
     }
 
-     public function styles(Worksheet $sheet)
+    public function styles(Worksheet $sheet)
     {
         $sheet->getStyle('1')->getFont()->setBold(true);
     }

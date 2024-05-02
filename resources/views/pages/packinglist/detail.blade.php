@@ -137,7 +137,7 @@
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     
     const packinglist_id = '{{ $packinglist->id }}';
-    const column_visible = '{{ $can_manage }}';    
+    const column_visible = '{{ $can_manage }}';
     
     // ## URL List
     const show_url = "{{ route('fabric-roll.show',':id') }}";
@@ -411,7 +411,6 @@
         let selected_print = get_selected_item();
 
         if(selected_print.length > 0) {
-            // window.open("{{ route('rack.print-barcode') }}?id=" + selected_print, '_blank');
             window.open(print_qrcode_url + "?id=" + selected_print, '_blank');
         } else {
             Swal.fire({

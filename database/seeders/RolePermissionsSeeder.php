@@ -204,6 +204,26 @@ class RolePermissionsSeeder extends Seeder
                 'description' => 'Can manage fabric request features.',
                 'permission_category_id' => '3',
             ],
+            [
+                'name' => 'fabric-status.access',
+                'description' => 'Can access fabric status features.',
+                'permission_category_id' => '2',
+            ],
+            [
+                'name' => 'fabric-status.manage',
+                'description' => 'Can manage fabric status features.',
+                'permission_category_id' => '3',
+            ],
+            [
+                'name' => 'instore-report.print',
+                'description' => 'Can manage instore report.',
+                'permission_category_id' => '5',
+            ],
+            [
+                'name' => 'packinglist.print-qrcode',
+                'description' => 'Can manage print barcode.',
+                'permission_category_id' => '5',
+            ],
         ];
         foreach ($permission_list as $key => $permission) {
             Permission::create($permission);

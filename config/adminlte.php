@@ -338,9 +338,14 @@ return [
                     'can'   => 'location.access',
                 ],
                 [
-                    'text' => 'rack',
+                    'text' => 'Rack',
                     'url' => 'rack',
                     'can'   => 'rack.access',
+                ],
+                [
+                    'text' => 'Fabric PO',
+                    'url' => 'fabric-po',
+                    'can'   => 'fabric-po.access',
                 ],
             ],
         ],

@@ -83,7 +83,10 @@ Route::group([
     Route::resource('rack', App\Http\Controllers\RackController::class);
     Route::get('rack-dtable', [App\Http\Controllers\RackController::class,'dtable'])->name('rack.dtable');
 
+    Route::resource('fabric-po', App\Http\Controllers\FabricPoController::class);
+    Route::get('fabric-po-dtable', [App\Http\Controllers\FabricPoController::class,'dtable'])->name('fabric-po.dtable');
     
+
     Route::resource('invoice', App\Http\Controllers\InvoiceController::class);
     Route::get('invoice-dtable', [App\Http\Controllers\InvoiceController::class,'dtable'])->name('invoice.dtable');
     
