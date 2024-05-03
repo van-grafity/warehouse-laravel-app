@@ -77,8 +77,8 @@ class FabricStockInController extends Controller
     {
         $packinglist = Packinglist::find($id);
         $data = [
-            'title' => 'Roll Loading',
-            'page_title' => 'Roll Loading',
+            'title' => 'Fabric Stock In',
+            'page_title' => 'Stock In',
             'packinglist' => $packinglist,
         ];
         return view('pages.fabric-stock-in.detail', $data);
@@ -105,10 +105,11 @@ class FabricStockInController extends Controller
                         'stock_in_by' => auth()->user()->id
                     ]);
 
-                    $data_update = [
-                        'racked_at' => date('Y-m-d H:i:s'),
-                        'racked_by' => auth()->user()->id
-                    ];
+                    // !! nanti hapus
+                    // $data_update = [
+                    //     'racked_at' => date('Y-m-d H:i:s'),
+                    //     'racked_by' => auth()->user()->id
+                    // ];
                     $roll = FabricRoll::find($roll_id);
                     $roll->racked_at = date('Y-m-d H:i:s');
                     $roll->racked_by = auth()->user()->id;
