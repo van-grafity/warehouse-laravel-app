@@ -125,13 +125,11 @@ class FabricStatusController extends Controller
             ->make(true);
     }
     
+    // ## Export Instore Report
     public function export(Request $request, int $id)
     {   
         $packinglist = Packinglist::find($id);
-        dd($packinglist);
-        $PackinglistModel = new Packinglist;
-        $roll_summary_in_packinglist = $PackinglistModel->getRollSummaryInPackinglist($packinglist->id);
-        $stock_in_summary = $PackinglistModel->getRollSummaryInPackinglist($packinglist->id, 'stock_in');
+        
         return Excel::download(new InstoreReportExport, 'Instore-Report.xlsx');
     }
 }

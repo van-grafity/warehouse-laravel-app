@@ -82,9 +82,6 @@ Route::group([
     Route::get('rack/print-barcode', [App\Http\Controllers\RackController::class,'print_barcode'])->name('rack.print-barcode');
     Route::resource('rack', App\Http\Controllers\RackController::class);
     Route::get('rack-dtable', [App\Http\Controllers\RackController::class,'dtable'])->name('rack.dtable');
-
-    Route::resource('fabric-po', App\Http\Controllers\FabricPoController::class);
-    Route::get('fabric-po-dtable', [App\Http\Controllers\FabricPoController::class,'dtable'])->name('fabric-po.dtable');
     
 
     Route::resource('invoice', App\Http\Controllers\InvoiceController::class);
