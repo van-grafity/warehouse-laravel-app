@@ -89,7 +89,7 @@ class FabricOffloadingController extends Controller
     {
         try {
             $selected_roll_ids = explode(',', $request->selected_roll_id);
-            $loaded_roll = [];
+            $offloaded_roll = [];
             foreach ($selected_roll_ids as $key => $roll_id) {
                 $data_update = [
                     'offloaded_at' => Carbon::now(),
@@ -99,14 +99,14 @@ class FabricOffloadingController extends Controller
                 $roll->offloaded_at = Carbon::now();
                 $roll->offloaded_by = auth()->user()->id;
                 $roll->save($data_update);
-                $loaded_roll[] = $roll;
+                $offloaded_roll[] = $roll;
             }
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully Offloaded ' . count($loaded_roll) . ' Roll',
+                'message' => 'Successfully Offloaded ' . count($offloaded_roll) . ' Roll',
                 'data' => [
-                    'loaded_roll' => $loaded_roll
+                    'offloaded_roll' => $offloaded_roll
                 ]
             ];
             return response()->json($data_return, 200);
@@ -179,9 +179,7 @@ class FabricOffloadingController extends Controller
                 return $checkbox_element;
             })
             ->editColumn('offloaded_at', function ($row) {
-                if (!$row->offloaded_at) {
-                    return null;
-                }
+                if (!$row->offloaded_at) { return null; }
                 $offloaded_at = Carbon::createFromFormat('Y-m-d H:i:s', $row->offloaded_at);
                 $readable_offloaded_at = $offloaded_at->format('d F y, H:i');
                 return $readable_offloaded_at;

@@ -294,35 +294,14 @@
             },
         },
         order: [],
-        columns: [{
-                data: 'checkbox',
-                orderable: false,
-                searchable: false
-            },
-            {
-                data: 'roll_number',
-                name: 'roll_number'
-            },
-            {
-                data: 'serial_number',
-                name: 'serial_number'
-            },
-            {
-                data: 'kgs',
-                name: 'kgs'
-            },
-            {
-                data: 'lbs',
-                name: 'lbs'
-            },
-            {
-                data: 'yds',
-                name: 'yds'
-            },
-            {
-                data: 'offloaded_at',
-                name: 'offloaded_at'
-            },
+        columns: [
+            { data: 'checkbox', orderable: false, searchable: false },
+            { data: 'roll_number', name: 'roll_number' },
+            { data: 'serial_number', name: 'serial_number' },
+            { data: 'kgs', name: 'kgs' },
+            { data: 'lbs', name: 'lbs' },
+            { data: 'yds', name: 'yds' },
+            { data: 'offloaded_at', name: 'offloaded_at' },
         ],
         columnDefs: [{
             targets: [0],

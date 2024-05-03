@@ -359,7 +359,7 @@ return [
         [
             'text' => 'Rack Dashboard',
             'icon' => 'far fa-list-alt nav-icon',
-            'url' => 'rackdashboard',
+            'url' => 'rack/dashboard-information',
             'can'   => 'packinglist.access',
         ],
         [

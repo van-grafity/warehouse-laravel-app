@@ -19,7 +19,7 @@ class Invoice extends Model
         'offloaded_date',
         'supplier_id',
         'flag_opened',
-        'flag_loaded',
+        'flag_offloaded',
         'received_at',
     ];
 

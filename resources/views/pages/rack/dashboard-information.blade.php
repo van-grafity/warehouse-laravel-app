@@ -35,7 +35,7 @@
             <th class="text-center"> Colour </th>
             <th class="text-center"> Rack </th>
 
-            <th class="text-center">Brand"></th>
+            <th class="text-center">Brand</th>
             <th class="text-center"> GL </th>
             <th class="text-center"> Colour </th>
             <th class="text-center"> Rack </th>
