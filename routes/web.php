@@ -80,6 +80,7 @@ Route::group([
     Route::get('location-dtable', [App\Http\Controllers\LocationController::class, 'dtable'])->name('location.dtable');
 
     Route::get('rack/dashboard-information', [App\Http\Controllers\RackController::class, 'dashboard_information'])->name('rack.dashboard-information');
+    Route::get('rack/print-barcode', [App\Http\Controllers\RackController::class,'print_barcode'])->name('rack.print-barcode');
     Route::resource('rack', App\Http\Controllers\RackController::class);
     Route::get('rack-dtable', [App\Http\Controllers\RackController::class, 'dtable'])->name('rack.dtable');
 
