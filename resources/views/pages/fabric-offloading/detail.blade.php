@@ -4,7 +4,11 @@
 @section('page_title', $page_title)
 
 @section('content')
-
+<div class="row mb-2">
+    <div class="col-sm-6">
+        <h3 class="">@yield('page_title')</h3>
+    </div>
+</div>
 <div class="row">
     <div class="col-12">
 
@@ -45,12 +49,13 @@
                                     </div>
                                 </div>
                             </th>
-                            <th width="100" class="text-center">Roll Number</th>
+                            <th width="60" class="text-center">Roll No.</th>
                             <th width="" class="text-center">Serial Number</th>
                             <th width="">KGs</th>
                             <th width="">LBs</th>
                             <th width="">YDs</th>
-                            <th width="">Offloaded on</th>
+                            <th width="">Rack No.</th>
+                            <th width="">Racked On</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -94,6 +99,12 @@
                             <p id="total_selected_roll" class="title mt-3 mb-0 text-bold"> </p>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="rack" class="col-form-label">Rack</label>
+                        <select name="rack" id="rack" class="form-control select2" required>
+                            <option value=""> Select Rack </option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -117,9 +128,9 @@
 
     // ## URL List
     const dtable_roll_list_url = "{{ route('fabric-offloading.dtable-roll-list') }}";
+    const fetch_select_rack_url = "{{ route('fetch-select.rack') }}";
     const store_url = "{{ route('fabric-offloading.store') }}";
     const packinglist_information_url = "{{ route('packinglist.information-card', ':id') }}";
-
 
 
     const reload_dtable = () => {
@@ -296,18 +307,27 @@
         order: [],
         columns: [
             { data: 'checkbox', orderable: false, searchable: false },
-            { data: 'roll_number', name: 'roll_number' },
+            { data: 'roll_number', name: 'roll_number'},
             { data: 'serial_number', name: 'serial_number' },
             { data: 'kgs', name: 'kgs' },
             { data: 'lbs', name: 'lbs' },
             { data: 'yds', name: 'yds' },
-            { data: 'offloaded_at', name: 'offloaded_at' },
+            { data: 'rack_number', name: 'racks.serial_number' },
+            { data: 'racked_at', name: 'racked_at' },
         ],
-        columnDefs: [{
-            targets: [0],
-            orderable: false,
-            searchable: false
-        }, ],
+        columnDefs: [
+            {
+                targets: 1, // Untuk kolom roll_number
+                render: function (data, type, row) {
+                    // Jika tipe sort atau type, konversi data ke angka
+                    if (type === 'sort' || type === 'type') {
+                        return Number(data.replace(/[^0-9.-]+/g, ""));
+                    }
+                    // Untuk tampilan lain, tampilkan data seperti biasa
+                    return data;
+                }
+            }
+        ],
 
         paging: true,
         responsive: true,
@@ -323,6 +343,36 @@
         fabric_roll_table.ajax.reload(function(json) {
             $('#reload_table_btn').removeClass('loading').attr('disabled', false);
         });
+    });
+
+    $('#rack.select2').select2({
+        dropdownParent: $('#modal_fabric_offloading'),
+        ajax: {
+            url: fetch_select_rack_url,
+            dataType: 'json',
+            delay: 500,
+            data: function (params) {
+                var query = {
+                    search: params.term,
+                }
+                return query;
+            },
+            processResults: function (fetch_result) {
+                return {
+                    results: fetch_result.data.items,
+                };
+            },
+        }
+    });
+    $('#rack.select2').on('select2:open', function (e) {
+        document.querySelector('.select2-search__field').focus();
+    }).on('change', function() {
+        // ## penyesuaian perlakuan untuk jquery validation di select2
+        if ($(this).valid()) {
+            $(this).removeClass("is-invalid");
+            $(this).next(".invalid-feedback").remove();
+            $(this).parent().find('.select2-container').removeClass('select2-container--error');
+        }
     });
 
     setTimeout(reload_dtable, 500);

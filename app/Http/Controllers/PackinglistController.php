@@ -387,21 +387,18 @@ class PackinglistController extends Controller
             $roll_data->category = 'Roll';
             $roll_data->packinglist_qty = $roll_summary_in_packinglist->total_roll;
             $roll_data->stock_in = ($stock_in_summary ? $stock_in_summary->total_roll : '0' );
-            $roll_data->stock_out = '0';
             $roll_data->balance = $roll_summary_in_packinglist->total_roll - ($stock_in_summary ? $stock_in_summary->total_roll : 0);
             
             $length_data = (object)[];
             $length_data->category = 'Length (YDs)';
             $length_data->packinglist_qty = $roll_summary_in_packinglist->total_length_yds . ' yds';
             $length_data->stock_in = ($stock_in_summary ? $stock_in_summary->total_length_yds : '0' ) . ' yds';
-            $length_data->stock_out = '0 yds';
             $length_data->balance = $roll_summary_in_packinglist->total_length_yds - ($stock_in_summary ? $stock_in_summary->total_length_yds : 0) . ' yds';
             
             $weight_data = (object)[];
             $weight_data->category = 'Weight (KGs)';
             $weight_data->packinglist_qty = $roll_summary_in_packinglist->total_weight_kgs . ' kgs';
             $weight_data->stock_in = ($stock_in_summary ? $stock_in_summary->total_weight_kgs : '0' ) . ' kgs';
-            $weight_data->stock_out = '0 kgs';
             $weight_data->balance = $roll_summary_in_packinglist->total_weight_kgs - ($stock_in_summary ? $stock_in_summary->total_weight_kgs : 0) . ' kgs';
             
             $roll_summary = [

@@ -76,7 +76,6 @@
                                     <th>#</th>
                                     <th>Packing List Qty</th>
                                     <th>Stock In</th>
-                                    <th>Stock Out</th>
                                     <th>Balance</th>
                                 </tr>
                             </thead>
@@ -91,7 +90,6 @@
                                         <td class="text-left"><?= $roll->category; ?></td>
                                         <td><?= $roll->packinglist_qty; ?></td>
                                         <td><?= $roll->stock_in; ?></td>
-                                        <td><?= $roll->stock_out; ?></td>
                                         <td><?= $roll->balance; ?></td>
                                     </tr>
                                     @endforeach

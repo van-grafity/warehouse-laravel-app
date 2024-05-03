@@ -75,8 +75,8 @@ class FabricOffloadingController extends Controller
     {
         $packinglist = Packinglist::find($id);
         $data = [
-            'title' => 'Roll Loading',
-            'page_title' => 'Roll Loading',
+            'title' => 'Fabric Offload & Racking',
+            'page_title' => 'Fabric Offload & Racking',
             'packinglist' => $packinglist,
         ];
         return view('pages.fabric-offloading.detail', $data);
@@ -88,19 +88,30 @@ class FabricOffloadingController extends Controller
     public function store(Request $request)
     {
         try {
+            $rack_id = $request->rack;
+            $rack = Rack::find($rack_id);
             $selected_roll_ids = explode(',', $request->selected_roll_id);
             $offloaded_roll = [];
-            foreach ($selected_roll_ids as $key => $roll_id) {
-                $data_update = [
-                    'offloaded_at' => Carbon::now(),
-                    'offloaded_by' => auth()->user()->id,
-                ];
-                $roll = FabricRoll::find($roll_id);
-                $roll->offloaded_at = Carbon::now();
-                $roll->offloaded_by = auth()->user()->id;
-                $roll->save($data_update);
-                $offloaded_roll[] = $roll;
-            }
+
+            DB::transaction(function () use ($selected_roll_ids, $rack_id, &$offloaded_roll) {
+
+                foreach ($selected_roll_ids as $key => $roll_id) {
+                    $data_roll = FabricRollRack::firstOrCreate([
+                        'rack_id' => $rack_id,
+                        'fabric_roll_id' => $roll_id,
+                        'stock_in_at' => date('Y-m-d H:i:s'),
+                        'stock_in_by' => auth()->user()->id
+                    ]);
+
+                    $roll = FabricRoll::find($roll_id);
+                    $roll->offloaded_at = date('Y-m-d H:i:s');
+                    $roll->offloaded_by = auth()->user()->id;
+                    $roll->racked_at = date('Y-m-d H:i:s');
+                    $roll->racked_by = auth()->user()->id;
+                    $roll->save();
+                    $offloaded_roll[] = $roll;
+                }
+            });
 
             $data_return = [
                 'status' => 'success',
@@ -126,7 +137,36 @@ class FabricOffloadingController extends Controller
     {
         $packinglist_id = request()->packinglist_id;
 
-        $query = FabricRoll::where('packinglist_id', $packinglist_id)->get();
+        $query = FabricRoll::leftJoin('fabric_roll_racks','fabric_roll_racks.fabric_roll_id','=','fabric_rolls.id')
+            ->leftJoin('racks','racks.id','=','fabric_roll_racks.rack_id')
+            ->where('fabric_rolls.packinglist_id', $packinglist_id)
+            ->select(
+                'fabric_rolls.id', 
+                'fabric_rolls.roll_number', 
+                'fabric_rolls.serial_number', 
+                'fabric_rolls.kgs', 
+                'fabric_rolls.lbs', 
+                'fabric_rolls.yds', 
+                'fabric_rolls.offloaded_at',
+                'fabric_rolls.racked_at',
+                'racks.serial_number as rack_number'
+            );
+
+        
+        // ## penambahan logika sorting agar mampu sort string as number
+        $orderData = request()->input('order');
+
+        //##  Cek apakah ada data order dan memenuhi kondisi yang dibutuhkan
+        if (!empty($orderData) && isset($orderData[0]['column'], $orderData[0]['dir'])) {
+            $orderIndex = $orderData[0]['column'];
+            $dir = $orderData[0]['dir'];
+
+            // ## Pengurutan berdasarkan kolom yang diurutkan, dalam hal ini roll_number berada di index 1
+            if ($orderIndex == 1) {
+                $query->orderByRaw("CAST(fabric_rolls.roll_number AS UNSIGNED) $dir");
+            }
+        }
+
 
         return Datatables::of($query)
             ->addIndexColumn()
@@ -178,11 +218,11 @@ class FabricOffloadingController extends Controller
 
                 return $checkbox_element;
             })
-            ->editColumn('offloaded_at', function ($row) {
-                if (!$row->offloaded_at) { return null; }
-                $offloaded_at = Carbon::createFromFormat('Y-m-d H:i:s', $row->offloaded_at);
-                $readable_offloaded_at = $offloaded_at->format('d F y, H:i');
-                return $readable_offloaded_at;
+            ->editColumn('racked_at', function($row){
+                if(!$row->racked_at) { return null; }
+                $racked_at = Carbon::createFromFormat('Y-m-d H:i:s', $row->racked_at);
+                $readable_racked_at = $racked_at->format('d F Y, H:i');
+                return $readable_racked_at;
             })
             ->toJson();
     }
