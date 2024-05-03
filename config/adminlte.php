@@ -357,12 +357,6 @@ return [
             'can'   => 'packinglist.access',
         ],
         [
-            'text' => 'Rack Dashboard',
-            'icon' => 'far fa-list-alt nav-icon',
-            'url' => 'rack/dashboard-information',
-            'can'   => 'packinglist.access',
-        ],
-        [
             'text' => 'Manage Fabric',
             'icon' => 'fas fa-shapes nav-icon',
             'can'   => 'manage-fabric.access',
@@ -388,6 +382,12 @@ return [
                     'can'   => 'fabric-request.access',
                 ],
             ],
+        ],
+        [
+            'text' => 'Rack Dashboard',
+            'icon' => 'far fa-list-alt nav-icon',
+            'url' => 'rack/dashboard-information',
+            'can'   => 'packinglist.access',
         ],
         [
             'header' => 'Admin',
