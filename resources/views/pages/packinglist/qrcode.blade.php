@@ -30,22 +30,7 @@
                     </tr>
                     <tr>
                     <td  colspan="2" style="font-size: 10px; border: 1px solid black; ">
-                        PO Number : {{ $fabricroll->packinglist->po_number }}
-                    </td>
-                    </tr>
-                     <tr>
-                    <td  colspan="2" style="font-size: 10px; border: 1px solid black; ">
-                        GL Number : {{ $fabricroll->packinglist->gl_number }}
-                    </td>
-                    </tr>
-                    <tr>
-                    <td  colspan="2" style="font-size: 10px; border: 1px solid black; ">
-                        Batch : {{ $fabricroll->packinglist->batch_number }}
-                    </td>
-                    </tr>
-                    <tr>
-                    <td  colspan="2" style="font-size: 10px; border: 1px solid black; ">
-                        Color : {{ $fabricroll->packinglist->color->color }}
+                        PO / GL : {{ $fabricroll->packinglist->po_number }} / {{ $fabricroll->packinglist->gl_number }}
                     </td>
                     </tr>
                 </tr>

@@ -338,7 +338,7 @@ return [
                     'can'   => 'location.access',
                 ],
                 [
-                    'text' => 'rack',
+                    'text' => 'Rack',
                     'url' => 'rack',
                     'can'   => 'rack.access',
                 ],

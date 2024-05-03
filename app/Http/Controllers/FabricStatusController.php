@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Packinglist;
 use App\Models\FabricRoll;
 use App\Models\FabricRollRack;
-use App\Models\Packinglist;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +17,16 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class FabricStatusController extends Controller
 {
+ public function __construct()
+    {
+        Gate::define('manage', function ($user) {
+            return $user->hasPermissionTo('fabric-status.manage');
+        });
+        Gate::define('print', function ($user) {
+            return $user->hasPermissionTo('instore-report.print');
+        });
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -79,7 +89,7 @@ class FabricStatusController extends Controller
      * Show detail page of resource.
      */
     public function detail(string $id)
-    {
+    { 
         $packinglist = Packinglist::find($id);
         $data = [
             'title' => 'Fabric Status',
@@ -114,9 +124,12 @@ class FabricStatusController extends Controller
         return Datatables::of($query)
             ->make(true);
     }
-
-    public function export(Request $request)
+    
+    // ## Export Instore Report
+    public function export(Request $request, int $id)
     {   
+        $packinglist = Packinglist::find($id);
+        
         return Excel::download(new InstoreReportExport, 'Instore-Report.xlsx');
     }
 }

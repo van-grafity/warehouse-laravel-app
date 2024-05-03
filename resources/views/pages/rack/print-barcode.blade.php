@@ -13,7 +13,7 @@
 	</style>
 </head>
 @foreach ($racks as $rack)
-    <table style=" display: inline-table; border: 1px solid black; padding-top:2px; padding-bottom:2px; padding-left:5px; padding-right:5px; margin-top: 5px;">
+    <table style=" display: inline-table; border: 1px solid black; padding-top:2px; padding-bottom:2px; padding-left:5px; padding-right:5px; margin-top: 15px;">
         <tbody>
             <tr>
                 <td style="align: center;">

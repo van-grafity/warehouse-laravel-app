@@ -82,9 +82,8 @@ Route::group([
     Route::get('rack/dashboard-information', [App\Http\Controllers\RackController::class, 'dashboard_information'])->name('rack.dashboard-information');
     Route::resource('rack', App\Http\Controllers\RackController::class);
     Route::get('rack-dtable', [App\Http\Controllers\RackController::class, 'dtable'])->name('rack.dtable');
-
-
     
+
     Route::resource('invoice', App\Http\Controllers\InvoiceController::class);
     Route::get('invoice-dtable', [App\Http\Controllers\InvoiceController::class, 'dtable'])->name('invoice.dtable');
 
@@ -122,7 +121,7 @@ Route::group([
         Route::get('dtable', [App\Http\Controllers\FabricStatusController::class,'dtable'])->name('dtable');
         Route::get('dtable-roll-list', [App\Http\Controllers\FabricStatusController::class,'dtable_roll_list'])->name('dtable-roll-list');
         Route::get('{packinglist_id}/detail', [App\Http\Controllers\FabricStatusController::class,'detail'])->name('detail');
-        Route::get('export', [App\Http\Controllers\FabricStatusController::class,'export'])->name('export');
+        Route::get('{packinglist_id}/export', [App\Http\Controllers\FabricStatusController::class,'export'])->name('export');
 
     });
     Route::resource('fabric-status', App\Http\Controllers\FabricStatusController::class);

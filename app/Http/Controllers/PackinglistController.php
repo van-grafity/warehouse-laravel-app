@@ -26,6 +26,9 @@ class PackinglistController extends Controller
         Gate::define('manage', function ($user) {
             return $user->hasPermissionTo('packinglist.manage');
         });
+        Gate::define('print', function ($user) {
+            return $user->hasPermissionTo('packinglist.print-qrcode');
+        });
     }
 
     /**
