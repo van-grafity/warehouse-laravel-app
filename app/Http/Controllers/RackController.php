@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 use Yajra\Datatables\Datatables;
+use PDF;
 
 class RackController extends Controller
 {
@@ -18,6 +19,9 @@ class RackController extends Controller
     {
         Gate::define('manage', function ($user) {
             return $user->hasPermissionTo('rack.manage');
+        });
+        Gate::define('print', function ($user) {
+            return $user->hasPermissionTo('rack.print-barcode');
         });
     }
 
@@ -30,6 +34,7 @@ class RackController extends Controller
             'title' => 'Rack',
             'page_title' => 'Rack List',
             'can_manage' => auth()->user()->can('manage'),
+            'can_print' => auth()->user()->can('print'),
         ];
         return view('pages.rack.index', $data);
     }
@@ -63,6 +68,26 @@ class RackController extends Controller
                     $query->where('rack_type', $rack_type);
                 }
             }, true)
+            ->addColumn('checkbox', function ($row) {
+                if($row->print_rack_id) { return null; }
+                
+                $checkbox_element = '
+                    <div class="form-group mb-0">
+                        <div class="custom-control custom-checkbox">
+                            <input 
+                                id="print_checkbox_'. $row->id .'" 
+                                name="selected_print[]" 
+                                class="custom-control-input checkbox-print-control" 
+                                type="checkbox" 
+                                value="'. $row->id .'"
+                                onchange="checkbox_clicked()" 
+                            >
+                            <label for="print_checkbox_'. $row->id .'" class="custom-control-label"></label>
+                        </div>
+                    </div>
+                ';
+                return $checkbox_element;
+            })
             ->toJson();
     }
 
@@ -145,6 +170,20 @@ class RackController extends Controller
             ];
             return response()->json($data_return);
         }
+    }
+
+    // ## Print Barcode
+    public function print_barcode(Request $request)
+    {
+        $id = explode(',', $request->id);
+        $racks = Rack::select('id', 'serial_number', 'basic_number')->whereIn('id', $id)->get();
+        
+        $data = [
+            'racks' => $racks,
+        ];
+
+        $pdf = PDF::loadview('pages.rack.print-barcode', $data)->setPaper('a4', 'potrait');
+        return $pdf->stream('rack-serial-number.pdf');
     }
 
      /**

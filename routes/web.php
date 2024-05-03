@@ -84,15 +84,16 @@ Route::group([
     Route::get('rack-dtable', [App\Http\Controllers\RackController::class, 'dtable'])->name('rack.dtable');
 
 
-
+    
     Route::resource('invoice', App\Http\Controllers\InvoiceController::class);
     Route::get('invoice-dtable', [App\Http\Controllers\InvoiceController::class, 'dtable'])->name('invoice.dtable');
 
     Route::prefix('packinglist')->name('packinglist.')->group(function () {
-        Route::get('dtable', [App\Http\Controllers\PackinglistController::class, 'dtable'])->name('dtable');
-        Route::get('{packinglist}/detail', [App\Http\Controllers\PackinglistController::class, 'detail'])->name('detail');
-        Route::post('import', [App\Http\Controllers\PackinglistController::class, 'import'])->name('import');
-        Route::get('{packinglist}/information-card', [App\Http\Controllers\PackinglistController::class, 'information_card'])->name('information-card');
+        Route::get('dtable', [App\Http\Controllers\PackinglistController::class,'dtable'])->name('dtable');
+        Route::get('{packinglist}/detail', [App\Http\Controllers\PackinglistController::class,'detail'])->name('detail');
+        Route::get('qrcode', [App\Http\Controllers\PackinglistController::class,'print_qrcode'])->name('print-qrcode');
+        Route::post('import', [App\Http\Controllers\PackinglistController::class,'import'])->name('import');
+        Route::get('{packinglist}/information-card', [App\Http\Controllers\PackinglistController::class,'information_card'])->name('information-card');
     });
     Route::resource('packinglist', App\Http\Controllers\PackinglistController::class);
 
@@ -116,6 +117,15 @@ Route::group([
         Route::get('{packinglist_id}/detail', [App\Http\Controllers\FabricStockInController::class, 'detail'])->name('detail');
     });
     Route::resource('fabric-stock-in', App\Http\Controllers\FabricStockInController::class);
+
+    Route::prefix('fabric-status')->name('fabric-status.')->group(function () {
+        Route::get('dtable', [App\Http\Controllers\FabricStatusController::class,'dtable'])->name('dtable');
+        Route::get('dtable-roll-list', [App\Http\Controllers\FabricStatusController::class,'dtable_roll_list'])->name('dtable-roll-list');
+        Route::get('{packinglist_id}/detail', [App\Http\Controllers\FabricStatusController::class,'detail'])->name('detail');
+        Route::get('export', [App\Http\Controllers\FabricStatusController::class,'export'])->name('export');
+
+    });
+    Route::resource('fabric-status', App\Http\Controllers\FabricStatusController::class);
 
     Route::prefix('fabric-request')->name('fabric-request.')->group(function () {
         Route::get('dtable', [App\Http\Controllers\FabricRequestController::class, 'dtable'])->name('dtable');

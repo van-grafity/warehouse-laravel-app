@@ -20,6 +20,13 @@
             <div class="card-body">
                 <div class="row  mb-3">
                     <div class="col-sm-12 d-inline-flex justify-content-end">
+                        <div class="action-wrapper mr-auto">
+                            @can('print')
+                                <button class="btn btn-primary" disabled="disabled" onclick="print_barcode_btn()">
+                                    <i class="fas fa-print"></i> Print Barcode
+                                </button>
+                            @endcan
+                        </div>
                         <div class="filter_wrapper mr-2" style="width:200px;">
                             <select name="rack_type_filter" id="rack_type_filter" class="form-control select2 no-search-box">
                                 <option value="" selected>All Data</option>
@@ -36,8 +43,20 @@
                 </div>
                 <table id="rack_table" class="table table-bordered table-hover text-center">
                     <thead>
-                        <tr>
-                            <th width="50">No</th>
+                        <tr class="">
+                            <th width="30">
+                                <div class="form-group mb-0">
+                                    <div class="custom-control custom-checkbox">
+                                        <input 
+                                            id="print_checkbox_all" 
+                                            class="custom-control-input checkbox-all-control" 
+                                            type="checkbox"
+                                        >
+                                        <label for="print_checkbox_all" class="custom-control-label"></label>
+                                    </div>
+                                </div>
+                            </th>
+                            <th width="">No</th>
                             <th width="250">Serial Number</th>
                             <th width="">Basic Number</th>
                             <th width="">Type</th>
@@ -102,13 +121,15 @@
 <script type="text/javascript">
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const column_visible = '{{ $can_manage }}';
-    
+    const column_checkbox = '{{ $can_print }}';
+
     // ## URL List
     const show_url = "{{ route('rack.show',':id') }}";
     const store_url = "{{ route('rack.store') }}";
     const update_url = "{{ route('rack.update',':id') }}";
     const delete_url = "{{ route('rack.destroy',':id') }}";
     const dtable_url = "{{ route('rack.dtable') }}";
+    const print_barcode_url = "{{ route('rack.print-barcode') }}";
 
     const show_modal_create = (modal_element_id) => {
         let modal_data = {
@@ -253,6 +274,7 @@
         },
         order: [],
         columns: [
+            { data: 'checkbox', name: 'checkbox', visible: column_checkbox},
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
             { data: 'serial_number', name: 'serial_number'},
             { data: 'basic_number', name: 'basic_number'},
@@ -261,7 +283,7 @@
             { data: 'action', name: 'action', visible: column_visible},
         ],
         columnDefs: [
-            { targets: [0,-1], orderable: false, searchable: false },
+            { targets: [1,0,-1], orderable: false, searchable: false },
         ],
         
         paging: true,
@@ -306,6 +328,83 @@
 
     $('#rack_type_filter').change(function(event) {
         reload_dtable();
-    });
+    });    
+</script>
+
+<script type="text/javascript">
+
+    const is_all_checked = () => {
+        let all_print_checkbox = document.getElementsByClassName('checkbox-print-control');
+        if(all_print_checkbox.length <= 0) { return false; }
+        for (let item of all_print_checkbox) {
+            if(!item.checked) { return false; }
+        }
+        return true;
+    }
+
+    const is_any_checked = () => {
+        let all_print_checkbox = document.getElementsByClassName('checkbox-print-control');
+        for (let item of all_print_checkbox) {
+            if(item.checked) { return true; }
+        }
+        return false;
+    }
+
+    // ## checkbox listener for always update print_checkbox_all
+    const checkbox_clicked = () => {
+        let checked_status_checkbox_all = is_all_checked() ? true : false;
+        document.getElementById('print_checkbox_all').checked = checked_status_checkbox_all;
+
+        let disabled_status_action_wrapper = is_any_checked() ? false : true;
+        disabled_action_wrapper(disabled_status_action_wrapper);
+    }
+
+    const disabled_action_wrapper = (disabled_status = false) => {
+        let action_wrapper = document.getElementsByClassName('action-wrapper').item(0);
+        let buttons = action_wrapper.querySelectorAll('button');
+        buttons.forEach(function(button) {
+            button.disabled = disabled_status;
+        });
+    }
+
+    const get_selected_item = () => {
+        let selected_element = $('.checkbox-print-control:checked').toArray();
+        let selected_item_value = [];
+
+        selected_element.forEach(element => {
+            selected_item_value.push($(element).val());
+        });
+        return selected_item_value;
+    }
+
+    const print_barcode_btn = async () => {
+        let selected_print = get_selected_item();
+
+        if(selected_print.length > 0) {
+            // window.open("{{ route('rack.print-barcode') }}?id=" + selected_print, '_blank');
+            window.open(print_barcode_url + "?id=" + selected_print, '_blank');
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: 'Please select at least one rack',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    };
+</script>
+
+<script>
+    // ## Checkbox Feature
+    $('.checkbox-all-control').on('click', function(e) {
+        let is_checked = $(this).prop('checked');
+        let table = $(this).parents('table');
+        table.find('.checkbox-print-control').prop('checked',is_checked);
+    })
+
+    $('#print_checkbox_all').on('change', function(e) {
+        checkbox_clicked();
+    })
+
 </script>
 @stop

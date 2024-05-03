@@ -154,7 +154,7 @@ class FabricStockInController extends Controller
                 'fabric_rolls.yds', 
                 'fabric_rolls.offloaded_at',
                 'fabric_rolls.racked_at',
-                'racks.rack as rack_number'
+                'racks.serial_number as rack_number'
             )
             ->get();
         
@@ -234,7 +234,7 @@ class FabricStockInController extends Controller
             ->editColumn('racked_at', function($row){
                 if(!$row->racked_at) { return null; }
                 $racked_at = Carbon::createFromFormat('Y-m-d H:i:s', $row->racked_at);
-                $readable_racked_at = $racked_at->format('d F y, H:i');
+                $readable_racked_at = $racked_at->format('d F Y, H:i');
                 return $readable_racked_at;
             })
             ->toJson();

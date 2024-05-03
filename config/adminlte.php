@@ -378,6 +378,11 @@ return [
                     'can'   => 'fabric-stock-in.access',
                 ],
                 [
+                    'text' => 'Fabric Status',
+                    'url' => 'fabric-status',
+                    'can'   => 'fabric-status.access',
+                ],
+                [
                     'text' => 'Fabric Request',
                     'url' => 'fabric-request',
                     'can'   => 'fabric-request.access',
