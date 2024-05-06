@@ -4,7 +4,11 @@
 @section('page_title', $page_title)
 
 @section('content')
-
+<div class="row mb-2">
+    <div class="col-sm-6">
+        <h3 class="">@yield('page_title')</h3>
+    </div>
+</div>
 <div class="row">
     <div class="col-12">
         
@@ -308,13 +312,13 @@
         order: [],
         columns: [
             { data: 'checkbox', orderable: false, searchable: false },
-            { data: 'roll_number', name: 'CAST(fabric_rolls.roll_number AS SIGNED)'},
+            { data: 'roll_number', name: 'roll_number'},
             { data: 'serial_number', name: 'fabric_rolls.serial_number'},
             { data: 'kgs', name: 'fabric_rolls.kgs'},
             { data: 'lbs', name: 'fabric_rolls.lbs'},
             { data: 'yds', name: 'fabric_rolls.yds'},
             { data: 'racked_at', name: 'fabric_rolls.racked_at'},
-            { data: 'rack_number', name: 'racks.rack_number'},
+            { data: 'rack_number', name: 'racks.serial_number'},
         ],
         columnDefs: [
             { targets: [0], orderable: false, searchable: false },

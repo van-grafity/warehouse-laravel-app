@@ -208,4 +208,13 @@ class RackController extends Controller
             return response()->json($data_return);
         }
     }
+
+    public function dashboard_information()
+    {
+        $data = [
+            'title' => 'Rack Details',
+            'page_title' => 'Rack Details'
+        ];
+        return view('pages.rack.dashboard-information', $data);
+    }
 }

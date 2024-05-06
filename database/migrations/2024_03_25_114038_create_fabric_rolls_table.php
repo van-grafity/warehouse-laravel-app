@@ -19,8 +19,6 @@ return new class extends Migration
             $table->double('kgs');
             $table->double('lbs');
             $table->double('yds');
-            $table->datetime('offloaded_at')->nullable();
-            $table->foreignId('offloaded_by')->nullable()->constrained('users');
             $table->datetime('racked_at')->nullable();
             $table->foreignId('racked_by')->nullable()->constrained('users');
             $table->foreignId('created_by')->nullable()->constrained('users');

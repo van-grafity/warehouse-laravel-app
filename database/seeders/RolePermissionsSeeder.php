@@ -175,16 +175,6 @@ class RolePermissionsSeeder extends Seeder
                 'permission_category_id' => '3',
             ],
             [
-                'name' => 'fabric-offloading.access',
-                'description' => 'Can access fabric offloading features.',
-                'permission_category_id' => '2',
-            ],
-            [
-                'name' => 'fabric-offloading.manage',
-                'description' => 'Can manage fabric offloading features.',
-                'permission_category_id' => '3',
-            ],
-            [
                 'name' => 'stock-in.access',
                 'description' => 'Can access stock in features.',
                 'permission_category_id' => '2',
@@ -255,7 +245,6 @@ class RolePermissionsSeeder extends Seeder
             'packinglist.access',
 
             'manage-fabric.access',
-            'fabric-offloading.access',
             'stock-in.access',
             'fabric-request.access',
         ]);

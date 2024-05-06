@@ -4,14 +4,11 @@
             <i class="fas fa-info-circle mr-1"></i>
             Packing List Information :
         </h3>
-                
         <div class="card-tools ml-auto p-3">
             <div class="btn-group">
                 <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Related Page </button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="{{ route('packinglist.detail', $packinglist->id) }}">Packinglist</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{{ route('fabric-offloading.detail', $packinglist->id) }}">Fabric Offloading</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('fabric-stock-in.detail', $packinglist->id) }}">Fabric Stock in</a>
                 </div>
@@ -75,9 +72,8 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Packinglist Qty</th>
+                                    <th>Packing List Qty</th>
                                     <th>Stock In</th>
-                                    <th>Stock Out</th>
                                     <th>Balance</th>
                                 </tr>
                             </thead>
@@ -92,7 +88,6 @@
                                         <td class="text-left"><?= $roll->category; ?></td>
                                         <td><?= $roll->packinglist_qty; ?></td>
                                         <td><?= $roll->stock_in; ?></td>
-                                        <td><?= $roll->stock_out; ?></td>
                                         <td><?= $roll->balance; ?></td>
                                     </tr>
                                     @endforeach

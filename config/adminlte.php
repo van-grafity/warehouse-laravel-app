@@ -362,11 +362,6 @@ return [
             'can'   => 'manage-fabric.access',
             'submenu' => [
                 [
-                    'text' => 'Fabric Offloading',
-                    'url' => 'fabric-offloading',
-                    'can'   => 'fabric-offloading.access',
-                ],
-                [
                     'text' => 'Stock In',
                     'url' => 'fabric-stock-in',
                     'can'   => 'fabric-stock-in.access',
@@ -384,23 +379,24 @@ return [
             ],
         ],
         [
+            'text' => 'Rack Dashboard',
+            'icon' => 'far fa-list-alt nav-icon',
+            'url' => 'rack/dashboard-information',
+            'can'   => 'packinglist.access',
+        ],
+        [
             'header' => 'Admin',
-            'can'   => 'admin-menu', 
+            'can'   => 'admin-menu',
         ],
         [
             'text' => 'User Management',
             'icon' => 'fas fa-users nav-icon',
+            'url'   => 'user',
             'can'   => 'admin-menu',
-            'submenu' => [
-                [
-                    'text' => 'User',
-                    'url' => 'user',
-                ],
-            ],
         ],
         [
             'header' => 'Developer',
-            'can'   => 'developer-menu', 
+            'can'   => 'developer-menu',
         ],
         [
             'text' => 'Settings',
@@ -567,7 +563,7 @@ return [
                 ],
             ],
         ],
-        
+
         'Chartjs' => [
             'active' => false,
             'files' => [

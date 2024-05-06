@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('offloaded_date')->nullable();
             $table->foreignId('supplier_id')->constrained('suppliers');
             $table->enum('flag_opened',['Y','N'])->default('N');
-            $table->enum('flag_loaded',['Y','N'])->default('N');
+            $table->enum('flag_offloaded',['Y','N'])->default('N');
             $table->datetime('received_at')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users');
             $table->foreignId('updated_by')->nullable()->constrained('users');
