@@ -379,6 +379,12 @@ return [
             ],
         ],
         [
+            'text' => 'Rack Location',
+            'icon' => 'far fa-list-alt nav-icon',
+            'url' => 'rack-location',
+            'can'   => 'rack-location.access',
+        ],
+        [
             'text' => 'Rack Dashboard',
             'icon' => 'far fa-list-alt nav-icon',
             'url' => 'rack/dashboard-information',
