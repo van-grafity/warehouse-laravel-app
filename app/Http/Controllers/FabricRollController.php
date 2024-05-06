@@ -26,6 +26,20 @@ class FabricRollController extends Controller
     public function dtable()
     {
         $query = FabricRoll::query()->where('packinglist_id', request()->packinglist_id);
+
+        // ## penambahan logika sorting agar mampu sort string as number
+        $orderData = request()->input('order');
+
+        //##  Cek apakah ada data order dan memenuhi kondisi yang dibutuhkan
+        if (!empty($orderData) && isset($orderData[0]['column'], $orderData[0]['dir'])) {
+            $orderIndex = $orderData[0]['column'];
+            $dir = $orderData[0]['dir'];
+
+            // ## Pengurutan berdasarkan kolom yang diurutkan, dalam hal ini roll_number berada di index 1
+            if ($orderIndex == 1) {
+                $query->orderByRaw("CAST(fabric_rolls.roll_number AS UNSIGNED) $dir");
+            }
+        }
         
         return DataTables::of($query)
             ->addIndexColumn()
