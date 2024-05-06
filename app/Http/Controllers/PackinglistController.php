@@ -215,6 +215,7 @@ class PackinglistController extends Controller
             'page_title' => 'Packinglist Detail',
             'packinglist' => $packinglist,
             'can_manage' => auth()->user()->can('manage'),
+            'can_print' => auth()->user()->can('print'),
         ];
         return view('pages.packinglist.detail', $data);
     }

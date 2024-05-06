@@ -138,6 +138,9 @@
     
     const packinglist_id = '{{ $packinglist->id }}';
     const column_visible = '{{ $can_manage }}';
+    const column_checkbox = '{{ $can_print }}';
+    const column_checkbox_visible = (column_visible || column_checkbox);
+
     
     // ## URL List
     const show_url = "{{ route('fabric-roll.show',':id') }}";
@@ -446,7 +449,7 @@
         },
         order: [],
         columns: [
-            { data: 'checkbox', orderable: false, searchable: false, visible: column_visible },
+            { data: 'checkbox', orderable: false, searchable: false, visible: column_checkbox_visible },
             { data: 'roll_number', name: 'roll_number'},
             { data: 'serial_number', name: 'serial_number'},
             { data: 'kgs', name: 'kgs'},
