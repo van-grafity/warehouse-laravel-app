@@ -19,7 +19,7 @@ class FabricStockInController extends Controller
     public function __construct()
     {
         Gate::define('manage', function ($user) {
-            return $user->hasPermissionTo('fabric-offloading.manage');
+            return $user->hasPermissionTo('fabric-stock-in.manage');
         });
     }
 
@@ -153,11 +153,24 @@ class FabricStockInController extends Controller
                 'fabric_rolls.kgs', 
                 'fabric_rolls.lbs', 
                 'fabric_rolls.yds', 
-                'fabric_rolls.offloaded_at',
                 'fabric_rolls.racked_at',
                 'racks.serial_number as rack_number'
-            )
-            ->get();
+            );
+
+
+        // ## penambahan logika sorting agar mampu sort string as number
+        $orderData = request()->input('order');
+
+        //##  Cek apakah ada data order dan memenuhi kondisi yang dibutuhkan
+        if (!empty($orderData) && isset($orderData[0]['column'], $orderData[0]['dir'])) {
+            $orderIndex = $orderData[0]['column'];
+            $dir = $orderData[0]['dir'];
+
+            // ## Pengurutan berdasarkan kolom yang diurutkan, dalam hal ini roll_number berada di index 1
+            if ($orderIndex == 1) {
+                $query->orderByRaw("CAST(fabric_rolls.roll_number AS UNSIGNED) $dir");
+            }
+        }
         
         return Datatables::of($query)
             ->addIndexColumn()
@@ -170,26 +183,6 @@ class FabricStockInController extends Controller
                 return $action_button;
             })
             ->addColumn('checkbox', function ($row) {
-                if(!$row->offloaded_at) {
-                    $checkbox_element = '
-                        <div class="form-group mb-0">
-                            <div class="custom-control custom-checkbox" data-toggle="tooltip" data-placement="top" title="Not Loaded">
-                                <input 
-                                    id="roll_checkbox_'. $row->id .'" 
-                                    name="selected_roll[]" 
-                                    class="custom-control-input checkbox-roll-control" 
-                                    type="checkbox" 
-                                    value="'. $row->id .'"
-                                    data-roll-number="'. $row->roll_number .'"
-                                    onchange="checkbox_clicked()"
-                                    disabled
-                                >
-                                <label for="roll_checkbox_'. $row->id .'" class="custom-control-label"></label>
-                            </div>
-                        </div>
-                    ';
-                    return $checkbox_element;
-                }
                 $FabricRollRackModel = new FabricRollRack;
                 $roll_rack = $FabricRollRackModel->where('fabric_roll_id', $row->id)->first();
                 if($roll_rack) {

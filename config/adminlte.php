@@ -362,11 +362,6 @@ return [
             'can'   => 'manage-fabric.access',
             'submenu' => [
                 [
-                    'text' => 'Fabric Offloading',
-                    'url' => 'fabric-offloading',
-                    'can'   => 'fabric-offloading.access',
-                ],
-                [
                     'text' => 'Stock In',
                     'url' => 'fabric-stock-in',
                     'can'   => 'fabric-stock-in.access',

@@ -10,8 +10,6 @@
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="{{ route('packinglist.detail', $packinglist->id) }}">Packinglist</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{{ route('fabric-offloading.detail', $packinglist->id) }}">Fabric Offloading</a>
-                    <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('fabric-stock-in.detail', $packinglist->id) }}">Fabric Stock in</a>
                 </div>
             </div>
