@@ -137,9 +137,8 @@
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     
     const packinglist_id = '{{ $packinglist->id }}';
-    const column_visible = '{{ $can_manage }}';
-    const column_checkbox = '{{ $can_print }}';
-    const column_checkbox_visible = (column_visible || column_checkbox);
+    const column_action = '{{ $can_manage }}';
+    const column_checkbox = ('{{ $can_manage }}' || '{{ $can_print }}');
 
     
     // ## URL List
@@ -350,7 +349,9 @@
     // ## checkbox listener for always update roll_checkbox_all
     const checkbox_clicked = () => {
         let checked_status_checkbox_all = is_all_checked() ? true : false;
-        document.getElementById('roll_checkbox_all').checked = checked_status_checkbox_all;
+        if(document.getElementById('roll_checkbox_all')){
+            document.getElementById('roll_checkbox_all').checked = checked_status_checkbox_all;
+        }
 
         let disabled_status_action_wrapper = is_any_checked() ? false : true;
         disabled_action_wrapper(disabled_status_action_wrapper);
@@ -449,13 +450,13 @@
         },
         order: [],
         columns: [
-            { data: 'checkbox', orderable: false, searchable: false, visible: column_checkbox_visible },
+            { data: 'checkbox', orderable: false, searchable: false, visible: column_checkbox },
             { data: 'roll_number', name: 'roll_number'},
             { data: 'serial_number', name: 'serial_number'},
             { data: 'kgs', name: 'kgs'},
             { data: 'lbs', name: 'lbs'},
             { data: 'yds', name: 'yds'},
-            { data: 'action', name: 'action', orderable: false, searchable: false, visible: column_visible },
+            { data: 'action', name: 'action', orderable: false, searchable: false, visible: column_action },
         ],
         paging: true,
         responsive: true,

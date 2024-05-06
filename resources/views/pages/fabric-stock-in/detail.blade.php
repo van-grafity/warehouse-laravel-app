@@ -153,55 +153,52 @@
         })
     }
 
+    // ## Function to check if all checkboxes are checked
     const is_all_checked = () => {
-        let all_roll_checkbox = document.getElementsByClassName('checkbox-roll-control');
-        if(all_roll_checkbox.length <= 0) { return false; }
-        for (let item of all_roll_checkbox) {
-            if(!item.checked) { return false; }
-        }
-        return true;
+        const all_checkboxes = document.querySelectorAll('.checkbox-roll-control');
+        return all_checkboxes.length > 0 && Array.from(all_checkboxes).every(checkbox => checkbox.checked);
     }
 
+    // ## Function to check if any checkbox is checked and not disabled
     const is_any_checked = () => {
-        let all_roll_checkbox = document.getElementsByClassName('checkbox-roll-control');
-        for (let item of all_roll_checkbox) {
-            if(item.disabled) { continue; } // ## Abaikan yang disabled
-            if(item.checked) { return true; }
-        }
-        return false;
+        const all_checkboxes = document.querySelectorAll('.checkbox-roll-control:not([disabled])');
+        return Array.from(all_checkboxes).some(checkbox => checkbox.checked);
     }
 
-    // ## checkbox listener for always update roll_checkbox_all
+    // ## Function to handle checkbox click events
     const checkbox_clicked = () => {
-        let checked_status_checkbox_all = is_all_checked() ? true : false;
-        document.getElementById('roll_checkbox_all').checked = checked_status_checkbox_all;
+        const all_checked = is_all_checked();
+        const any_checked = is_any_checked();
+        const roll_checkbox_all = document.getElementById('roll_checkbox_all');
 
-        let disabled_status_action_wrapper = is_any_checked() ? false : true;
-        disabled_action_wrapper(disabled_status_action_wrapper);
+        if (roll_checkbox_all) {
+            roll_checkbox_all.checked = all_checked;
+        }
+
+        update_action_wrapper_disabled_state(!any_checked);
     }
 
-    const disabled_action_wrapper = (disabled_status = false) => {
-        let action_wrapper = document.getElementsByClassName('action-wrapper').item(0);
-        let buttons = action_wrapper.querySelectorAll('button');
-        buttons.forEach(function(button) {
-            button.disabled = disabled_status;
-        });
+    // ## Function to enable or disable action buttons based on checkbox state
+    const update_action_wrapper_disabled_state = (disable) => {
+        const action_wrapper = document.querySelector('.action-wrapper');
+        if (action_wrapper) {
+            const buttons = action_wrapper.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.disabled = disable;
+            });
+        }
     }
 
+    // ## Function to get selected items from checkboxes
     const get_selected_item = () => {
-        let selected_element = $('.checkbox-roll-control:checked:not([disabled]').toArray();
-        let item_id = [];
-        let item_name = [];
-
-        selected_element.forEach(element => {
-            item_id.push($(element).val());
-            item_name.push($(element).data('roll-number'));
-        });
+        const selected_elements = document.querySelectorAll('.checkbox-roll-control:checked:not([disabled])');
+        const item_ids = Array.from(selected_elements).map(element => element.value);
+        const item_names = Array.from(selected_elements).map(element => element.dataset.rollNumber);
 
         return {
-            item_id,
-            item_name
-        }
+            item_id: item_ids,
+            item_name: item_names
+        };
     }
 
     const show_modal_stock_in = (modal_element_id) => {
@@ -256,7 +253,7 @@
                 swal_info({ title: response.message })
                 
                 reload_dtable();
-                disabled_action_wrapper(true); // ## disabled button inside action_wrapper
+                update_action_wrapper_disabled_state(true); // ## disabled button inside action_wrapper
                 $(`#${modal_id}`).modal('hide');
             } else {
                 toastr.error(response.message)
