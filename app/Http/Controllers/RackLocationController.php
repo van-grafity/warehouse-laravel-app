@@ -42,40 +42,45 @@ class RackLocationController extends Controller
             ->escapeColumns([])
             ->addColumn('action', function($row){
                 $return = '
-                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_rack\', '.$row->id.')">Edit</a>
-                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>
+                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_rack_location\', '.$row->id.')">Edit</a>
                 ';
                 return $return; 
-            })
-            ->addColumn('location', function($row){
-                return $row->location->location;
             })
             ->addColumn('rack', function($row){
                 return $row->rack->serial_number;
             })
-    
+            ->addColumn('location', function($row){
+                return $row->location->location;
+            })
+            ->filter(function ($query) {
+                if (request()->has('rack_location_filter') && request('rack_location_filter')) {
+                    $rack_location = request('rack_location_filter');
+                    $query->where('rack_location', $rack_location);
+                }
+            }, true)
             ->addColumn('checkbox', function ($row) {
-                if($row->print_rack_id) { return null; }
+                if($row->rack_location_id) { return null; }
                 
                 $checkbox_element = '
                     <div class="form-group mb-0">
                         <div class="custom-control custom-checkbox">
                             <input 
-                                id="print_checkbox_'. $row->id .'" 
+                                id="rack_checkbox_'. $row->id .'" 
                                 name="selected_print[]" 
-                                class="custom-control-input checkbox-print-control" 
+                                class="custom-control-input checkbox-rack-control" 
                                 type="checkbox" 
                                 value="'. $row->id .'"
+                                data-rack-number="'. $row->id .'"
                                 onchange="checkbox_clicked()" 
                             >
-                            <label for="print_checkbox_'. $row->id .'" class="custom-control-label"></label>
+                            <label for="rack_checkbox_'. $row->id .'" class="custom-control-label"></label>
                         </div>
                     </div>
                 ';
                 return $checkbox_element;
             })
             ->toJson();
-    }
+        }
     /**
      * Store a newly created resource in storage.
      */
@@ -83,13 +88,12 @@ class RackLocationController extends Controller
     {
         try {
             $rack_location = RackLocation::firstOrCreate([
-                'rack_id' => $request->rack,
                 'location_id' => $request->location,
             ]);
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully added new rack location (' . $rack_location->rack_location . ')',
+                'message' => 'Successfully added new rack location',
                 'data' => [
                     'rack_location' => $rack_location,
                 ]
@@ -114,7 +118,7 @@ class RackLocationController extends Controller
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully get Rack location (' . $rack_location->rack_location . ')',
+                'message' => 'Successfully get Rack location',
                 'data' => [
                     'rack_location' => $rack_location,
                 ]
@@ -136,13 +140,12 @@ class RackLocationController extends Controller
     {
         try {
             $rack_location = RackLocation::find($id);
-            $rack_location->rack_id = $request->rack;
             $rack_location->location_id = $request->location;
             $rack_location->save();
             
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully updated rack location (' . $rack_location->rack_location . ')',
+                'message' => 'Successfully updated rack location',
                 'data' => $rack_location
             ];
             return response()->json($data_return, 200);
@@ -166,7 +169,7 @@ class RackLocationController extends Controller
             $data_return = [
                 'status' => 'success',
                 'data'=> $rack_location,
-                'message'=> 'Rack Location '. $rack_location->rack_location .' successfully Deleted!',
+                'message'=> 'Rack Location successfully Deleted!',
             ];
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {

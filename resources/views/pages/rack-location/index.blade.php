@@ -9,12 +9,6 @@
         <div class="card">
             <div class="card-header d-flex p-0">
                 <h3 class="card-title p-3 my-auto"> Rack Location List </h3>
-
-                <div class="ml-auto p-3">
-                    @can('manage')
-                        <a href="javascript:void(0)" class="btn btn-success " id="btn_modal_create" onclick="show_modal_create('modal_rack_location')">Create</a>
-                    @endcan
-                </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -22,10 +16,15 @@
                     <div class="col-sm-12 d-inline-flex justify-content-end">
                         <div class="action-wrapper mr-auto">
                             @can('manage')
-                                <button class="btn btn-primary" disabled="disabled" onclick="show_modal_rack_location('modal_rack_location')">
-                                    <i></i> Change Location
-                                </button>
+                                <button class="btn btn-primary" disabled="disabled" onclick="show_modal_change('modal_change_rack_location')">Change Location</button>
                             @endcan
+                        </div>
+                         <div class="filter_wrapper mr-2" style="width:200px;">
+                            <select name="rack_location_filter" id="rack_location_filter" class="form-control select2 no-search-box">
+                                <option value="" selected>All Data</option>
+                                <option value="allocated"> Allocated Rack </option>
+                                <option value="unallocated"> Unallocated Rack </option>
+                            </select>
                         </div>
                         <div class="filter_wrapper text-right align-self-center">
                             <button id="reload_table_btn" class="btn btn-sm btn-info">
@@ -41,11 +40,11 @@
                                 <div class="form-group mb-0">
                                     <div class="custom-control custom-checkbox">
                                         <input 
-                                            id="print_checkbox_all" 
+                                            id="rack_checkbox_all" 
                                             class="custom-control-input checkbox-all-control" 
                                             type="checkbox"
                                         >
-                                        <label for="print_checkbox_all" class="custom-control-label"></label>
+                                        <label for="rack_checkbox_all" class="custom-control-label"></label>
                                     </div>
                                 </div>
                             </th>
@@ -75,6 +74,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form action="" method="post" onsubmit="stopFormSubmission(event)">
+                <input type="hidden" name="edit_rack_location_id" value="" id="edit_rack_location_id">
+                
                 <div class="modal-header">
                     <h5 class="modal-title" id="ModalLabel">Select Rack Location</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -82,12 +83,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                   <div class="form-group">
+                   <!-- <div class="form-group">
                         <label for="rack" class="col-form-label">Rack</label>
                         <select name="rack" id="rack" class="form-control select2" required>
                             <option value=""> Select Rack </option>
                         </select>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="location">Location</label>
                         <select name="location" id="location" class="form-control select2 validate-on-change" data-placeholder="Select Location" required>
@@ -106,6 +107,45 @@
     </div>
 </div>
 <!-- End Modal Add and Edit Rack Location -->
+
+<!-- Modal Put Rack to Location -->
+<div class="modal fade" id="modal_change_rack_location" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="" method="post" onsubmit="stopFormSubmission(event)">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel">Select Location</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="selected_rack_id" name="selected_rack_id">
+                    <div class="card card-primary card-outline">
+                        <div class="card-body">
+                            <h6 class="title text-bold">Selected Rack: </h6>
+                            <div id="display_rack_number"></div>
+                            <p id="total_selected_rack" class="title mt-3 mb-0 text-bold"> </p>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label for="location">Location</label>
+                        <select name="location" id="location" class="form-control select2 validate-on-change" data-placeholder="Select Location" required>
+                            @foreach ($locations as $location)
+                                <option value="{{ $location->id }}"> {{ $location->location }} </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary btn-submit" onclick="submitForm('modal_change_rack_location')">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End Modal Put Rack to Location -->
 @endsection
 
 @section('js')
@@ -117,21 +157,9 @@
     const show_url = "{{ route('rack-location.show',':id') }}";
     const store_url = "{{ route('rack-location.store') }}";
     const update_url = "{{ route('rack-location.update',':id') }}";
-    const delete_url = "{{ route('rack-location.destroy',':id') }}";
     const dtable_url = "{{ route('rack-location.dtable') }}";
     const fetch_select_rack_url = "{{ route('fetch-select.rack') }}";
 
-
-    const show_modal_create = (modal_element_id) => {
-        let modal_data = {
-            modal_id : modal_element_id,
-            title : "Add New rack Location",
-            btn_submit : "Save",
-            form_action_url : store_url,
-        }
-        clear_form(modal_data);
-        $(`#${modal_element_id}`).modal('show');
-    }
 
     const show_modal_edit = async (modal_element_id, rack_location_id) => {
         let modal_data = {
@@ -141,7 +169,6 @@
             form_action_url : update_url.replace(':id',rack_location_id),
         }
         clear_form(modal_data);
-        
         fetch_data = {
             url: show_url.replace(':id',rack_location_id),
             method: "GET",
@@ -207,55 +234,86 @@
         $(`#${modal_id}`).modal('hide');
     }
 
-    const show_modal_delete = async (rack_location_id) => {
-        swal_data = {
-            title: "Are you Sure?",
-            text: "Want to delete the rack location",
-            icon: "warning",
-            confirmButton: "Delete",
-            confirmButtonClass: "btn-danger",
-            cancelButtonClass: "btn-secondary"
-        };
-        let confirm_delete = await swal_confirm(swal_data);
-        if(!confirm_delete) { return false; };
-
-        fetch_data = {
-            url: delete_url.replace(':id', rack_location_id),
-            method: "DELETE",
-            token: token,
+    const is_all_checked = () => {
+        let all_rack_checkbox = document.getElementsByClassName('checkbox-rack-control');
+        if(all_rack_checkbox.length <= 0) { return false; }
+        for (let item of all_rack_checkbox) {
+            if(!item.checked) { return false; }
         }
-        result = await using_fetch(fetch_data);
+        return true;
+    }
 
-        if(result.status == "success"){
-            swal_info({
-                title : result.message,
-            });
-
-            reload_dtable();
-            
-        } else {
-            swal_failed({ title: result.message });
+    const is_any_checked = () => {
+        let all_rack_checkbox = document.getElementsByClassName('checkbox-rack-control');
+        for (let item of all_rack_checkbox) {
+            if(item.checked) { return true; }
         }
+        return false;
+    }
+
+     // ## checkbox listener for always update rack_checkbox_all
+    const checkbox_clicked = () => {
+        let checked_status_checkbox_all = is_all_checked() ? true : false;
+        document.getElementById('rack_checkbox_all').checked = checked_status_checkbox_all;
+
+        let disabled_status_action_wrapper = is_any_checked() ? false : true;
+        disabled_action_wrapper(disabled_status_action_wrapper);
+    }
+
+    const disabled_action_wrapper = (disabled_status = false) => {
+        let action_wrapper = document.getElementsByClassName('action-wrapper').item(0);
+        let buttons = action_wrapper.querySelectorAll('button');
+        buttons.forEach(function(button) {
+            button.disabled = disabled_status;
+        });
+    }
+
+    const get_selected_item = () => {
+        let selected_element = $('.checkbox-rack-control:checked').toArray();
+        let item_id = [];
+        let item_name = [];
+
+        selected_element.forEach(element => {
+            item_id.push($(element).val());
+            item_name.push($(element).data('rack-number'));
+        });
+
+        return {
+            item_id,
+            item_name
+        }
+    }
+
+    const show_modal_change = (modal_element_id) => {
+        let modal_data = {
+            modal_id : modal_element_id,
+            title : "Select Location",
+            btn_submit : "Save",
+        }
+        clear_form(modal_data);
+        
+        let selected_rack = get_selected_item();
+
+        if(selected_rack.item_id.length <= 0) {
+            swal_warning({title: "Please select at least one rack"});
+            return false;
+        }
+
+        let selected_rack_number = selected_rack.item_name.sort(function(a, b){return a-b});
+        let rack_number_element = '';
+        selected_rack_number.forEach(rack_name => {
+            rack_number_element += `<span class="badge bg-maroon mr-1">Rack ${rack_name}</span>`;
+        });
+        $('#display_rack_number').html(rack_number_element)
+        $('#total_selected_rack').text(`Total Rack: ${selected_rack.item_id.length}`)
+        $('#selected_rack_id').val(selected_rack.item_id);
+
+        $(`#${modal_element_id}`).modal('show');
     }
 
     const reload_dtable = () => {
         $('#reload_table_btn').trigger('click');
     }
-
-    const getValidationRules = () => {
-            return {
-                rack: {
-                    required: true,
-                },
-            };
-        }
-        const getValidationMessages = () => {
-            return {
-                rack: {
-                    required: "Please select Rack Number",
-                },
-            };
-        }
 </script>
 
 <script type="text/javascript">
@@ -296,40 +354,8 @@
         });
     });
 
-    $('#rack.select2').select2({
-            dropdownParent: $('#modal_rack_location'),
-            ajax: {
-                url: fetch_select_rack_url,
-                dataType: 'json',
-                delay: 500,
-                data: function (params) {
-                    var query = {
-                        search: params.term,
-                    }
-                    return query;
-                },
-                processResults: function (fetch_result) {
-                    return {
-                        results: fetch_result.data.items,
-                    };
-                },
-            }
-        });
-        $('#rack.select2').on('select2:open', function (e) {
-            document.querySelector('.select2-search__field').focus();
-        }).on('change', function() {
-            // ## penyesuaian perlakuan untuk jquery validation di select2
-            if ($(this).valid()) {
-                $(this).removeClass("is-invalid");
-                $(this).next(".invalid-feedback").remove();
-                $(this).parent().find('.select2-container').removeClass('select2-container--error');
-            }
-        });
-
-   // ## Form Validation
+    // ## Form Validation
     let validator = $("#modal_rack_location form").validate({
-        rules: getValidationRules(),
-        messages: getValidationMessages(),
         errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("invalid-feedback");
@@ -354,72 +380,42 @@
         },
     });
 
-    setTimeout(reload_dtable, 500);
-
-</script>
-</script>
-
-<script type="text/javascript">
-
-    const is_all_checked = () => {
-        let all_print_checkbox = document.getElementsByClassName('checkbox-print-control');
-        if(all_print_checkbox.length <= 0) { return false; }
-        for (let item of all_print_checkbox) {
-            if(!item.checked) { return false; }
-        }
-        return true;
-    }
-
-    const is_any_checked = () => {
-        let all_print_checkbox = document.getElementsByClassName('checkbox-print-control');
-        for (let item of all_print_checkbox) {
-            if(item.checked) { return true; }
-        }
-        return false;
-    }
-
-    // ## checkbox listener for always update print_checkbox_all
-    const checkbox_clicked = () => {
-        let checked_status_checkbox_all = is_all_checked() ? true : false;
-        document.getElementById('print_checkbox_all').checked = checked_status_checkbox_all;
-
-        let disabled_status_action_wrapper = is_any_checked() ? false : true;
-        disabled_action_wrapper(disabled_status_action_wrapper);
-    }
-
-    const disabled_action_wrapper = (disabled_status = false) => {
-        let action_wrapper = document.getElementsByClassName('action-wrapper').item(0);
-        let buttons = action_wrapper.querySelectorAll('button');
-        buttons.forEach(function(button) {
-            button.disabled = disabled_status;
+    $('#rack.select2').select2({
+            dropdownParent: $('#modal_rack_location'),
+            ajax: {
+                url: fetch_select_rack_url,
+                dataType: 'json',
+                delay: 500,
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                    }
+                    return query;
+                },
+                processResults: function (fetch_result) {
+                    return {
+                        results: fetch_result.data.items,
+                    };
+                },
+            }
         });
-    }
-
-    const get_selected_item = () => {
-        let selected_element = $('.checkbox-print-control:checked').toArray();
-        let selected_item_value = [];
-
-        selected_element.forEach(element => {
-            selected_item_value.push($(element).val());
-        });
-        return selected_item_value;
-    }
-
-    const print_barcode_btn = async () => {
-        let selected_print = get_selected_item();
-
-        if(selected_print.length > 0) {
-            // window.open("{{ route('rack.print-barcode') }}?id=" + selected_print, '_blank');
-            window.open(print_barcode_url + "?id=" + selected_print, '_blank');
-        } else {
-            Swal.fire({
-                title: 'Error',
-                text: 'Please select at least one rack',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
+    $('#rack.select2').on('select2:open', function (e) {
+        document.querySelector('.select2-search__field').focus();
+    }).on('change', function() {
+        // ## penyesuaian perlakuan untuk jquery validation di select2
+        if ($(this).valid()) {
+            $(this).removeClass("is-invalid");
+            $(this).next(".invalid-feedback").remove();
+            $(this).parent().find('.select2-container').removeClass('select2-container--error');
         }
-    };
+    });
+
+    $('#location.select2').select2({
+        dropdownParent: $('#modal_rack_location'),
+    });
+    $('#location.select2').select2({
+        dropdownParent: $('#modal_change_rack_location'),
+    });
 </script>
 
 <script>
@@ -427,16 +423,12 @@
     $('.checkbox-all-control').on('click', function(e) {
         let is_checked = $(this).prop('checked');
         let table = $(this).parents('table');
-        table.find('.checkbox-print-control').prop('checked',is_checked);
+        table.find('.checkbox-rack-control').prop('checked',is_checked);
     })
 
-    $('#print_checkbox_all').on('change', function(e) {
+    $('#rack_checkbox_all').on('change', function(e) {
         checkbox_clicked();
     })
-
-      $('#location.select2').select2({
-        dropdownParent: $('#modal_rack_location'),
-    });
 
 </script>
 @stop
