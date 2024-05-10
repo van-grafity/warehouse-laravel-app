@@ -76,20 +76,21 @@
             <form action="" method="post" onsubmit="stopFormSubmission(event)">
                 <input type="hidden" name="edit_rack_location_id" value="" id="edit_rack_location_id">
                 
-                <div class="modal-header">
-                    <h5 class="modal-title" id="ModalLabel">Select Rack Location</h5>
+                 <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel">Select Location</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                   <!-- <div class="form-group">
-                        <label for="rack" class="col-form-label">Rack</label>
-                        <select name="rack" id="rack" class="form-control select2" required>
-                            <option value=""> Select Rack </option>
-                        </select>
-                    </div> -->
-                    <div class="form-group">
+                    <input type="hidden" id="selected_rack_id" name="selected_rack_id">
+                    <div class="card card-primary card-outline">
+                        <div class="card-body">
+                            <h6 class="title text-bold">Selected Rack: </h6>
+                            <div id="display_rack_name"></div>
+                        </div>
+                    </div>
+                     <div class="form-group">
                         <label for="location">Location</label>
                         <select name="location" id="location" class="form-control select2 validate-on-change" data-placeholder="Select Location" required>
                             @foreach ($locations as $location)
@@ -113,6 +114,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form action="" method="post" onsubmit="stopFormSubmission(event)">
+
+
                 <div class="modal-header">
                     <h5 class="modal-title" id="ModalLabel">Select Location</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -160,8 +163,39 @@
     const dtable_url = "{{ route('rack-location.dtable') }}";
     const fetch_select_rack_url = "{{ route('fetch-select.rack') }}";
 
+    const reload_dtable = () => {
+        $('#reload_table_btn').trigger('click');
+    }
+
+    const show_modal_change = (modal_element_id) => {
+        let modal_data = {
+            modal_id : modal_element_id,
+            title : "Select Location",
+            btn_submit : "Save",
+        }
+        clear_form(modal_data);
+        
+        let selected_rack = get_selected_item();
+
+        if(selected_rack.item_id.length <= 0) {
+            swal_warning({title: "Please select at least one rack"});
+            return false;
+        }
+
+        let selected_rack_number = selected_rack.item_name.sort(function(a, b){return a-b});
+        let rack_number_element = '';
+        selected_rack_number.forEach(rack_name => {
+            rack_number_element += `<span class="badge bg-maroon mr-1">Rack ${rack_name}</span>`;
+        });
+        $('#display_rack_number').html(rack_number_element)
+        $('#total_selected_rack').text(`Total Rack: ${selected_rack.item_id.length}`)
+        $('#selected_rack_id').val(selected_rack.item_id);
+
+        $(`#${modal_element_id}`).modal('show');
+    }
 
     const show_modal_edit = async (modal_element_id, rack_location_id) => {
+
         let modal_data = {
             modal_id : modal_element_id,
             title : "Edit Rack Location",
@@ -169,6 +203,7 @@
             form_action_url : update_url.replace(':id',rack_location_id),
         }
         clear_form(modal_data);
+        
         fetch_data = {
             url: show_url.replace(':id',rack_location_id),
             method: "GET",
@@ -177,8 +212,7 @@
         result = await using_fetch(fetch_data);
         rack_location_data = result.data.rack_location
 
-        $('#location').val(rack_location_data.location_id).trigger('change');
-        $('#rack').val(rack_location_data.rack_id).trigger('change');
+        $('#location_id').val(rack_location_data.location_id).trigger('change');
         $('#edit_rack_location_id').val(rack_location_data.id);
         
         $(`#${modal_element_id}`).modal('show');
@@ -197,7 +231,13 @@
                 submit_btn.removeAttribute('disabled');
                 return false;
             }
-
+            
+            // let fetch_data = {
+            //     url: store_url,
+            //     method: "POST",
+            //     data: formData,
+            //     token: token,
+            // }
             if(!formData.edit_rack_location_id) {
                 // ## kalau tidak ada rack location id berarti STORE dan Method nya POST
                 fetch_data = {
@@ -221,17 +261,36 @@
                 swal_info({ title: response.message })
                 
                 reload_dtable();
+                disabled_action_wrapper(true); // ## disabled button inside action_wrapper
+                $(`#${modal_id}`).modal('hide');
             } else {
-                swal_failed({ title: response.message })
+                toastr.error(response.message)
             }
 
             submit_btn.removeAttribute('disabled');
 
         } catch (error) {
             console.error("Error:", error);
+            swal_failed({ title: "An error occurred while processing the form." });
+            let modal = document.getElementById(modal_id);
+            let submit_btn = modal.querySelector('.btn-submit');
+            submit_btn.removeAttribute('disabled');
         }
+    }
 
-        $(`#${modal_id}`).modal('hide');
+   const getValidationRules = () => {
+        return {
+            rack: {
+                required: true,
+            },
+        };
+    }
+    const getValidationMessages = () => {
+        return {
+            rack: {
+                required: "Please select Rack Number",
+            },
+        };
     }
 
     const is_all_checked = () => {
@@ -284,36 +343,6 @@
         }
     }
 
-    const show_modal_change = (modal_element_id) => {
-        let modal_data = {
-            modal_id : modal_element_id,
-            title : "Select Location",
-            btn_submit : "Save",
-        }
-        clear_form(modal_data);
-        
-        let selected_rack = get_selected_item();
-
-        if(selected_rack.item_id.length <= 0) {
-            swal_warning({title: "Please select at least one rack"});
-            return false;
-        }
-
-        let selected_rack_number = selected_rack.item_name.sort(function(a, b){return a-b});
-        let rack_number_element = '';
-        selected_rack_number.forEach(rack_name => {
-            rack_number_element += `<span class="badge bg-maroon mr-1">Rack ${rack_name}</span>`;
-        });
-        $('#display_rack_number').html(rack_number_element)
-        $('#total_selected_rack').text(`Total Rack: ${selected_rack.item_id.length}`)
-        $('#selected_rack_id').val(selected_rack.item_id);
-
-        $(`#${modal_element_id}`).modal('show');
-    }
-
-    const reload_dtable = () => {
-        $('#reload_table_btn').trigger('click');
-    }
 </script>
 
 <script type="text/javascript">
@@ -322,12 +351,15 @@
         serverSide: true,
         ajax: {
             url: dtable_url,
+             data: function (d) {
+                d.rack_location_filter = $('#rack_location_filter').val();
+            },
         },
         order: [],
         columns: [
             { data: 'checkbox', name: 'checkbox', visible: column_visible},
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            { data: 'rack', name: 'rack'},
+            { data: 'serial_number', name: 'serial_number'},
             { data: 'location', name: 'location'},
             { data: 'location', name: 'location'},
             { data: 'location', name: 'location'},
@@ -352,32 +384,6 @@
         rack_location_table.ajax.reload(function(json){
             $('#reload_table_btn').removeClass('loading').attr('disabled',false);
         });
-    });
-
-    // ## Form Validation
-    let validator = $("#modal_rack_location form").validate({
-        errorElement: "span",
-        errorPlacement: function (error, element) {
-            error.addClass("invalid-feedback");
-            element.closest(".form-group").append(error);
-
-            // ## khusus untuk select2
-            if (element.hasClass('select2-hidden-accessible')) {
-                error.insertAfter(element.next('span.select2-container'));
-            }
-
-            // ## validasi error pada select2
-            if (!$(element).val()) {
-                $(element).parent().find('.select2-container').addClass('select2-container--error');
-            }
-
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).addClass("is-invalid");
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass("is-invalid");
-        },
     });
 
     $('#rack.select2').select2({
@@ -416,6 +422,38 @@
     $('#location.select2').select2({
         dropdownParent: $('#modal_change_rack_location'),
     });
+
+
+    // ## Form Validation
+    let validator = $("#modal_rack_location form").validate({
+        errorElement: "span",
+        errorPlacement: function (error, element) {
+            error.addClass("invalid-feedback");
+            element.closest(".form-group").append(error);
+
+            // ## khusus untuk select2
+            if (element.hasClass('select2-hidden-accessible')) {
+                error.insertAfter(element.next('span.select2-container'));
+            }
+
+            // ## validasi error pada select2
+            if (!$(element).val()) {
+                $(element).parent().find('.select2-container').addClass('select2-container--error');
+            }
+
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass("is-invalid");
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass("is-invalid");
+        },
+    });
+    setTimeout(reload_dtable, 500);
+
+    $('#rack_location_filter').change(function(event) {
+        reload_dtable();
+    });  
 </script>
 
 <script>

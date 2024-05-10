@@ -30,13 +30,17 @@ class RackLocationController extends Controller
         ];
         return view('pages.rack-location.index', $data);
     }
-     /**
-     * Show Datatable Data.
-     */
+
     public function dtable()
     {
-        $query = RackLocation::query();
-        
+        $query = Rack::leftJoin('rack_locations','rack_locations.rack_id','=','racks.id')
+        ->leftJoin('locations','locations.id','=','rack_locations.location_id')    
+        ->select(
+                'racks.id',
+                'racks.serial_number',
+                'locations.location as location',
+            );
+        // $query = Rack::query();
         return Datatables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
@@ -46,16 +50,10 @@ class RackLocationController extends Controller
                 ';
                 return $return; 
             })
-            ->addColumn('rack', function($row){
-                return $row->rack->serial_number;
-            })
-            ->addColumn('location', function($row){
-                return $row->location->location;
-            })
             ->filter(function ($query) {
                 if (request()->has('rack_location_filter') && request('rack_location_filter')) {
-                    $rack_location = request('rack_location_filter');
-                    $query->where('rack_location', $rack_location);
+                    $location_id = request('rack_location_filter');
+                    $query ->where('rack_locations.location_id','!=', null); 
                 }
             }, true)
             ->addColumn('checkbox', function ($row) {
@@ -80,33 +78,58 @@ class RackLocationController extends Controller
                 return $checkbox_element;
             })
             ->toJson();
-        }
-    /**
-     * Store a newly created resource in storage.
-     */
+    }       
+    
     public function store(Request $request)
     {
-        try {
-            $rack_location = RackLocation::firstOrCreate([
-                'location_id' => $request->location,
-            ]);
+    try {
+        $location_id = $request->location;
+        $location = Location::find($location_id);
+        
+        $selected_rack_ids = explode(',',$request->selected_rack_id);
 
-            $data_return = [
-                'status' => 'success',
-                'message' => 'Successfully added new rack location',
-                'data' => [
-                    'rack_location' => $rack_location,
-                ]
-            ];
-            return response()->json($data_return, 200);
-        } catch (\Throwable $th) {
-            $data_return = [
-                'status' => 'error',
-                'message' => $th->getMessage(),
-            ];
-            return response()->json($data_return);
-        }
+        $updated_racks = [];
+        DB::transaction(function () use ($selected_rack_ids, $location_id, &$updated_racks) {
+
+            foreach ($selected_rack_ids as $key => $rack_id) {
+                $rackLocation = RackLocation::where('rack_id', $rack_id)->first();
+
+                if ($rackLocation) {
+                    $rackLocation->update(['location_id' => $location_id]);
+                    $updated_racks[] = $rackLocation;
+                } else {
+                    foreach ($selected_rack_ids as $key => $rack_id) {
+                        $data_rack = RackLocation::firstOrCreate([
+                            'location_id' => $location_id,
+                            'rack_id' => $rack_id,
+                            'entry_at' => date('Y-m-d H:i:s')
+                        ]);
+                        
+                        $rack = Rack::find($rack_id);
+                        $rack->save();
+                        $inserted_rack[] = $rack;
+                    }
+                }
+            }
+        });
+
+        $data_return = [
+            'status' => 'success',
+            'message' => 'Successfully updated '. count($updated_racks) .' Rack locations to ' . $location->location,
+            'data' => [
+                'updated_racks' => $updated_racks
+            ]
+        ];
+        return response()->json($data_return, 200);
+
+    } catch (\Throwable $th) {
+        $data_return = [
+            'status' => 'error',
+            'message' => $th->getMessage(),
+        ];
+        return response()->json($data_return);
     }
+}
 
      /**
      * Display the specified resource.
@@ -115,7 +138,7 @@ class RackLocationController extends Controller
     {
         try {
             $rack_location = RackLocation::find($id);
-
+            // dd($rack_location);
             $data_return = [
                 'status' => 'success',
                 'message' => 'Successfully get Rack location',
