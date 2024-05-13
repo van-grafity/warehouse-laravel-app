@@ -69,52 +69,12 @@
     <!-- /.col -->
 </div>
 
-<!-- Modal Add and Edit Rack Location -->
-<div class="modal fade" id="modal_rack_location" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form action="" method="post" onsubmit="stopFormSubmission(event)">
-                <input type="hidden" name="edit_rack_location_id" value="" id="edit_rack_location_id">
-                
-                 <div class="modal-header">
-                    <h5 class="modal-title" id="ModalLabel">Select Location</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="selected_rack_id" name="selected_rack_id">
-                    <div class="card card-primary card-outline">
-                        <div class="card-body">
-                            <h6 class="title text-bold">Selected Rack: </h6>
-                            <div id="display_rack_name"></div>
-                        </div>
-                    </div>
-                     <div class="form-group">
-                        <label for="location">Location</label>
-                        <select name="location" id="location" class="form-control select2 validate-on-change" data-placeholder="Select Location" required>
-                            @foreach ($locations as $location)
-                                <option value="{{ $location->id }}"> {{ $location->location }} </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary btn-submit" onclick="submitForm('modal_rack_location')">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- End Modal Add and Edit Rack Location -->
-
 <!-- Modal Put Rack to Location -->
 <div class="modal fade" id="modal_change_rack_location" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form action="" method="post" onsubmit="stopFormSubmission(event)">
-
+            <input type="hidden" name="edit_rack_location_id" value="" id="edit_rack_location_id">    
 
                 <div class="modal-header">
                     <h5 class="modal-title" id="ModalLabel">Select Location</h5>
@@ -172,9 +132,11 @@
             modal_id : modal_element_id,
             title : "Select Location",
             btn_submit : "Save",
+            form_action_url : store_url,
         }
         clear_form(modal_data);
         
+
         let selected_rack = get_selected_item();
 
         if(selected_rack.item_id.length <= 0) {
@@ -210,8 +172,10 @@
             token: token,
         }
         result = await using_fetch(fetch_data);
+        
         rack_location_data = result.data.rack_location
 
+        $('#display_rack_number').html(`<span class="badge bg-maroon mr-1">Rack ${rack_location_data.rack_id}</span>`);
         $('#location_id').val(rack_location_data.location_id).trigger('change');
         $('#edit_rack_location_id').val(rack_location_data.id);
         
@@ -231,13 +195,7 @@
                 submit_btn.removeAttribute('disabled');
                 return false;
             }
-            
-            // let fetch_data = {
-            //     url: store_url,
-            //     method: "POST",
-            //     data: formData,
-            //     token: token,
-            // }
+
             if(!formData.edit_rack_location_id) {
                 // ## kalau tidak ada rack location id berarti STORE dan Method nya POST
                 fetch_data = {
@@ -261,21 +219,17 @@
                 swal_info({ title: response.message })
                 
                 reload_dtable();
-                disabled_action_wrapper(true); // ## disabled button inside action_wrapper
-                $(`#${modal_id}`).modal('hide');
             } else {
-                toastr.error(response.message)
+                swal_failed({ title: response.message })
             }
 
             submit_btn.removeAttribute('disabled');
 
         } catch (error) {
             console.error("Error:", error);
-            swal_failed({ title: "An error occurred while processing the form." });
-            let modal = document.getElementById(modal_id);
-            let submit_btn = modal.querySelector('.btn-submit');
-            submit_btn.removeAttribute('disabled');
         }
+
+        $(`#${modal_id}`).modal('hide');
     }
 
    const getValidationRules = () => {
@@ -386,70 +340,9 @@
         });
     });
 
-    $('#rack.select2').select2({
-            dropdownParent: $('#modal_rack_location'),
-            ajax: {
-                url: fetch_select_rack_url,
-                dataType: 'json',
-                delay: 500,
-                data: function (params) {
-                    var query = {
-                        search: params.term,
-                    }
-                    return query;
-                },
-                processResults: function (fetch_result) {
-                    return {
-                        results: fetch_result.data.items,
-                    };
-                },
-            }
-        });
-    $('#rack.select2').on('select2:open', function (e) {
-        document.querySelector('.select2-search__field').focus();
-    }).on('change', function() {
-        // ## penyesuaian perlakuan untuk jquery validation di select2
-        if ($(this).valid()) {
-            $(this).removeClass("is-invalid");
-            $(this).next(".invalid-feedback").remove();
-            $(this).parent().find('.select2-container').removeClass('select2-container--error');
-        }
-    });
-
-    $('#location.select2').select2({
-        dropdownParent: $('#modal_rack_location'),
-    });
     $('#location.select2').select2({
         dropdownParent: $('#modal_change_rack_location'),
     });
-
-
-    // ## Form Validation
-    let validator = $("#modal_rack_location form").validate({
-        errorElement: "span",
-        errorPlacement: function (error, element) {
-            error.addClass("invalid-feedback");
-            element.closest(".form-group").append(error);
-
-            // ## khusus untuk select2
-            if (element.hasClass('select2-hidden-accessible')) {
-                error.insertAfter(element.next('span.select2-container'));
-            }
-
-            // ## validasi error pada select2
-            if (!$(element).val()) {
-                $(element).parent().find('.select2-container').addClass('select2-container--error');
-            }
-
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).addClass("is-invalid");
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass("is-invalid");
-        },
-    });
-    setTimeout(reload_dtable, 500);
 
     $('#rack_location_filter').change(function(event) {
         reload_dtable();
