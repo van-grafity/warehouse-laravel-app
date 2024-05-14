@@ -74,7 +74,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form action="" method="post" onsubmit="stopFormSubmission(event)">
-            <input type="hidden" name="edit_rack_location_id" value="" id="edit_rack_location_id">    
+                <input type="hidden" name="edit_rack_location_id" value="" id="edit_rack_location_id">
 
                 <div class="modal-header">
                     <h5 class="modal-title" id="ModalLabel">Select Location</h5>
@@ -172,7 +172,7 @@
             token: token,
         }
         result = await using_fetch(fetch_data);
-        
+        // console.log(result);
         rack_location_data = result.data.rack_location
 
         $('#display_rack_number').html(`<span class="badge bg-maroon mr-1">Rack ${rack_location_data.rack_id}</span>`);

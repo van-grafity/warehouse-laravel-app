@@ -50,11 +50,15 @@ class RackLocationController extends Controller
                 ';
                 return $return; 
             })
+
             ->filter(function ($query) {
-                if (request()->has('rack_location_filter') && request('rack_location_filter') && request('rack_location_filter'))  {
-                    $location_id = request('rack_location_filter');
-                    $query ->where('rack_locations.location_id','!=', null);
-                    // $query ->where('racks.id','=','rack_locations.rack_id','=','rack_locations.location_id','=', null); 
+                if (request()->has('rack_location_filter')) {
+                    if (request('rack_location_filter') == 'allocated') {
+                        $query->where('rack_locations.location_id', '!=', null);
+                    }
+                    if (request('rack_location_filter') == 'unallocated') {
+                        $query->where('rack_locations.location_id','=', null);
+                    }
                 }
             }, true)
             ->addColumn('checkbox', function ($row) {
@@ -109,7 +113,7 @@ class RackLocationController extends Controller
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully updated '. count($updated_racks) .' Rack locations to ' . $location->location,
+                'message' => 'Successfully updated Rack locations to ' . $location->location,
                 'data' => [
                     'updated_racks' => $updated_racks
                 ]
@@ -132,6 +136,7 @@ class RackLocationController extends Controller
     {
         try {
             $rack_location = RackLocation::find($id);
+            dd($rack_location);
             $data_return = [
                 'status' => 'success',
                 'message' => 'Successfully get Rack location',
