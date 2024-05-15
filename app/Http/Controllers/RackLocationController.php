@@ -39,7 +39,7 @@ class RackLocationController extends Controller
                 'racks.id',
                 'racks.serial_number',
                 'locations.location as location',
-            );
+            ); 
 
         return Datatables::of($query)
             ->addIndexColumn()
@@ -85,7 +85,7 @@ class RackLocationController extends Controller
             ->toJson();
     }       
     
-     public function store(Request $request)
+    public function store(Request $request)
     {
         try {
             $location_id = $request->location;
@@ -96,24 +96,30 @@ class RackLocationController extends Controller
             $updated_racks = [];
             DB::transaction(function () use ($selected_rack_ids, $location_id, &$updated_racks) {
 
-                $rack_location = RackLocation::whereIn('rack_id', $selected_rack_ids)->delete();
+            foreach ($selected_rack_ids as $key => $rack_id) {
+                $rackLocation = RackLocation::where('rack_id', $rack_id)->first();
 
-                foreach ($selected_rack_ids as $key => $rack_id) {
-                    $data_rack = RackLocation::firstOrCreate([
-                        'location_id' => $location_id,
-                        'rack_id' => $rack_id,
-                        'entry_at' => date('Y-m-d H:i:s')
-                    ]);                           
-                    $rack = Rack::find($rack_id);
-                    $rack->save();
-                    $inserted_rack[] = $rack;
+                if ($rackLocation) {
+                    $rackLocation->update(['location_id' => $location_id]);
+                    $updated_racks[] = $rackLocation;
+                } 
+                else {                   
+                        $data_rack = RackLocation::firstOrCreate([
+                            'location_id' => $location_id,
+                            'rack_id' => $rack_id,
+                            'entry_at' => date('Y-m-d H:i:s')
+                        ]);
+
+                        $rack = Rack::find($rack_id);
+                        $rack->save();
+                        $inserted_rack[] = $rack;                  
                 }
-
-            });
+            }
+        });
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully updated Rack locations to ' . $location->location,
+                'message' => 'Successfully updated '. count($selected_rack_ids) .' Rack locations to ' . $location->location,
                 'data' => [
                     'updated_racks' => $updated_racks
                 ]
@@ -136,7 +142,7 @@ class RackLocationController extends Controller
     {
         try {
             $rack_location = RackLocation::find($id);
-            dd($rack_location);
+            
             $data_return = [
                 'status' => 'success',
                 'message' => 'Successfully get Rack location',
@@ -166,7 +172,7 @@ class RackLocationController extends Controller
             
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully updated rack location',
+                'message' => 'Successfully updated rack location ',
                 'data' => $rack_location
             ];
             return response()->json($data_return, 200);
@@ -178,28 +184,4 @@ class RackLocationController extends Controller
             return response()->json($data_return);
         }
     }
-
-     /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        try {
-            $rack_location = rackLocation::find($id);
-            $rack_location->delete();
-            $data_return = [
-                'status' => 'success',
-                'data'=> $rack_location,
-                'message'=> 'Rack Location successfully Deleted!',
-            ];
-            return response()->json($data_return, 200);
-        } catch (\Throwable $th) {
-            $data_return = [
-                'status' => 'error',
-                'message' => $th->getMessage(),
-            ];
-            return response()->json($data_return);
-        }
-    }
-
 }

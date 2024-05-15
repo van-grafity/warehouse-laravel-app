@@ -172,7 +172,6 @@
             token: token,
         }
         result = await using_fetch(fetch_data);
-        // console.log(result);
         rack_location_data = result.data.rack_location
 
         $('#display_rack_number').html(`<span class="badge bg-maroon mr-1">Rack ${rack_location_data.rack_id}</span>`);
@@ -338,6 +337,33 @@
         rack_location_table.ajax.reload(function(json){
             $('#reload_table_btn').removeClass('loading').attr('disabled',false);
         });
+    });
+
+    // ## Form Validator
+    let validator = $('#modal_change_rack_location form').validate({
+        rules: getValidationRules(),
+        messages: getValidationMessages(),
+        errorElement: "span",
+        errorPlacement: function (error, element) {
+            error.addClass("invalid-feedback");
+            element.closest(".form-group").append(error);
+
+            // ## khusus untuk select2
+            if (element.hasClass('select2-hidden-accessible')) {
+                error.insertAfter(element.next('span.select2-container'));
+            }
+
+            // ## validasi error pada select2
+            if (!$(element).val()) {
+                $(element).parent().find('.select2-container').addClass('select2-container--error');
+            }
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass("is-invalid");
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass("is-invalid");
+        },
     });
 
     $('#location.select2').select2({
