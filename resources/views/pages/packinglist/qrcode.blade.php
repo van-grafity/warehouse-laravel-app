@@ -10,31 +10,39 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-size: 12px;
+            margin: 0px;
         }
+
+        .page-break {
+            page-break-after: always;
+        }
+        @page { margin: 0px; }
 	</style>
 </head>
     @foreach ($fabricrolls as $fabricroll)
-        <table style=" display: inline-table; border: 1px solid black; margin-left: 5px; margin-top: 10px;" cellpadding="8" cellspacing="0" width="105">
-            <tbody>
-                <tr style="">
-                    <td width="50">
-                        <img src="data:image/png;base64, {!! base64_encode(QrCode::size(60)->generate($fabricroll->serial_number))!!} ">
-                    </td>
-                    <td style="font-size: 35px; padding-left:5px;">
-                        {{ $fabricroll->roll_number }}
-                    </td>
-                    <tr>
-                    <td  colspan="2" style="font-size: 9px; text-align: center; border: 1px solid black; ">
-                        {{ $fabricroll->serial_number }}
-                    </td>
+        <div class="page-break">
+            <table style=" display: inline-table; border: 1px solid black; margin-left: 5px; margin-right: 5px; margin-top: 5px;" cellpadding="8" cellspacing="0" width="105">
+                <tbody>
+                    <tr style="">
+                        <td width="50">
+                            <img src="data:image/png;base64, {!! base64_encode(QrCode::size(60)->generate($fabricroll->serial_number))!!} ">
+                        </td>
+                        <td style="font-size: 35px; padding-left:5px;">
+                            {{ $fabricroll->roll_number }}
+                        </td>
+                        <tr>
+                        <td  colspan="2" style="font-size: 9px; text-align: center; border: 1px solid black; ">
+                            {{ $fabricroll->serial_number }}
+                        </td>
+                        </tr>
+                        <tr>
+                        <td  colspan="2" style="font-size: 10px; border: 1px solid black; ">
+                            PO / GL : {{ $fabricroll->packinglist->po_number }} / {{ $fabricroll->packinglist->gl_number }}
+                        </td>
+                        </tr>
                     </tr>
-                    <tr>
-                    <td  colspan="2" style="font-size: 10px; border: 1px solid black; ">
-                        PO / GL : {{ $fabricroll->packinglist->po_number }} / {{ $fabricroll->packinglist->gl_number }}
-                    </td>
-                    </tr>
-                </tr>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     @endforeach
 </html>
