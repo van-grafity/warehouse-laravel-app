@@ -36,10 +36,10 @@ class RackLocationController extends Controller
         $query = Rack::leftJoin('rack_locations','rack_locations.rack_id','=','racks.id')
         ->leftJoin('locations','locations.id','=','rack_locations.location_id')    
         ->select(
-                'racks.id',
-                'racks.serial_number',
-                'locations.location as location',
-            ); 
+            'racks.id',
+            'racks.serial_number',
+            'locations.location as location',
+        ); 
 
         return Datatables::of($query)
             ->addIndexColumn()
@@ -96,14 +96,13 @@ class RackLocationController extends Controller
             $updated_racks = [];
             DB::transaction(function () use ($selected_rack_ids, $location_id, &$updated_racks) {
 
-            foreach ($selected_rack_ids as $key => $rack_id) {
-                $rackLocation = RackLocation::where('rack_id', $rack_id)->first();
+                foreach ($selected_rack_ids as $key => $rack_id) {
+                    $rackLocation = RackLocation::where('rack_id', $rack_id)->first();
 
-                if ($rackLocation) {
-                    $rackLocation->update(['location_id' => $location_id]);
-                    $updated_racks[] = $rackLocation;
-                } 
-                else {                   
+                    if ($rackLocation) {
+                        $rackLocation->update(['location_id' => $location_id]);
+                        $updated_racks[] = $rackLocation;
+                    } else {                   
                         $data_rack = RackLocation::firstOrCreate([
                             'location_id' => $location_id,
                             'rack_id' => $rack_id,
@@ -113,9 +112,9 @@ class RackLocationController extends Controller
                         $rack = Rack::find($rack_id);
                         $rack->save();
                         $inserted_rack[] = $rack;                  
+                    }
                 }
-            }
-        });
+            });
 
             $data_return = [
                 'status' => 'success',
