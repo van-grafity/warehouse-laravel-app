@@ -41,6 +41,7 @@ class PackinglistsImport implements ToCollection, WithCalculatedFormulas
                 'kgs' => $row[9],
                 'lbs' => $row[10],
                 'yds' => $row[11],
+                'width' => $row[12],
             ];
 
             $this->data[] = $packinglist;

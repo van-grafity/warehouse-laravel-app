@@ -64,6 +64,7 @@
                             <th width="">KGs</th>
                             <th width="">LBs</th>
                             <th width="">YDs</th>
+                            <th width="">Width</th>
                             <th width="120">Action</th>
                         </tr>
                     </thead>
@@ -117,6 +118,10 @@
                     <div class="form-group">
                         <label for="yds" class="col-form-label">YDs</label>
                         <input type="number" class="form-control" id="yds" name="yds" step=".01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="width" class="col-form-label">Width</label>
+                        <input type="number" class="form-control" id="width" name="width" step=".01" min="0" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -187,6 +192,7 @@
         $('#kgs').val(fabric_roll.kgs);
         $('#lbs').val(fabric_roll.lbs);
         $('#yds').val(fabric_roll.yds);
+        $('#width').val(fabric_roll.width);
         $('#edit_fabric_roll_id').val(fabric_roll.id);
         
         $('#roll_number').attr('readonly',true);
@@ -456,6 +462,7 @@
             { data: 'kgs', name: 'kgs'},
             { data: 'lbs', name: 'lbs'},
             { data: 'yds', name: 'yds'},
+            { data: 'width', name: 'width'},
             { data: 'action', name: 'action', orderable: false, searchable: false, visible: column_action },
         ],
         paging: true,

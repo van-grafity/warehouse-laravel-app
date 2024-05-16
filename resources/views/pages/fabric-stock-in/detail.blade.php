@@ -58,6 +58,7 @@
                             <th width="">KGs</th>
                             <th width="">LBs</th>
                             <th width="">YDs</th>
+                            <th width="">Width</th>
                             <th width="">Rack at</th>
                             <th width="">Rack Number</th>
                         </tr>
@@ -314,6 +315,7 @@
             { data: 'kgs', name: 'fabric_rolls.kgs'},
             { data: 'lbs', name: 'fabric_rolls.lbs'},
             { data: 'yds', name: 'fabric_rolls.yds'},
+            { data: 'width', name: 'fabric_rolls.width'},
             { data: 'racked_at', name: 'fabric_rolls.racked_at'},
             { data: 'rack_number', name: 'racks.serial_number'},
         ],

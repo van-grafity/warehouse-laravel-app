@@ -19,6 +19,7 @@ return new class extends Migration
             $table->double('kgs');
             $table->double('lbs');
             $table->double('yds');
+            $table->double('width');
             $table->datetime('racked_at')->nullable();
             $table->foreignId('racked_by')->nullable()->constrained('users');
             $table->foreignId('created_by')->nullable()->constrained('users');

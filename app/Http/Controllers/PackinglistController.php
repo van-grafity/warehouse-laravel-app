@@ -238,7 +238,7 @@ class PackinglistController extends Controller
             }
 
             // ## set required Column. cannot be empty / null on excel
-            $required_column = ['invoice','buyer','gl_number','po_number','color','batch','style','fabric_content','roll','kgs','lbs','yds'];
+            $required_column = ['invoice','buyer','gl_number','po_number','color','batch','style','fabric_content','roll','kgs','lbs','yds','width'];
     
             // ## cleaning data
             $cleaned_data = removeEmptyData($packinglist_data, $required_column);
@@ -275,7 +275,7 @@ class PackinglistController extends Controller
     {
         // ## get first row in header_array and check valid name
         $header_from_excel = array_values($header_array);
-        $header_list = ['invoice','buyer','gl_number','po_number','color','batch','style','fabric_content','roll','kgs','lbs','yds'];
+        $header_list = ['invoice','buyer','gl_number','po_number','color','batch','style','fabric_content','roll','kgs','lbs','yds','width'];
 
         foreach ($header_list as $key => $header) {
             if ($header != $header_from_excel[$key]) return false;
@@ -345,7 +345,7 @@ class PackinglistController extends Controller
         $inserted_roll = [];
         try {
             
-            $column_to_insert = ['batch','color','roll','kgs','lbs','yds'];
+            $column_to_insert = ['batch','color','roll','kgs','lbs','yds','width'];
             $roll_data_from_excel = filterArrayByKeys($data_array_from_excel, $column_to_insert);
             
             foreach ($roll_data_from_excel as $key_data => $roll) {
@@ -365,6 +365,7 @@ class PackinglistController extends Controller
                     'kgs' => $roll['kgs'],
                     'lbs' => $roll['lbs'],
                     'yds' => $roll['yds'],
+                    'width' => $roll['width'],
                 ];
 
                 $inserted_roll[] = FabricRoll::create($roll_data_to_insert);

@@ -116,7 +116,8 @@ class FabricStatusController extends Controller
                 'fabric_rolls.serial_number', 
                 'fabric_rolls.kgs', 
                 'fabric_rolls.lbs', 
-                'fabric_rolls.yds', 
+                'fabric_rolls.yds',
+                'fabric_rolls.width',  
                 'racks.serial_number as rack_number'
             )
             ->get();

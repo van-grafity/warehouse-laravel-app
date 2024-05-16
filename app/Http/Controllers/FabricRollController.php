@@ -102,6 +102,7 @@ class FabricRollController extends Controller
                 'kgs' => $request->kgs,
                 'lbs' => $request->lbs,
                 'yds' => $request->yds,
+                'width' => $request->width,
             ]);
 
             $data_return = [
@@ -155,6 +156,7 @@ class FabricRollController extends Controller
             $fabric_roll->kgs = $request->kgs;
             $fabric_roll->lbs = $request->lbs;
             $fabric_roll->yds = $request->yds;
+            $fabric_roll->width = $request->width;
             $fabric_roll->save();
             
             $data_return = [
