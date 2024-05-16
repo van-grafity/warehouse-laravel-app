@@ -52,13 +52,21 @@ class RackLocationController extends Controller
             })
 
             ->filter(function ($query) {
-                if (request()->has('rack_location_filter')) {
-                    if (request('rack_location_filter') == 'allocated') {
+                if (request()->has('rack_allocation_filter')) {
+                    if (request('rack_allocation_filter') == 'allocated') {
                         $query->where('rack_locations.location_id', '!=', null);
-                        $query->orderBy('id', 'ASC');
                     }
-                    if (request('rack_location_filter') == 'unallocated') {
+                    if (request('rack_allocation_filter') == 'unallocated') {
                         $query->where('rack_locations.location_id','=', null);
+                    }
+                }
+
+                if (request()->has('rack_type_filter')) {
+                    if (request('rack_type_filter') == 'moveable') {
+                        $query->where('racks.rack_type', '=', 'moveable');
+                    }
+                    if (request('rack_type_filter') == 'fixed') {
+                        $query->where('racks.rack_type','=', 'fixed');
                     }
                 }
             }, true)

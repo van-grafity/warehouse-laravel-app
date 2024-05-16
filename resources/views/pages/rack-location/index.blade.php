@@ -20,7 +20,14 @@
                             @endcan
                         </div>
                          <div class="filter_wrapper mr-2" style="width:200px;">
-                            <select name="rack_location_filter" id="rack_location_filter" class="form-control select2 no-search-box">
+                            <select name="rack_type_filter" id="rack_type_filter" class="form-control select2 no-search-box">
+                                <option value="">All Rack Type</option>
+                                <option value="moveable" selected > Moveable Rack </option>
+                                <option value="fixed"> Fixed Rack </option>
+                            </select>
+                        </div>
+                         <div class="filter_wrapper mr-2" style="width:200px;">
+                            <select name="rack_allocation_filter" id="rack_allocation_filter" class="form-control select2 no-search-box">
                                 <option value="" selected>All Data</option>
                                 <option value="allocated"> Allocated Rack </option>
                                 <option value="unallocated"> Unallocated Rack </option>
@@ -74,8 +81,6 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form action="" method="post" onsubmit="stopFormSubmission(event)">
-                <input type="hidden" name="edit_rack_location_id" value="" id="edit_rack_location_id">
-
                 <div class="modal-header">
                     <h5 class="modal-title" id="ModalLabel">Select Location</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -290,10 +295,11 @@
         ajax: {
             url: dtable_url,
              data: function (d) {
-                d.rack_location_filter = $('#rack_location_filter').val();
+                d.rack_allocation_filter = $('#rack_allocation_filter').val();
+                d.rack_type_filter = $('#rack_type_filter').val();
             },
         },
-        order: [],
+        order: [2,'asc'],
         columns: [
             { data: 'checkbox', name: 'checkbox', visible: column_visible},
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
@@ -355,7 +361,7 @@
         dropdownParent: $('#modal_change_rack_location'),
     });
 
-    $('#rack_location_filter').change(function(event) {
+    $('#rack_allocation_filter, #rack_type_filter').change(function(event) {
         reload_dtable();
     });  
 </script>
