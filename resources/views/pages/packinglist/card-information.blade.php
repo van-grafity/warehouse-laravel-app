@@ -74,7 +74,7 @@
                                     <th>#</th>
                                     <th>Packing List Qty</th>
                                     <th>Stock In</th>
-                                    <th>Balance</th>
+                                    <th>Balance to rec'd</th>
                                 </tr>
                             </thead>
                             <tbody>
