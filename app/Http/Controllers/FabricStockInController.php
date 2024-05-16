@@ -105,11 +105,6 @@ class FabricStockInController extends Controller
                         'stock_in_by' => auth()->user()->id
                     ]);
 
-                    // !! nanti hapus
-                    // $data_update = [
-                    //     'racked_at' => date('Y-m-d H:i:s'),
-                    //     'racked_by' => auth()->user()->id
-                    // ];
                     $roll = FabricRoll::find($roll_id);
                     $roll->racked_at = date('Y-m-d H:i:s');
                     $roll->racked_by = auth()->user()->id;
