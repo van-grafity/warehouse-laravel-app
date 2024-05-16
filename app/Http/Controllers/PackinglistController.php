@@ -428,12 +428,14 @@ class PackinglistController extends Controller
     {
         $id = explode(',', $request->id);
         $fabricrolls = FabricRoll::with('packinglist.color')->whereIn('id', $id)->get();
+        // ## 6cm x 4cm uk sticker
+        $customepaper = array(0,0,170,113.38);
         
         $data = [
             'fabricrolls' => $fabricrolls,
         ];
         
-        $pdf = PDF::loadview('pages.packinglist.qrcode', $data)->setPaper('a4', 'potrait');
+        $pdf = PDF::loadview('pages.packinglist.qrcode', $data)->setPaper($customepaper, 'landscape');
         return $pdf->stream('fabric-roll.pdf');
     }
 }
