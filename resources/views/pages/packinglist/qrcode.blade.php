@@ -14,9 +14,12 @@
         }
 
         .page-break {
-            page-break-after: always;
+            page-break-after: auto;
         }
-        @page { margin: 0px; }
+        
+        @page { 
+            margin: 0px; 
+        }
 	</style>
 </head>
     @foreach ($fabricrolls as $fabricroll)
@@ -25,9 +28,9 @@
                 <tbody>
                     <tr style="">
                         <td width="50">
-                            <img src="data:image/png;base64, {!! base64_encode(QrCode::size(60)->generate($fabricroll->serial_number))!!} ">
+                            <img src="data:image/png;base64, {!! base64_encode(QrCode::size(70)->generate($fabricroll->serial_number))!!} ">
                         </td>
-                        <td style="font-size: 35px; padding-left:5px;">
+                        <td style="font-size: 30px; text-align: center;">
                             {{ $fabricroll->roll_number }}
                         </td>
                         <tr>
@@ -37,7 +40,9 @@
                         </tr>
                         <tr>
                         <td  colspan="2" style="font-size: 10px; border: 1px solid black; ">
-                            PO / GL : {{ $fabricroll->packinglist->po_number }} / {{ $fabricroll->packinglist->gl_number }}
+                            PO : {{ $fabricroll->packinglist->po_number }} 
+                            </br>
+                            GL : {{ $fabricroll->packinglist->gl_number }}
                         </td>
                         </tr>
                     </tr>

@@ -428,7 +428,8 @@ class PackinglistController extends Controller
     {
         $id = explode(',', $request->id);
         $fabricrolls = FabricRoll::with('packinglist.color')->whereIn('id', $id)->get();
-        $customepaper = array(0,0,127,113);
+        // ## 6cm x 4cm uk sticker
+        $customepaper = array(0,0,170,113.38);
         
         $data = [
             'fabricrolls' => $fabricrolls,
