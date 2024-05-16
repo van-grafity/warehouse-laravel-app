@@ -156,27 +156,23 @@
         $(`#${modal_element_id}`).modal('show');
     }
 
-    const show_modal_edit = async (modal_element_id, rack_location_id) => {
+    const show_modal_edit = async (modal_element_id, element) => {
+
+        let rack_id = $(element).data('rack-id');
+        let rack_number = $(element).data('rack-number');
 
         let modal_data = {
             modal_id : modal_element_id,
-            title : "Edit Rack Location",
+            title : "Select Location",
             btn_submit : "Save",
-            form_action_url : update_url.replace(':id',rack_location_id),
+            form_action_url : store_url,
         }
         clear_form(modal_data);
         
-        fetch_data = {
-            url: show_url.replace(':id',rack_location_id),
-            method: "GET",
-            token: token,
-        }
-        result = await using_fetch(fetch_data);
-        rack_location_data = result.data.rack_location
-
-        $('#display_rack_number').html(`<span class="badge bg-maroon mr-1">Rack ${rack_location_data.rack_id}</span>`);
-        $('#location_id').val(rack_location_data.location_id).trigger('change');
-        $('#edit_rack_location_id').val(rack_location_data.id);
+        let rack_number_element = `<span class="badge bg-maroon mr-1">Rack ${rack_number}</span>`;
+        $('#display_rack_number').html(rack_number_element);
+        $('#total_selected_rack').text(``);
+        $('#selected_rack_id').val(rack_id);
         
         $(`#${modal_element_id}`).modal('show');
     }
@@ -195,22 +191,11 @@
                 return false;
             }
 
-            if(!formData.edit_rack_location_id) {
-                // ## kalau tidak ada rack location id berarti STORE dan Method nya POST
-                fetch_data = {
-                    url: store_url,
-                    method: "POST",
-                    data: formData,
-                    token: token,
-                }
-            } else {
-                // ## kalau ada rack location id berarti UPDATE dan Method nya PUT
-                fetch_data = {
-                    url: update_url.replace(':id',formData.edit_rack_location_id),
-                    method: "PUT",
-                    data: formData,
-                    token: token,
-                }
+            let fetch_data = {
+                url: store_url,
+                method: "POST",
+                data: formData,
+                token: token,
             }
 
             const response = await using_fetch(fetch_data);
@@ -313,10 +298,10 @@
             { data: 'checkbox', name: 'checkbox', visible: column_visible},
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
             { data: 'serial_number', name: 'serial_number'},
-            { data: 'location', name: 'location'},
-            { data: 'location', name: 'location'},
-            { data: 'location', name: 'location'},
-            { data: 'location', name: 'location'},
+            { data: 'location', name: 'locations.location'},
+            { data: 'location', name: 'locations.location'},
+            { data: 'location', name: 'locations.location'},
+            { data: 'location', name: 'locations.location'},
             { data: 'action', name: 'action', visible: column_visible},
         ],
         columnDefs: [
