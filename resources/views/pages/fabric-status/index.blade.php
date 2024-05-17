@@ -9,29 +9,46 @@
         <div class="card">
             <div class="card-header d-flex p-0">
                 <h3 class="card-title p-3 my-auto"> Fabric Stock Status </h3>
-
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <div class="mb-3 text-right">
-                    <button id="reload_table_btn" class="btn btn-sm btn-info">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
+                <div class="row  mb-3">
+                    <div class="col-sm-12 d-inline-flex justify-content-end">
+                        <div class="filter_wrapper mr-2" style="width:200px;">
+                        <select name="gl_filter" id="gl_filter" class="form-control select2 no-search-box">
+                            <option value="" selected>All GL Number</option>
+                            <option value="moveable" > Moveable Rack </option>
+                            <option value="fixed"> Fixed Rack </option>
+                        </select>
+                        </div>
+                        <div class="filter_wrapper mr-2" style="width:200px;">
+                            <select name="color_filter" id="color_filter" class="form-control select2 no-search-box">
+                                <option value="" selected >All Color</option>
+                                <option value="moveable" > Moveable Rack </option>
+                                <option value="fixed"> Fixed Rack </option>
+                            </select>
+                        </div>
+                        <div class="filter_wrapper text-right align-self-center">
+                            <button id="reload_table_btn" class="btn btn-sm btn-info">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <table id="packinglist_table" class="table table-bordered table-hover text-center">
                     <thead>
                         <tr class="">
-                            <th width="20">No</th>
-                            <th width="" class="text-center">Packinglist No</th>
-                            <th width="">Batch</th>
-                            <th width="">PO Number</th>
-                            <th width="">Invoice</th>
-                            <th width="50">GL</th>
-                            <th width="">Color</th>
-                            <th width="">Roll Stock</th>
+                            <th width="20" rowspan="2">No</th>
+                            <th width="" rowspan="2" class="text-center">Packinglist No</th>
+                            <th width="50"rowspan="2">GL</th>
+                            <th width="" rowspan="2">Color</th>
+                            <th width="" rowspan="2">Batch</th>
+                            <th width="" colspan="2">Stock</th>
+                            <th width="100" rowspan="2">Action</th>
+                        </tr> 
+                        <tr>      
+                            <th width="">Roll Qty</th>
                             <th width="">Length (YDs)</th>
-                            <th width="">Weight (KGs)</th>
-                            <th width="100">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,6 +63,104 @@
     <!-- /.col -->
 </div>
 
+<!-- Modal Detail Fabric Status  -->
+<div class="modal fade" id="modal_fabric_status" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form>
+                <input type="hidden" name="detail_packinglist_id" value="" id="detail_packinglist_id">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalLabel">Detail Fabric Rolls</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-lg-12 col-xl-12">
+                            <div class="row mb-3">
+                                <div class="col-sm-12">
+                                    <h5 style="font-weight:bold" type="text">Serial Number : {{$packinglist}}</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <dl class="row">
+                                        <dt class="col-md-4 col-sm-12">Invoice </dt>
+                                        <dd class="col-md-8 col-sm-12" id="invoice" name="invoice">:</dd>
+
+                                        <dt class="col-md-4 col-sm-12">Buyer</dt>
+                                        <dd class="col-md-8 col-sm-12" id="buyer">:</dd>
+
+                                        <dt class="col-md-4 col-sm-12">GL Number</dt>
+                                        <dd class="col-md-8 col-sm-12" id="gl_number" >:</dd>
+
+                                        <dt class="col-md-4 col-sm-12">Style</dt>
+                                        <dd class="col-md-8 col-sm-12" id="style">: </dd>
+                                    </dl>
+                                </div>
+                                <div class="col-sm-7">
+                                    <dl class="row">
+                                        <dt class="col-md-4 col-sm-12">PO Number</dt>
+                                        <dd class="col-md-8 col-sm-12" id="po_number">: </dd>
+
+                                        <dt class="col-md-4 col-sm-12">Color</dt>
+                                        <dd class="col-md-8 col-sm-12" id="color">: </dd>
+
+                                        <dt class="col-md-4 col-sm-12">Batch</dt>
+                                        <dd class="col-md-8 col-sm-12" id="batch_number">: </dd>
+
+                                        <dt class="col-md-4 col-sm-12">Fabric Content</dt>
+                                        <dd class="col-md-8 col-sm-12" id="fabric_content">:</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Table Roll List -->
+                        <div class="col-lg-12 col-xl-12">
+                            <h5 style="font-weight:bold" type="text">Detail Fabric Roll</h5>                
+                            <table id="fabric_roll_table" border="1px solid black" style="width:100%" >
+                                <thead>
+                                <tr style="text-align: center; background-color:silver;">
+                                    <th width="100">Roll Number</th>
+                                    <th>Serial Number</th>
+                                    <th width="60">KGs</th>
+                                    <th width="60">LBs</th>
+                                    <th width="60">YDs</th>
+                                    <th width="60">Width</th>
+                                    <th width="110">Rack Number</th>
+                                    <th width="80">Location</th>
+                                </tr>
+                                </thead>                           
+                                <tbody>
+                                    @foreach ($fabricrolls as $fabricroll) 
+                                    <tr>
+                                        <td style="text-align: center;" >{{ $fabricroll->roll_number }}</td>
+                                        <td>{{ $fabricroll->serial_number }}</td>
+                                        <td style="text-align: center;" >{{ $fabricroll->kgs }}</td>
+                                        <td style="text-align: center;" >{{ $fabricroll->lbs }}</td>
+                                        <td style="text-align: center;" >{{ $fabricroll->yds }}</td>
+                                        <td style="text-align: center;" >{{ $fabricroll->width }}</td>
+                                        <td style="text-align: center;" >{{ $fabricroll->roll_number }}</td>
+                                        <td style="text-align: center;" >{{ $fabricroll->roll_number }}</td>
+                                    </tr>
+                                    @endforeach  
+                                </tbody>                                                  
+                            </table>
+                        
+                        </div>
+                        <!-- End Table Roll List -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- End Modal Detail Fabric Status -->
+
 @endsection
 
 @section('js')
@@ -54,7 +169,29 @@
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     
     // ## URL List
+    const show_url = "{{ route('fabric-status.show',':id') }}";
     const dtable_url = "{{ route('fabric-status.dtable') }}";
+
+    const show_modal_detail = async (modal_element_id, packinglist_id) => {
+        let modal_data = {
+            modal_id : modal_element_id,
+            title : "Detail Fabric Status",
+        }
+        clear_form(modal_data);
+        
+        fetch_data = {
+            url: show_url.replace(':id',packinglist_id),
+            method: "GET",
+            token: token,
+        }
+        result = await using_fetch(fetch_data);
+        packinglist_data = result.data.packinglist
+
+        $('#serial_number').val(packinglist_data.serial_number);
+        $('#detail_packinglist_id').val(packinglist_data.id);
+        
+        $(`#${modal_element_id}`).modal('show');
+    }
 </script>
 
 <script type="text/javascript">
@@ -77,18 +214,15 @@
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
             { data: 'serial_number', name: 'serial_number', className: 'text-left'},
-            { data: 'batch_number', name: 'batch_number'},
-            { data: 'po_number', name: 'po_number'},
-            { data: 'invoice', name: 'invoice'},
             { data: 'gl_number', name: 'gl_number'},
             { data: 'color', name: 'color'},
+            { data: 'batch_number', name: 'batch_number'},
             { data: 'roll_balance', name: 'roll_balance'},
             { data: 'total_length_yds', name: 'total_length_yds'},
-            { data: 'total_weight_kgs', name: 'total_weight_kgs'},
-            { data: 'action', name: 'action'},
+            { data: 'action', name: 'action', searchable: false},
         ],
         columnDefs: [
-            { targets: [0,-2], orderable: false, searchable: false },
+            { targets: [0,-1], orderable: false, searchable: false },
         ],
         
         paging: true,
@@ -105,6 +239,20 @@
         packinglist_table.ajax.reload(function(json){
             $('#reload_table_btn').removeClass('loading').attr('disabled',false);
         });
+    });
+
+    let validator = $('#modal_fabric_status form').validate({
+        errorElement: "span",
+        errorPlacement: function (error, element) {
+            error.addClass("invalid-feedback");
+            element.closest(".form-group").append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass("is-invalid");
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass("is-invalid");
+        },
     });
 </script>
 @stop

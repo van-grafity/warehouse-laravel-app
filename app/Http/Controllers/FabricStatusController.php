@@ -30,11 +30,15 @@ class FabricStatusController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
+    public function index(Request $request)
+    {    
+        $packinglist = Packinglist::find($request->id);
+        $fabricrolls = FabricRoll::get();
         $data = [
             'title' => 'Fabric Status',
             'page_title' => 'Fabric Status',
+            'packinglist' => $packinglist,
+            'fabricrolls' => $fabricrolls,
             'can_manage' => auth()->user()->can('manage'),
         ];
         return view('pages.fabric-status.index', $data);
@@ -52,10 +56,31 @@ class FabricStatusController extends Controller
             ->escapeColumns([])
             ->addColumn('action', function($row){
                 $action_button = "
-                    <a href='". route('fabric-status.detail',$row->id)."' class='btn btn-primary btn-sm' >Detail</a>
-                ";
+                    <a href='". route('fabric-status.detail',$row->id)."' class='btn btn-primary btn-sm' >Detail</a>".                  
+                    '<a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_detail(\'modal_fabric_status\', '.$row->id.')">Quick Detail</a>';                 
                 return $action_button;
             })
+
+            // ->filter(function ($query) {
+            //     if (request()->has('gl_filter')) {
+            //         if (request('gl_filter') == 'allocated') {
+            //             $query->where('rack_locations.location_id', '!=', null);
+            //         }
+            //         if (request('gl_filter') == 'unallocated') {
+            //             $query->where('rack_locations.location_id','=', null);
+            //         }
+            //     }
+
+            //     if (request()->has('color_filter')) {
+            //         if (request('color_filter') == 'moveable') {
+            //             $query->where('racks.rack_type', '=', 'moveable');
+            //         }
+            //         if (request('color_filter') == 'fixed') {
+            //             $query->where('racks.rack_type','=', 'fixed');
+            //         }
+            //     }
+            // }, true)
+
             ->addColumn('serial_number', function($row){
                 $serial_number = "<a href='". route('packinglist.detail',$row->id)."' class='' data-toggle='tooltip' data-placement='top' title='Click for Detail'>$row->serial_number</a>";
                 return $serial_number;
@@ -124,6 +149,34 @@ class FabricStatusController extends Controller
         
         return Datatables::of($query)
             ->make(true);
+    }
+
+     /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        try {
+            $packinglist_id = request()->packinglist_id;
+            $packinglist = Packinglist::find($id);
+            $fabricrolls = FabricRoll::find($packinglist_id);
+            
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully get packinglist (' . $packinglist->packinglist . ')',
+                'data' => [
+                    'packinglist' => $packinglist,
+                    'fabricrolls' => $fabricrolls,
+                ]
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
     }
     
     // ## Export Instore Report
