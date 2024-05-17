@@ -384,12 +384,13 @@ return [
             'url' => 'rack-location',
             'can'   => 'rack-location.access',
         ],
-        [
-            'text' => 'Rack Dashboard',
-            'icon' => 'far fa-list-alt nav-icon',
-            'url' => 'rack/dashboard-information',
-            'can'   => 'packinglist.access',
-        ],
+        // !! untuk sementara di hide dulu aja. karena ada kemungkinan bakal di hapus. atau nanti di rombak
+        // [
+        //     'text' => 'Rack Dashboard',
+        //     'icon' => 'far fa-list-alt nav-icon',
+        //     'url' => 'rack/dashboard-information',
+        //     'can'   => 'packinglist.access',
+        // ],
         [
             'header' => 'Admin',
             'can'   => 'admin-menu',

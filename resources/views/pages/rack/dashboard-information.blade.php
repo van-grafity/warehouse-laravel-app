@@ -4,6 +4,8 @@
 @section('page_title', $page_title)
 
 @section('content')
+<!-- // !! file ini nanti di hapus kalau memang tidak perlu-->
+
 <h4 class="text-center">Fabric Warehouse Rack Information</h4>
 <table class="table table-bordered table-hover">
     <thead>
