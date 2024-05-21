@@ -32,12 +32,11 @@ class FabricStatusController extends Controller
      */
     public function index(Request $request)
     {    
-        $packinglist = Packinglist::find($request->id);
         $fabricrolls = FabricRoll::get();
+        
         $data = [
             'title' => 'Fabric Status',
             'page_title' => 'Fabric Status',
-            'packinglist' => $packinglist,
             'fabricrolls' => $fabricrolls,
             'can_manage' => auth()->user()->can('manage'),
         ];
@@ -45,12 +44,41 @@ class FabricStatusController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        try {
+            $packinglist_id = request()->packinglist_id;
+
+            $fabricrolls = FabricRoll::get(); 
+            $packinglist = Packinglist::find($id);          
+            
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully get packinglist (' . $packinglist->packinglist . ')',
+                'data' => [
+                    'packinglist' => $packinglist,
+                    'fabricrolls' => $fabricrolls,
+                ]
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
+    }
+
+    /**
      * Show Datatable Data.
      */
-    public function dtable()
+    public function dtable(Request $request)
     {
         $query = Packinglist::query();
-        
+     
         return Datatables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
@@ -61,26 +89,18 @@ class FabricStatusController extends Controller
                 return $action_button;
             })
 
-            // ->filter(function ($query) {
-            //     if (request()->has('gl_filter')) {
-            //         if (request('gl_filter') == 'allocated') {
-            //             $query->where('rack_locations.location_id', '!=', null);
-            //         }
-            //         if (request('gl_filter') == 'unallocated') {
-            //             $query->where('rack_locations.location_id','=', null);
-            //         }
-            //     }
+            ->filter(function ($query) use ($request) {
+               if (request('gl_filter')) {
+                        $query->where('packinglists.color_id', '=', 'color');
+                    }
 
-            //     if (request()->has('color_filter')) {
-            //         if (request('color_filter') == 'moveable') {
-            //             $query->where('racks.rack_type', '=', 'moveable');
-            //         }
-            //         if (request('color_filter') == 'fixed') {
-            //             $query->where('racks.rack_type','=', 'fixed');
-            //         }
-            //     }
-            // }, true)
+                if (request('color_filter')) {
+                        $query->where('color_id', $request->get('color'));
+                    }
+                
+            }, true)
 
+           
             ->addColumn('serial_number', function($row){
                 $serial_number = "<a href='". route('packinglist.detail',$row->id)."' class='' data-toggle='tooltip' data-placement='top' title='Click for Detail'>$row->serial_number</a>";
                 return $serial_number;
@@ -130,7 +150,6 @@ class FabricStatusController extends Controller
     public function dtable_roll_list()
     {
         $packinglist_id = request()->packinglist_id;
-
         $query = FabricRoll::leftJoin('fabric_roll_racks','fabric_roll_racks.fabric_roll_id','=','fabric_rolls.id')
             ->leftJoin('racks','racks.id','=','fabric_roll_racks.rack_id')
             ->where('fabric_rolls.packinglist_id', $packinglist_id)
@@ -151,32 +170,27 @@ class FabricStatusController extends Controller
             ->make(true);
     }
 
-     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function dtable_detail_roll_list()
     {
-        try {
-            $packinglist_id = request()->packinglist_id;
-            $packinglist = Packinglist::find($id);
-            $fabricrolls = FabricRoll::find($packinglist_id);
-            
-            $data_return = [
-                'status' => 'success',
-                'message' => 'Successfully get packinglist (' . $packinglist->packinglist . ')',
-                'data' => [
-                    'packinglist' => $packinglist,
-                    'fabricrolls' => $fabricrolls,
-                ]
-            ];
-            return response()->json($data_return, 200);
-        } catch (\Throwable $th) {
-            $data_return = [
-                'status' => 'error',
-                'message' => $th->getMessage(),
-            ];
-            return response()->json($data_return);
-        }
+        $packinglist_id = request()->packinglist_id;
+
+        $query = FabricRoll::leftJoin('fabric_roll_racks','fabric_roll_racks.fabric_roll_id','=','fabric_rolls.id')
+            ->leftJoin('racks','racks.id','=','fabric_roll_racks.rack_id')
+            ->where('fabric_rolls.packinglist_id', $packinglist_id)
+            ->select(
+                'fabric_rolls.id', 
+                'fabric_rolls.roll_number', 
+                'fabric_rolls.serial_number', 
+                'fabric_rolls.kgs', 
+                'fabric_rolls.lbs', 
+                'fabric_rolls.yds',
+                'fabric_rolls.width',  
+                'racks.serial_number as rack_number'
+            )
+            ->get();
+        
+        return Datatables::of($query)
+            ->make(true);
     }
     
     // ## Export Instore Report

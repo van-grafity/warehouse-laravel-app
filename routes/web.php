@@ -115,6 +115,7 @@ Route::group([
     Route::prefix('fabric-status')->name('fabric-status.')->group(function () {
         Route::get('dtable', [App\Http\Controllers\FabricStatusController::class,'dtable'])->name('dtable');
         Route::get('dtable-roll-list', [App\Http\Controllers\FabricStatusController::class,'dtable_roll_list'])->name('dtable-roll-list');
+        Route::get('dtable-detail-roll-list', [App\Http\Controllers\FabricStatusController::class,'dtable_detail_roll_list'])->name('dtable-detail-roll-list');
         Route::get('{packinglist_id}/detail', [App\Http\Controllers\FabricStatusController::class,'detail'])->name('detail');
         Route::get('{packinglist_id}/export', [App\Http\Controllers\FabricStatusController::class,'export'])->name('export');
 
