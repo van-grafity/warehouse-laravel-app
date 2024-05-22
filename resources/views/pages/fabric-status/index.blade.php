@@ -4,6 +4,7 @@
 @section('page_title', $page_title)
 
 @section('content')
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -15,9 +16,14 @@
                 <div class="row  mb-3">
                     <div class="col-sm-12 d-inline-flex justify-content-end">
                         <div class="filter_wrapper mr-2" style="width:200px;">
+                             
                         <select name="gl_filter" id="gl_filter" class="form-control select2 no-search-box">
-                            <option value="" selected>All GL Number</option>
+                            <option value="" selected>All GL Number</option>    
+                            @foreach ($packinglist as $packinglist)
+                            <option value="{{$packinglist->gl_number}}" >{{$packinglist->gl_number}}</option>    
+                            @endforeach
                         </select>
+                        
                         </div>
                         <div class="filter_wrapper mr-2" style="width:200px;">
                             <select name="color_filter" id="color_filter" class="form-control select2">
