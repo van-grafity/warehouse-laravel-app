@@ -46,7 +46,7 @@
                             <th width="" rowspan="2">Color</th>
                             <th width="" rowspan="2">Batch</th>
                             <th width="" colspan="2">Stock</th>
-                            <th width="100" rowspan="2">Action</th>  
+                            <th width="80" rowspan="2">Action</th>  
                         </tr> 
                         <tr>      
                             <th width="">Roll Qty</th>
@@ -67,7 +67,7 @@
 
 <!-- Modal Detail Fabric Status  -->
 <div class="modal fade" id="modal_fabric_status" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <form>
                 <div class="modal-header">
@@ -87,7 +87,7 @@
                             <div class="col-sm-5">
                                 <dl class="row">
                                     <dt class="col-md-4 col-sm-12">Invoice </dt>
-                                    <dd class="col-md-8 col-sm-12">: <span id="invoice"></span></dd>
+                                    <dd class="col-md-8 col-sm-12">: <span id="invoice"> D2310/016 </span></dd>
 
                                     <dt class="col-md-4 col-sm-12">Buyer</dt>
                                     <dd class="col-md-8 col-sm-12">: <span id="buyer"></span> </dd>
@@ -105,7 +105,7 @@
                                     <dd class="col-md-8 col-sm-12">: <span id="po_number"></span></dd>
 
                                     <dt class="col-md-4 col-sm-12">Color</dt>
-                                    <dd class="col-md-8 col-sm-12">: <span id="color"></span></dd>
+                                    <dd class="col-md-8 col-sm-12">: <span id="color"> Stone Heather Gray </span></dd>
 
                                     <dt class="col-md-4 col-sm-12">Batch</dt>
                                     <dd class="col-md-8 col-sm-12">: <span id="batch_number"></span></dd>
@@ -122,29 +122,18 @@
                         <table id="fabric_roll_table" border="1px solid black" style="width:100%" >
                             <thead>
                             <tr style="text-align: center; background-color:silver;">
-                                <th width="100">Roll Number</th>
-                                <th>Serial Number</th>
+                                <th width="80">Roll Number</th>
+                                <th width="280">Serial Number</th>
                                 <th width="60">KGs</th>
                                 <th width="60">LBs</th>
                                 <th width="60">YDs</th>
                                 <th width="60">Width</th>
-                                <th width="110">Rack Number</th>
+                                <th width="100">Rack Number</th>
                                 <th width="80">Location</th>
                             </tr>
                             </thead>                           
                             <tbody>
-                                @foreach ($fabricrolls as $fabricroll) 
-                                <tr>
-                                    <td style="text-align: center;" >{{ $fabricroll->roll_number }}</td>
-                                    <td>{{ $fabricroll->serial_number }}</td>
-                                    <td style="text-align: center;" >{{ $fabricroll->kgs }}</td>
-                                    <td style="text-align: center;" >{{ $fabricroll->lbs }}</td>
-                                    <td style="text-align: center;" >{{ $fabricroll->yds }}</td>
-                                    <td style="text-align: center;" >{{ $fabricroll->width }}</td>
-                                    <td style="text-align: center;" >{{ $fabricroll->roll_number }}</td>
-                                    <td style="text-align: center;" >{{ $fabricroll->roll_number }}</td>
-                                </tr>
-                                @endforeach  
+                                
                             </tbody>                                                  
                         </table>                 
                     </div>
@@ -169,7 +158,6 @@
     // ## URL List
     const show_url = "{{ route('fabric-status.show',':id') }}";
     const dtable_url = "{{ route('fabric-status.dtable') }}";
-    const dtable_detail_url = "{{ route('fabric-status.dtable-detail-roll-list') }}";
     const fetch_select_color_url = "{{ route('fetch-select.color') }}";
 
     const reload_dtable = () => {
@@ -191,16 +179,33 @@
         result = await using_fetch(fetch_data);
         
         packinglist_data = result.data.packinglist
-
+        fabric_rolls_data = result.data.fabric_rolls
+        console.log(fabric_rolls_data)
         $('#serial_number').text(packinglist_data.serial_number);
-        $('#invoice').text(packinglist_data.invoice_id);
+        $('#invoice').text(packinglist_data.invoice.invoice_number);
         $('#buyer').text(packinglist_data.buyer);
         $('#gl_number').text(packinglist_data.gl_number);
         $('#po_number').text(packinglist_data.po_number);
-        $('#color').text(packinglist_data.color_id);
+        $('#color').text(packinglist_data.color.color);
         $('#batch_number').text(packinglist_data.batch_number);
         $('#style').text(packinglist_data.style);
         $('#fabric_content').text(packinglist_data.fabric_content);
+
+        let fabric_rolls_element = '';
+        fabric_rolls_data.forEach(fabric_roll => {
+            fabric_rolls_element += 
+            `<tr style="text-align: center">
+            <td>${fabric_roll.roll_number}</td>
+            <td>${fabric_roll.serial_number}</td> 
+            <td>${fabric_roll.kgs}</td> 
+            <td>${fabric_roll.lbs}</td>
+            <td>${fabric_roll.yds}</td>
+            <td>${fabric_roll.width}</td>
+            <td>${fabric_roll.rack_number}</td> 
+            <td>${fabric_roll.rack_location}</td>
+            </tr>`;
+        });
+        $('#fabric_roll_table').find('tbody').html(fabric_rolls_element);
 
         $(`#${modal_element_id}`).modal('show');
     }
