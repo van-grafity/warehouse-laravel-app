@@ -87,7 +87,7 @@
                             <div class="col-sm-5">
                                 <dl class="row">
                                     <dt class="col-md-4 col-sm-12">Invoice </dt>
-                                    <dd class="col-md-8 col-sm-12">: <span id="invoice"> D2310/016 </span></dd>
+                                    <dd class="col-md-8 col-sm-12">: <span id="invoice"></span></dd>
 
                                     <dt class="col-md-4 col-sm-12">Buyer</dt>
                                     <dd class="col-md-8 col-sm-12">: <span id="buyer"></span> </dd>
@@ -105,7 +105,7 @@
                                     <dd class="col-md-8 col-sm-12">: <span id="po_number"></span></dd>
 
                                     <dt class="col-md-4 col-sm-12">Color</dt>
-                                    <dd class="col-md-8 col-sm-12">: <span id="color"> Stone Heather Gray </span></dd>
+                                    <dd class="col-md-8 col-sm-12">: <span id="color"></span></dd>
 
                                     <dt class="col-md-4 col-sm-12">Batch</dt>
                                     <dd class="col-md-8 col-sm-12">: <span id="batch_number"></span></dd>
@@ -180,7 +180,7 @@
         
         packinglist_data = result.data.packinglist
         fabric_rolls_data = result.data.fabric_rolls
-        console.log(fabric_rolls_data)
+
         $('#serial_number').text(packinglist_data.serial_number);
         $('#invoice').text(packinglist_data.invoice.invoice_number);
         $('#buyer').text(packinglist_data.buyer);
@@ -193,7 +193,7 @@
 
         let fabric_rolls_element = '';
         fabric_rolls_data.forEach(fabric_roll => {
-            fabric_rolls_element += 
+            fabric_rolls_element +=
             `<tr style="text-align: center">
             <td>${fabric_roll.roll_number}</td>
             <td>${fabric_roll.serial_number}</td> 
