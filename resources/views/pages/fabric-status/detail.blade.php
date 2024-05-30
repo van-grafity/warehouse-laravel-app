@@ -59,6 +59,7 @@
                             <th width="">KGs</th>
                             <th width="">LBs</th>
                             <th width="">YDs</th>
+                            <th width="">Width</th>
                             <th width="">Rack Number</th>
                         </tr>
                     </thead>
@@ -80,7 +81,6 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form action="" method="post" onsubmit="stopFormSubmission(event)">
-            <input type="hidden" name="change_rack_id" value="" id="change_rack_id">
 
                 <div class="modal-header">
                     <h5 class="modal-title" id="ModalLabel">Select Rack</h5>
@@ -137,7 +137,6 @@
     const dtable_list_url = "{{ route('fabric-status.dtable-roll-list') }}";
     const packinglist_information_url = "{{ route('packinglist.information-card', ':id') }}";
     const store_url = "{{ route('fabric-status.store') }}";
-    const update_url = "{{ route('fabric-status.update', ':id') }}";
     const fetch_select_rack_url = "{{ route('fetch-select.rack') }}";
 
     const reload_dtable = () => {
@@ -154,7 +153,7 @@
         })
     }
 
-    const show_modal_change = (modal_element_id, fabric_roll_id) => {
+    const show_modal_change = (modal_element_id) => {
         let modal_data = {
             modal_id : modal_element_id,
             title : "Change Rack",
@@ -162,7 +161,7 @@
             form_action_url : store_url,
         }
         clear_form(modal_data);
-    
+
         let selected_roll = get_selected_item();
 
         if(selected_roll.item_id.length <= 0) {
@@ -315,6 +314,7 @@
             { data: 'kgs', name: 'fabric_rolls.kgs'},
             { data: 'lbs', name: 'fabric_rolls.lbs'},
             { data: 'yds', name: 'fabric_rolls.yds'},
+            { data: 'width', name: 'fabric_rolls.width'},
             { data: 'rack_number', name: 'racks.rack_number'},
         ],
         columnDefs: [
