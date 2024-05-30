@@ -277,7 +277,7 @@
     });
     
 
-     $('#color_filter.select2').select2({
+    $('#color_filter.select2').select2({
         ajax: {
             url: fetch_select_color_url,
             dataType: 'json',
@@ -289,6 +289,10 @@
                 return query;
             },
             processResults: function (fetch_result) {
+                fetch_result.data.items.unshift({
+                    id: '',
+                    text: 'All Color'
+                });
                 return {
                     results: fetch_result.data.items,
                 };

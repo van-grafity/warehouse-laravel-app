@@ -23,11 +23,15 @@ class PackinglistsImport implements ToCollection, WithCalculatedFormulas
         // ## Get Header (First Row)
         $this->header = $rows->first();
 
-        foreach ($rows as $key => $row) {
-            if ($key === 0) {
-                continue; // ## Skip first row (header)
-            }
+        $headerList = ['invoice', 'buyer', 'gl_number', 'po_number', 'color', 'batch', 'style', 'fabric_content', 'roll', 'kgs', 'lbs', 'yds', 'width'];
+        $headerFromExcel = $this->header->toArray();
 
+        $missingHeaders = array_diff($headerList, $headerFromExcel);
+        if (!empty($missingHeaders)) {
+            throw new \Exception('Missing Column: ' . implode(', ', $missingHeaders));
+        }
+
+        foreach ($rows->slice(1) as $row) {
             $packinglist = [
                 'invoice' => $row[0],
                 'buyer' => $row[1],
