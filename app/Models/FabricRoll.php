@@ -19,6 +19,7 @@ class FabricRoll extends Model
         'kgs',
         'lbs',
         'yds',
+        'width',
         'racked_at',
         'racked_by',
     ];

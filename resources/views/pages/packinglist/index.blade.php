@@ -444,6 +444,7 @@
             complete: function() {
                 // ## Hapus kelas dimmed-table setelah proses loading selesai
                 $('#packinglist_table').removeClass('dimmed-table').find('.datatable-overlay').remove();
+                $('[data-toggle="tooltip"]').tooltip();
             },
         },
         order: [],
