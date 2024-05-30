@@ -63,8 +63,8 @@ class FabricStatusController extends Controller
                 'fabric_rolls.lbs', 
                 'fabric_rolls.yds',
                 'fabric_rolls.width',
-                'racks.serial_number as rack_number',
-                'locations.location as rack_location'
+                'racks.serial_number as rack_number',        
+                'locations.location as rack_location',
             )
             ->get();
 
@@ -77,6 +77,66 @@ class FabricStatusController extends Controller
                     'packinglist' => $packinglist,
                     'fabric_rolls' => $fabric_rolls,
                 ]
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
+    }
+
+    // public function store(Request $request, string $id)
+    // {
+    //     try {
+    //         $selected_roll_ids = explode(',',$request->selected_roll_id);
+
+    //         $updated_racks = [];
+    //         DB::transaction(function () use ($selected_roll_ids, &$updated_racks) {
+             
+    //             $rack_location = FabricRollRack::whereIn('rack_id', $selected_roll_ids);
+
+    //             foreach ($selected_roll_ids as $key => $rack_id) {
+    //                 $data_rack = FabricRollRack::firstOrCreate([
+    //                     'rack_id' => $rack_id,
+    //                 ]);                           
+    //                 $rack = Rack::find($rack_id);
+    //                 $rack->save();
+    //                 $inserted_rack[] = $rack;
+    //             }
+    //             });
+
+    //         $data_return = [
+    //             'status' => 'success',
+    //             'message' => 'Successfully updated Rack ',
+    //             'data' => [
+    //                 'updated_racks' => $updated_racks
+    //             ]
+    //         ];
+    //         return response()->json($data_return, 200);
+
+    //     } catch (\Throwable $th) {
+    //         $data_return = [
+    //             'status' => 'error',
+    //             'message' => $th->getMessage(),
+    //         ];
+    //         return response()->json($data_return);
+    //     }
+    // }
+
+    public function update(Request $request, string $id)
+    {
+        try {
+            $fabric_roll_rack = FabricRollRack::find($id);
+            $fabric_roll_rack->rack_id = $request->rack_id;
+            $fabric_roll_rack->save();
+            
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully updated Rack',
+                'data' => $fabric_roll_rack
             ];
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {
@@ -182,7 +242,31 @@ class FabricStatusController extends Controller
             ->get();
         
         return Datatables::of($query)
-            ->make(true);
+                ->addIndexColumn()
+                ->escapeColumns([])
+                ->addColumn('checkbox', function ($row) {
+                        if($row->change_rack_id) { return null; }
+                        
+                        $checkbox_element = '
+                            <div class="form-group mb-0">
+                                <div class="custom-control custom-checkbox">
+                                    <input 
+                                        id="roll_checkbox_'. $row->id .'" 
+                                        name="selected_roll[]" 
+                                        class="custom-control-input checkbox-roll-control" 
+                                        type="checkbox" 
+                                        value="'. $row->id .'"
+                                        data-roll-number="'. $row->roll_number .'"
+                                        onchange="checkbox_clicked()" 
+                                    >
+                                    <label for="roll_checkbox_'. $row->id .'" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        ';
+                        return $checkbox_element;
+                    })
+                    ->toJson();
+
     }
     
     // ## Export Instore Report
