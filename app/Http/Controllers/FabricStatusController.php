@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Packinglist;
 use App\Models\FabricRoll;
+use App\Models\Rack;
 use App\Models\FabricRollRack;
 
 use Illuminate\Support\Facades\Gate;
@@ -68,6 +69,7 @@ class FabricStatusController extends Controller
             )
             ->get();
 
+
             $packinglist = Packinglist::with('color', 'invoice')->find($packinglist_id);
 
             $data_return = [
@@ -88,55 +90,29 @@ class FabricStatusController extends Controller
         }
     }
 
-    // public function store(Request $request, string $id)
-    // {
-    //     try {
-    //         $selected_roll_ids = explode(',',$request->selected_roll_id);
-
-    //         $updated_racks = [];
-    //         DB::transaction(function () use ($selected_roll_ids, &$updated_racks) {
-             
-    //             $rack_location = FabricRollRack::whereIn('rack_id', $selected_roll_ids);
-
-    //             foreach ($selected_roll_ids as $key => $rack_id) {
-    //                 $data_rack = FabricRollRack::firstOrCreate([
-    //                     'rack_id' => $rack_id,
-    //                 ]);                           
-    //                 $rack = Rack::find($rack_id);
-    //                 $rack->save();
-    //                 $inserted_rack[] = $rack;
-    //             }
-    //             });
-
-    //         $data_return = [
-    //             'status' => 'success',
-    //             'message' => 'Successfully updated Rack ',
-    //             'data' => [
-    //                 'updated_racks' => $updated_racks
-    //             ]
-    //         ];
-    //         return response()->json($data_return, 200);
-
-    //     } catch (\Throwable $th) {
-    //         $data_return = [
-    //             'status' => 'error',
-    //             'message' => $th->getMessage(),
-    //         ];
-    //         return response()->json($data_return);
-    //     }
-    // }
-
-    public function update(Request $request, string $id)
+    public function store(Request $request)
     {
         try {
-            $fabric_roll_rack = FabricRollRack::find($id);
-            $fabric_roll_rack->rack_id = $request->rack_id;
-            $fabric_roll_rack->save();
-            
+            $rack_id = $request->rack;
+            $rack = Rack::find($rack_id);
+            $selected_roll_ids = explode(',',$request->selected_roll_id);
+
+            $updated_racks = [];
+            DB::transaction(function () use ($selected_roll_ids, $rack_id, &$updated_racks) {
+
+                foreach ($selected_roll_ids as $key => $fabric_roll_id) {
+                    $fabric_roll_rack = FabricRollRack::where('fabric_roll_id', $fabric_roll_id)->first();
+                    $fabric_roll_rack->update(['rack_id' => $rack_id]);
+                    $updated_racks[] = $fabric_roll_rack;
+                }
+            });
+
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully updated Rack',
-                'data' => $fabric_roll_rack
+                'message' => 'Successfully updated '. count($updated_racks) .' Rack',
+                'data' => [
+                    'updated_racks' => $updated_racks
+                ]
             ];
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {
@@ -265,8 +241,7 @@ class FabricStatusController extends Controller
                         ';
                         return $checkbox_element;
                     })
-                    ->toJson();
-
+                ->toJson();
     }
     
     // ## Export Instore Report
