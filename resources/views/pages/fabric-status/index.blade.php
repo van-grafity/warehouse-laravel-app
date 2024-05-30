@@ -46,7 +46,7 @@
                             <th width="" rowspan="2">Color</th>
                             <th width="" rowspan="2">Batch</th>
                             <th width="" colspan="2">Stock</th>
-                            <th width="80" rowspan="2">Action</th>  
+                            <th width="150" rowspan="2">Action</th>  
                         </tr> 
                         <tr>      
                             <th width="">Roll Qty</th>
@@ -80,7 +80,7 @@
                     <div class="col-lg-12 col-xl-12">
                         <div class="row mb-3">
                             <div class="col-sm-12">
-                                <h5 style="font-weight:bold" type="text">Serial Number : <span id="serial_number"></span></h5>
+                                <h5 class="text-bold" type="text">Serial Number : <span id="serial_number"></span></h5>
                             </div>
                         </div>
                         <div class="row">
@@ -118,24 +118,24 @@
                     </div>
                     <!-- Table Roll List -->
                     <div class="col-lg-12 col-xl-12">
-                        <h5 style="font-weight:bold" type="text">Detail Fabric Roll</h5>                
-                        <table id="fabric_roll_table" border="1px solid black" style="width:100%" >
-                            <thead>
-                            <tr style="text-align: center; background-color:silver;">
-                                <th width="80">Roll Number</th>
-                                <th width="280">Serial Number</th>
-                                <th width="60">KGs</th>
-                                <th width="60">LBs</th>
-                                <th width="60">YDs</th>
-                                <th width="60">Width</th>
-                                <th width="100">Rack Number</th>
-                                <th width="80">Location</th>
-                            </tr>
-                            </thead>                           
+                        <h5>Detail Fabric Roll</h5>
+                        <table id="fabric_roll_table" class="table table-bordered table-sm">
+                            <thead class="text-center thead-dark">
+                                <tr>
+                                    <th style="width: 80px;">Roll Number</th>
+                                    <th style="width: 280px;">Serial Number</th>
+                                    <th style="width: 60px;">KGs</th>
+                                    <th style="width: 60px;">LBs</th>
+                                    <th style="width: 60px;">YDs</th>
+                                    <th style="width: 60px;">Width</th>
+                                    <th style="width: 100px;">Rack Number</th>
+                                    <th style="width: 80px;">Location</th>
+                                </tr>
+                            </thead>
                             <tbody>
-                                
-                            </tbody>                                                  
-                        </table>                 
+                                <!-- Data rows will be dynamically populated here -->
+                            </tbody>
+                        </table>
                     </div>
                     <!-- End Table Roll List -->
                 </div>

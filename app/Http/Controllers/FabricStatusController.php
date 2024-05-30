@@ -159,9 +159,10 @@ class FabricStatusController extends Controller
             ->addIndexColumn()
             ->escapeColumns([])
             ->addColumn('action', function($row){
-                $action_button = "
-                    <a href='". route('fabric-status.detail',$row->id)."' class='btn btn-primary btn-xs' >Detail</a>".                  
-                    '<a href="javascript:void(0);" class="btn btn-primary btn-xs" onclick="show_modal_detail(\'modal_fabric_status\', '.$row->id.')">Quick Detail</a>';                 
+                $action_button = '
+                    <a href="'. route('fabric-status.detail',$row->id).'" class="btn btn-primary btn-sm" >Detail</a>
+                    <a href="javascript:void(0);" class="btn btn-info btn-sm" onclick="show_modal_detail(\'modal_fabric_status\', '.$row->id.')" data-toggle="tooltip" data-placement="top" title="Quick Detail"><i class="fas fa-eye"></i></a>
+                ';                 
                 return $action_button;
             })
 
@@ -242,30 +243,30 @@ class FabricStatusController extends Controller
             ->get();
         
         return Datatables::of($query)
-                ->addIndexColumn()
-                ->escapeColumns([])
-                ->addColumn('checkbox', function ($row) {
-                        if($row->change_rack_id) { return null; }
-                        
-                        $checkbox_element = '
-                            <div class="form-group mb-0">
-                                <div class="custom-control custom-checkbox">
-                                    <input 
-                                        id="roll_checkbox_'. $row->id .'" 
-                                        name="selected_roll[]" 
-                                        class="custom-control-input checkbox-roll-control" 
-                                        type="checkbox" 
-                                        value="'. $row->id .'"
-                                        data-roll-number="'. $row->roll_number .'"
-                                        onchange="checkbox_clicked()" 
-                                    >
-                                    <label for="roll_checkbox_'. $row->id .'" class="custom-control-label"></label>
-                                </div>
-                            </div>
-                        ';
-                        return $checkbox_element;
-                    })
-                    ->toJson();
+            ->addIndexColumn()
+            ->escapeColumns([])
+            ->addColumn('checkbox', function ($row) {
+                if($row->change_rack_id) { return null; }
+                
+                $checkbox_element = '
+                    <div class="form-group mb-0">
+                        <div class="custom-control custom-checkbox">
+                            <input 
+                                id="roll_checkbox_'. $row->id .'" 
+                                name="selected_roll[]" 
+                                class="custom-control-input checkbox-roll-control" 
+                                type="checkbox" 
+                                value="'. $row->id .'"
+                                data-roll-number="'. $row->roll_number .'"
+                                onchange="checkbox_clicked()" 
+                            >
+                            <label for="roll_checkbox_'. $row->id .'" class="custom-control-label"></label>
+                        </div>
+                    </div>
+                ';
+                return $checkbox_element;
+            })
+            ->toJson();
 
     }
     
