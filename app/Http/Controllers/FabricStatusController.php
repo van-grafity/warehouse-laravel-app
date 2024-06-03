@@ -54,7 +54,7 @@ class FabricStatusController extends Controller
             ->leftJoin('racks','racks.id','=','fabric_roll_racks.rack_id')
             ->leftJoin('rack_locations','rack_locations.rack_id','=','fabric_roll_racks.rack_id')
             ->leftJoin('locations','locations.id','=','rack_locations.location_id')
-            
+            ->where('fabric_rolls.racked_by','!=', null)
             ->where('fabric_rolls.packinglist_id', $packinglist_id)
             ->select(
                 'fabric_rolls.id',
@@ -69,9 +69,8 @@ class FabricStatusController extends Controller
             )
             ->get();
 
-
             $packinglist = Packinglist::with('color', 'invoice')->find($packinglist_id);
-
+            
             $data_return = [
                 'status' => 'success',
                 'message' => 'Successfully get packinglist (' . $packinglist->packinglist . ')',

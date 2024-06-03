@@ -34,6 +34,26 @@ class LocationRowsTableSeeder extends Seeder
                 'row' => 'E',
                 'description' => 'Row E',
             ],
+            [
+                'row' => 'F',
+                'description' => 'Row F',
+            ],
+            [
+                'row' => 'G',
+                'description' => 'Row G',
+            ],
+            [
+                'row' => 'H',
+                'description' => 'Row H',
+            ],
+            [
+                'row' => 'I',
+                'description' => 'Row I',
+            ],
+            [
+                'row' => 'J',
+                'description' => 'Row J',
+            ],
         ];
 
         foreach ($data as $key => $location) {
