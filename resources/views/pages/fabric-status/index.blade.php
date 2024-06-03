@@ -133,8 +133,11 @@
                             </tr>
                             </thead>                           
                             <tbody>
-                                
-                            </tbody>                                                  
+
+                            </tbody>       
+                            <tfoot>
+
+                            </tfoot>
                         </table>                 
                     </div>
                     <!-- End Table Roll List -->
@@ -191,22 +194,51 @@
         $('#style').text(packinglist_data.style);
         $('#fabric_content').text(packinglist_data.fabric_content);
 
+        
         let fabric_rolls_element = '';
-        fabric_rolls_data.forEach(fabric_roll => {
-            fabric_rolls_element +=
-            `<tr style="text-align: center">
-            <td>${fabric_roll.roll_number}</td>
-            <td>${fabric_roll.serial_number}</td> 
-            <td>${fabric_roll.kgs}</td> 
-            <td>${fabric_roll.lbs}</td>
-            <td>${fabric_roll.yds}</td>
-            <td>${fabric_roll.width}</td>
-            <td>${fabric_roll.rack_number}</td> 
-            <td>${fabric_roll.rack_location}</td>
-            </tr>`;
-        });
-        $('#fabric_roll_table').find('tbody').html(fabric_rolls_element);
+        let total_rolls_element = '';
+        
+        let total_roll_weight = 0;
+        let total_roll_pound = 0;
+        let total_roll_length = 0;
 
+        if(fabric_rolls_data.length > 0) {
+            fabric_rolls_data.forEach(fabric_roll => {
+                fabric_rolls_element += `
+                    <tr style="text-align: center">
+                        <td>${fabric_roll.roll_number}</td>
+                        <td>${fabric_roll.serial_number}</td> 
+                        <td>${fabric_roll.kgs}</td> 
+                        <td>${fabric_roll.lbs}</td>
+                        <td>${fabric_roll.yds}</td>
+                        <td>${fabric_roll.width}</td>
+                        <td>${fabric_roll.rack_number}</td> 
+                        <td>${fabric_roll.rack_location}</td>
+                    </tr>
+                `;
+
+                // ## Penjumlahan data roll
+                total_roll_weight = total_roll_weight + fabric_roll.kgs;
+                total_roll_pound = total_roll_pound + fabric_roll.lbs;
+                total_roll_length = total_roll_length + fabric_roll.yds;
+            }); 
+                total_rolls_element += `
+                    <tr style="text-align: center">
+                        <td style="font-weight:bold" >Total</td>
+                        <td>${fabric_rolls_data.length} Roll</td>
+                        <td>${total_roll_weight} Kgs</td> 
+                        <td>${total_roll_pound} Lbs</td> 
+                        <td>${total_roll_length} Yds</td>
+                        <td colspan="3"></td>
+                    </tr>
+                `;
+        } else {
+            fabric_rolls_element = '<tr style="text-align: center"><td colspan="8">There is no data fabric roll</td></tr>';
+        }
+        
+        $('#fabric_roll_table').find('tbody').html(fabric_rolls_element);
+        $('#fabric_roll_table').find('tfoot').html(total_rolls_element);
+        
         $(`#${modal_element_id}`).modal('show');
     }
 </script>
