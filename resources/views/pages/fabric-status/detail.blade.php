@@ -19,7 +19,7 @@
                 </h3>
                  <div class="ml-auto p-3">
                     @can('print')
-                        <a href="{{ route('fabric-status.export', $packinglist->id) }}" class="btn btn-primary ">Report</a>
+                        <a href="{{ route('fabric-status.export', $packinglist->id) }}" class="btn btn-primary disabled">Report</a>
                     @endcan
                 </div>
             </div>
@@ -29,7 +29,7 @@
                     <div class="col-sm-12 d-flex">
                         <div class="action-wrapper mr-auto">
                             @can('manage')
-                                <button class="btn btn-primary" onclick="show_modal_change('modal_change_rack')">Change Rack</button>
+                                <button class="btn btn-info btn-sm" onclick="show_modal_change('modal_change_rack')">Change Rack</button>
                             @endcan
                         </div>
                         <div class="filter-wrapper text-right ml-auto align-self-center">
@@ -304,6 +304,7 @@
                 // ## Hapus kelas dimmed-table setelah proses loading selesai
                 $('#fabric_roll_table').removeClass('dimmed-table').find('.datatable-overlay').remove();
                 $('[data-toggle="tooltip"]').tooltip();
+                checkbox_clicked();
             },
         },
         order: [],

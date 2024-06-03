@@ -4,7 +4,14 @@
 @section('page_title', $page_title)
 
 @section('content')
-
+<style>
+    /*
+     * Make Thead of Datatable Vertical Align Center / Middle
+     */
+    #packinglist_table thead th {
+        vertical-align: middle;
+    }
+</style>
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -200,7 +207,7 @@
         let total_roll_weight = 0;
         let total_roll_pound = 0;
         let total_roll_length = 0;
-
+        
         if(fabric_rolls_data.length > 0) {
             fabric_rolls_data.forEach(fabric_roll => {
                 fabric_rolls_element += `
@@ -221,16 +228,16 @@
                 total_roll_pound = total_roll_pound + fabric_roll.lbs;
                 total_roll_length = total_roll_length + fabric_roll.yds;
             }); 
-                total_rolls_element += `
-                    <tr style="text-align: center">
-                        <td style="font-weight:bold" >Total</td>
-                        <td>${fabric_rolls_data.length} Roll</td>
-                        <td>${total_roll_weight} Kgs</td> 
-                        <td>${total_roll_pound} Lbs</td> 
-                        <td>${total_roll_length} Yds</td>
-                        <td colspan="3"></td>
-                    </tr>
-                `;
+            total_rolls_element += `
+                <tr style="text-align: center">
+                    <td style="font-weight:bold" >Total</td>
+                    <td class="text-bold" >${fabric_rolls_data.length} Roll</td>
+                    <td class="text-bold" >${total_roll_weight} Kgs</td> 
+                    <td class="text-bold" >${total_roll_pound} Lbs</td> 
+                    <td class="text-bold" >${total_roll_length} Yds</td>
+                    <td colspan="3"></td>
+                </tr>
+            `;
         } else {
             fabric_rolls_element = '<tr style="text-align: center"><td colspan="8">There is no data fabric roll</td></tr>';
         }
@@ -265,12 +272,12 @@
         order: [],
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            { data: 'serial_number', name: 'serial_number', className: 'text-left'},
+            { data: 'serial_number', name: 'packinglists.serial_number', className: 'text-left'},
             { data: 'gl_number', name: 'gl_number'},
-            { data: 'color', name: 'color'},
+            { data: 'color_name', name: 'colors.color'},
             { data: 'batch_number', name: 'batch_number'},
-            { data: 'roll_balance', name: 'roll_balance'},
-            { data: 'total_length_yds', name: 'total_length_yds'},
+            { data: 'roll_balance', name: 'roll_balance', orderable: false, searchable: false},
+            { data: 'total_length_yds', name: 'total_length_yds', orderable: false, searchable: false},
             { data: 'action', name: 'action', searchable: false},
         ],
         columnDefs: [
@@ -315,21 +322,25 @@
             delay: 500,
             data: function (params) {
                 var query = {
-                    search: params.term,
+                    search: params.term || '',
                 }
                 return query;
             },
-            processResults: function (fetch_result) {
-                fetch_result.data.items.unshift({
-                    id: '',
-                    text: 'All Color'
-                });
+            processResults: function (fetch_result, params) {
+                if (!params.term) {
+                    fetch_result.data.items.unshift({
+                        id: '',
+                        text: 'All Color'
+                    });
+                }
                 return {
                     results: fetch_result.data.items,
                 };
             },
         }
     });
+
+
 
     $('#gl_filter, #color_filter').change(function(event) {
         reload_dtable();

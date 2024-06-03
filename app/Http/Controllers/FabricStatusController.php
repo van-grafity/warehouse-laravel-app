@@ -51,23 +51,23 @@ class FabricStatusController extends Controller
     {
         try {
             $fabric_rolls = FabricRoll::leftJoin('fabric_roll_racks','fabric_roll_racks.fabric_roll_id','=','fabric_rolls.id')
-            ->leftJoin('racks','racks.id','=','fabric_roll_racks.rack_id')
-            ->leftJoin('rack_locations','rack_locations.rack_id','=','fabric_roll_racks.rack_id')
-            ->leftJoin('locations','locations.id','=','rack_locations.location_id')
-            ->where('fabric_rolls.racked_by','!=', null)
-            ->where('fabric_rolls.packinglist_id', $packinglist_id)
-            ->select(
-                'fabric_rolls.id',
-                'fabric_rolls.roll_number',
-                'fabric_rolls.serial_number',
-                'fabric_rolls.kgs',
-                'fabric_rolls.lbs', 
-                'fabric_rolls.yds',
-                'fabric_rolls.width',
-                'racks.serial_number as rack_number',        
-                'locations.location as rack_location',
-            )
-            ->get();
+                ->leftJoin('racks','racks.id','=','fabric_roll_racks.rack_id')
+                ->leftJoin('rack_locations','rack_locations.rack_id','=','fabric_roll_racks.rack_id')
+                ->leftJoin('locations','locations.id','=','rack_locations.location_id')
+                ->where('fabric_rolls.racked_by','!=', null)
+                ->where('fabric_rolls.packinglist_id', $packinglist_id)
+                ->select(
+                    'fabric_rolls.id',
+                    'fabric_rolls.roll_number',
+                    'fabric_rolls.serial_number',
+                    'fabric_rolls.kgs',
+                    'fabric_rolls.lbs', 
+                    'fabric_rolls.yds',
+                    'fabric_rolls.width',
+                    'racks.serial_number as rack_number',        
+                    DB::raw('COALESCE(locations.location, "-") as rack_location')
+                )
+                ->get();
 
             $packinglist = Packinglist::with('color', 'invoice')->find($packinglist_id);
             
@@ -128,7 +128,8 @@ class FabricStatusController extends Controller
      */
     public function dtable(Request $request)
     {
-        $query = Packinglist::query();
+        $query = Packinglist::join('colors', 'packinglists.color_id', '=', 'colors.id')
+            ->select('packinglists.*', 'colors.color as color_name');;
    
         return Datatables::of($query)
             ->addIndexColumn()
@@ -139,6 +140,23 @@ class FabricStatusController extends Controller
                     <a href="javascript:void(0);" class="btn btn-info btn-sm" onclick="show_modal_detail(\'modal_fabric_status\', '.$row->id.')" data-toggle="tooltip" data-placement="top" title="Quick Detail"><i class="fas fa-eye"></i></a>
                 ';                 
                 return $action_button;
+            })
+            ->addColumn('serial_number', function($row){
+                $serial_number = "<a href='". route('packinglist.detail',$row->id)."' class='' data-toggle='tooltip' data-placement='top' title='Click for Detail'>$row->serial_number</a>";
+                return $serial_number;
+            })
+            ->addColumn('color', function($row){
+                return $row->color->color;
+            })
+            ->addColumn('total_length_yds', function($row){
+                $PackinglistModel = new Packinglist;
+                $total_length_yds = $PackinglistModel->getRollSummaryInPackinglist($row->id,'stock_in');
+                return ($total_length_yds ? $total_length_yds->total_length_yds : 0) . ' yds';
+            })
+            ->addColumn('roll_balance', function($row){
+                $PackinglistModel = new Packinglist;
+                $stock_in_roll = $PackinglistModel->getRollSummaryInPackinglist($row->id,'stock_in');
+                return $stock_in_roll ? $stock_in_roll->total_roll : 0;
             })
 
             ->filter(function ($query, $gl_filter){
@@ -151,32 +169,6 @@ class FabricStatusController extends Controller
                     }
                 
             }, true)
-           
-            ->addColumn('serial_number', function($row){
-                $serial_number = "<a href='". route('packinglist.detail',$row->id)."' class='' data-toggle='tooltip' data-placement='top' title='Click for Detail'>$row->serial_number</a>";
-                return $serial_number;
-            })
-            ->addColumn('invoice', function($row){
-                return $row->invoice->invoice_number;
-            })
-            ->addColumn('color', function($row){
-                return $row->color->color;
-            })
-            ->addColumn('total_length_yds', function($row){
-                $PackinglistModel = new Packinglist;
-                $total_length_yds = $PackinglistModel->getRollSummaryInPackinglist($row->id,'stock_in');
-                return ($total_length_yds ? $total_length_yds->total_length_yds : 0) . ' yds';
-            })
-            ->addColumn('total_weight_kgs', function($row){
-                $PackinglistModel = new Packinglist;
-                $total_weight_kgs = $PackinglistModel->getRollSummaryInPackinglist($row->id,'stock_in');
-                return ($total_weight_kgs ? $total_weight_kgs->total_weight_kgs : 0) . ' kgs';
-            })
-            ->addColumn('roll_balance', function($row){
-                $PackinglistModel = new Packinglist;
-                $stock_in_roll = $PackinglistModel->getRollSummaryInPackinglist($row->id,'stock_in');
-                return $stock_in_roll ? $stock_in_roll->total_roll : 0;
-            })
 
             ->toJson();
     }
