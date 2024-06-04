@@ -84,9 +84,6 @@ Route::group([
     Route::resource('rack', App\Http\Controllers\RackController::class);
     Route::get('rack-dtable', [App\Http\Controllers\RackController::class, 'dtable'])->name('rack.dtable');
     
-    Route::resource('rack-location', App\Http\Controllers\RackLocationController::class);
-    Route::get('rack-location-dtable', [App\Http\Controllers\RackLocationController::class, 'dtable'])->name('rack-location.dtable');
-
     Route::resource('invoice', App\Http\Controllers\InvoiceController::class);
     Route::get('invoice-dtable', [App\Http\Controllers\InvoiceController::class, 'dtable'])->name('invoice.dtable');
 
@@ -143,4 +140,19 @@ Route::group([
     Route::get('invoice', 'select_invoice')->name('invoice');
     Route::get('color', 'select_color')->name('color');
     Route::get('rack', 'select_rack')->name('rack');
+});
+
+Route::group([
+    'middleware' => [
+        'auth',
+        'can:user-menu',
+    ],
+    'controller' => App\Http\Controllers\RackLocationController::class,
+    'prefix' => 'rack-location',
+    'as' => 'rack-location.',
+], function () {
+    Route::get('', 'index')->name('index');
+    Route::get('dtable', 'dtable')->name('dtable');
+    Route::get('{user}', 'show')->name('show');
+    Route::post('', 'store')->name('store');
 });

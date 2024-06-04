@@ -50,11 +50,12 @@ class FabricStatusController extends Controller
     public function show(string $packinglist_id)
     {
         try {
-            $fabric_rolls = FabricRoll::leftJoin('fabric_roll_racks','fabric_roll_racks.fabric_roll_id','=','fabric_rolls.id')
-                ->leftJoin('racks','racks.id','=','fabric_roll_racks.rack_id')
-                ->leftJoin('rack_locations','rack_locations.rack_id','=','fabric_roll_racks.rack_id')
-                ->leftJoin('locations','locations.id','=','rack_locations.location_id')
-                ->where('fabric_rolls.racked_by','!=', null)
+            $fabric_rolls = FabricRoll::leftJoin('fabric_roll_racks','fabric_roll_racks.fabric_roll_id','fabric_rolls.id')
+                ->leftJoin('racks','racks.id','fabric_roll_racks.rack_id')
+                ->leftJoin('rack_locations','rack_locations.rack_id','fabric_roll_racks.rack_id')
+                ->leftJoin('locations','locations.id','rack_locations.location_id')
+                ->whereNotNull('fabric_rolls.racked_at')
+                ->whereNull('rack_locations.exit_at')
                 ->where('fabric_rolls.packinglist_id', $packinglist_id)
                 ->select(
                     'fabric_rolls.id',
@@ -195,8 +196,8 @@ class FabricStatusController extends Controller
         $packinglist_id = request()->packinglist_id;
         $query = FabricRoll::leftJoin('fabric_roll_racks','fabric_roll_racks.fabric_roll_id','=','fabric_rolls.id')
             ->leftJoin('racks','racks.id','=','fabric_roll_racks.rack_id')
+            ->whereNotNull('fabric_rolls.racked_at')
             ->where('fabric_rolls.packinglist_id', $packinglist_id)
-            ->where('fabric_rolls.racked_by','!=', null)
             ->select(
                 'fabric_rolls.id', 
                 'fabric_rolls.roll_number', 

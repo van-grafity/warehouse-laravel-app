@@ -124,7 +124,6 @@
     // ## URL List
     const show_url = "{{ route('rack-location.show',':id') }}";
     const store_url = "{{ route('rack-location.store') }}";
-    const update_url = "{{ route('rack-location.update',':id') }}";
     const dtable_url = "{{ route('rack-location.dtable') }}";
     const fetch_select_rack_url = "{{ route('fetch-select.rack') }}";
 
@@ -291,7 +290,6 @@
 <script type="text/javascript">
     let rack_location_table = $('#rack_location_table').DataTable({
         processing: true,
-        serverSide: true,
         ajax: {
             url: dtable_url,
             data: function (d) {
@@ -329,8 +327,7 @@
         searching: true,
         autoWidth: false,
         orderCellsTop: true,
-        searchDelay: 500,
-    })
+    });
 
     $('#reload_table_btn').on('click', function(event) {
         $(this).addClass('loading').attr('disabled',true);
