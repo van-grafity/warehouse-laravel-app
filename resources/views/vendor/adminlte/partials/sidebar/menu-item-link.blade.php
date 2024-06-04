@@ -4,7 +4,7 @@
        href="{{ $item['href'] }}" @isset($item['target']) target="{{ $item['target'] }}" @endisset
        {!! $item['data-compiled'] ?? '' !!}>
 
-        <i class="{{ $item['icon'] ?? 'far fa-fw fa-circle' }} {{
+        <i class="{{ $item['icon'] ?? 'far fa-fw fa-circle nav-icon' }} {{
             isset($item['icon_color']) ? 'text-'.$item['icon_color'] : ''
         }}"></i>
 

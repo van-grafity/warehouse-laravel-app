@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Rack;
 use App\Models\Location;
 use App\Models\RackLocation;
+use App\Models\FabricRollRack;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +35,7 @@ class RackLocationController extends Controller
     public function dtable()
     {
         $query = Rack::leftJoin('rack_locations','rack_locations.rack_id','=','racks.id')
-        ->leftJoin('locations','locations.id','=','rack_locations.location_id')    
+        ->leftJoin('locations','locations.id','=','rack_locations.location_id')
         ->select(
             'racks.id',
             'racks.serial_number',
@@ -50,26 +51,6 @@ class RackLocationController extends Controller
                 ';
                 return $return; 
             })
-
-            ->filter(function ($query) {
-                if (request()->has('rack_allocation_filter')) {
-                    if (request('rack_allocation_filter') == 'allocated') {
-                        $query->where('rack_locations.location_id', '!=', null);
-                    }
-                    if (request('rack_allocation_filter') == 'unallocated') {
-                        $query->where('rack_locations.location_id','=', null);
-                    }
-                }
-
-                if (request()->has('rack_type_filter')) {
-                    if (request('rack_type_filter') == 'moveable') {
-                        $query->where('racks.rack_type', '=', 'moveable');
-                    }
-                    if (request('rack_type_filter') == 'fixed') {
-                        $query->where('racks.rack_type','=', 'fixed');
-                    }
-                }
-            }, true)
             ->addColumn('checkbox', function ($row) {
                 if($row->rack_location_id) { return null; }
                 
@@ -91,8 +72,42 @@ class RackLocationController extends Controller
                 ';
                 return $checkbox_element;
             })
+            ->editColumn('location', function($row) {
+                return $row->location ?? '-';
+            })
+            ->addColumn('gl_number', function($row) {
+                $gl_numbers = FabricRollRack::getGlNumberByRackId($row->id);
+                return $gl_numbers ? $gl_numbers : '-';
+            })
+            ->addColumn('color', function($row) {
+                $colors = FabricRollRack::getColorByRackId($row->id);
+                return $colors ? $colors : '-';
+            })
+            ->addColumn('total_roll', function($row) {
+                $total_roll = FabricRollRack::getTotalRollByRackId($row->id);
+                return $total_roll;
+            })
+            ->filter(function ($query) {
+                if (request()->has('rack_allocation_filter')) {
+                    if (request('rack_allocation_filter') == 'allocated') {
+                        $query->where('rack_locations.location_id', '!=', null);
+                    }
+                    if (request('rack_allocation_filter') == 'unallocated') {
+                        $query->where('rack_locations.location_id','=', null);
+                    }
+                }
+
+                if (request()->has('rack_type_filter')) {
+                    if (request('rack_type_filter') == 'moveable') {
+                        $query->where('racks.rack_type', '=', 'moveable');
+                    }
+                    if (request('rack_type_filter') == 'fixed') {
+                        $query->where('racks.rack_type','=', 'fixed');
+                    }
+                }
+            }, true)
             ->toJson();
-    }       
+    }
     
     public function store(Request $request)
     {

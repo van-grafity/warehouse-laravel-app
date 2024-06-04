@@ -57,7 +57,7 @@ class PackinglistController extends Controller
             ->addIndexColumn()
             ->escapeColumns([])
             ->editColumn('serial_number', function($row){
-                $serial_number = "<a href='". route('packinglist.detail',$row->id)."' class='' data-toggle='tooltip' data-placement='top' title='Click for Detail'>$row->serial_number</a>";
+                $serial_number = "<a href='". route('packinglist.detail',$row->id)."' class='' data-toggle='tooltip' data-placement='top' title='Packing List Detail'>$row->serial_number</a>";
                 return $serial_number;
             })
             ->addColumn('action', function($row){

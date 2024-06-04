@@ -305,9 +305,9 @@
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
             { data: 'serial_number', name: 'serial_number'},
             { data: 'location', name: 'locations.location'},
-            { data: 'location', name: 'locations.location'},
-            { data: 'location', name: 'locations.location'},
-            { data: 'location', name: 'locations.location'},
+            { data: 'gl_number', name: 'gl_number'},
+            { data: 'color', name: 'color'},
+            { data: 'total_roll', name: 'total_roll'},
             { data: 'action', name: 'action', visible: column_visible},
         ],
         columnDefs: [

@@ -358,7 +358,7 @@ return [
         ],
         [
             'text' => 'Manage Fabric',
-            'icon' => 'fas fa-shapes nav-icon',
+            'icon' => 'fas fa-scroll nav-icon',
             'can'   => 'manage-fabric.access',
             'submenu' => [
                 [
@@ -379,10 +379,21 @@ return [
             ],
         ],
         [
-            'text' => 'Rack Location',
-            'icon' => 'far fa-list-alt nav-icon',
-            'url' => 'rack-location',
-            'can'   => 'rack-location.access',
+            'text' => 'Manage Rack',
+            'icon' => 'fas fa-suitcase-rolling nav-icon',
+            'can'   => 'manage-rack.access',
+            'submenu' => [
+                [
+                    'text' => 'Rack Location',
+                    'url' => 'rack-location',
+                    'can' => 'rack-location.access',
+                ],
+                [
+                    'text' => 'Rack Status',
+                    'url' => 'rack-status',
+                    'can'   => 'rack-status.access',
+                ],
+            ],
         ],
         [
             'header' => 'Admin',
