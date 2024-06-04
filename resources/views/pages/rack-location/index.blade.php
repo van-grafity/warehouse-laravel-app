@@ -294,9 +294,18 @@
         serverSide: true,
         ajax: {
             url: dtable_url,
-             data: function (d) {
+            data: function (d) {
                 d.rack_allocation_filter = $('#rack_allocation_filter').val();
                 d.rack_type_filter = $('#rack_type_filter').val();
+            },
+            beforeSend: function() {
+                // ## Tambahkan kelas dimmed-table sebelum proses loading dimulai
+                $('#rack_location_table').addClass('dimmed-table').append('<div class="datatable-overlay"></div>');
+            },
+            complete: function() {
+                // ## Hapus kelas dimmed-table setelah proses loading selesai
+                $('#rack_location_table').removeClass('dimmed-table').find('.datatable-overlay').remove();
+                checkbox_clicked();
             },
         },
         order: [2,'asc'],

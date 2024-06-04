@@ -11,6 +11,7 @@ use App\Models\FabricRollRack;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
 
 use Yajra\Datatables\Datatables;
 
@@ -35,12 +36,13 @@ class RackLocationController extends Controller
     public function dtable()
     {
         $query = Rack::leftJoin('rack_locations','rack_locations.rack_id','=','racks.id')
-        ->leftJoin('locations','locations.id','=','rack_locations.location_id')
-        ->select(
-            'racks.id',
-            'racks.serial_number',
-            'locations.location as location',
-        ); 
+            ->leftJoin('locations','locations.id','=','rack_locations.location_id')
+            ->whereNull('rack_locations.exit_at')
+            ->select(
+                'racks.id',
+                'racks.serial_number',
+                'locations.location as location',
+            );
 
         return Datatables::of($query)
             ->addIndexColumn()
@@ -119,25 +121,36 @@ class RackLocationController extends Controller
 
             $updated_racks = [];
             DB::transaction(function () use ($selected_rack_ids, $location_id, &$updated_racks) {
-
-                $rack_location = RackLocation::whereIn('rack_id', $selected_rack_ids)->delete();
-
+                
                 foreach ($selected_rack_ids as $key => $rack_id) {
+                    $last_rack_location = RackLocation::where('rack_id', $rack_id)
+                        ->whereNull('exit_at')
+                        ->orderBy('created_at','DESC')
+                        ->first();
+                    
+                    if($last_rack_location) {
+                        if($last_rack_location->location_id == $location_id) {
+                            continue;
+                        }
+                        $last_rack_location->exit_at = Carbon::now();
+                        $last_rack_location->save();
+                    }
+                    
                     $data_rack = RackLocation::firstOrCreate([
                         'location_id' => $location_id,
                         'rack_id' => $rack_id,
                         'entry_at' => date('Y-m-d H:i:s')
-                    ]);                           
+                    ]);                 
                     $rack = Rack::find($rack_id);
                     $rack->save();
-                    $inserted_rack[] = $rack;
+                    $updated_racks[] = $rack;
                 }
 
             });
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully updated '. count($selected_rack_ids) .' Rack locations to ' . $location->location,
+                'message' => 'Successfully move '. count($updated_racks) .' Rack locations to ' . $location->location,
                 'data' => [
                     'updated_racks' => $updated_racks
                 ]
