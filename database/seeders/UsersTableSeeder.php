@@ -45,11 +45,20 @@ class UsersTableSeeder extends Seeder
         $user->syncRoles('user');
 
         $user = \App\Models\User::factory()->create([
+            'name' => 'Warehouse Supervisor',
+            'email' => 'warehouse_supervisor@example.com',
+            'password' => Hash::make('123456789'),
+            'department_id' => '3',
+        ]);
+        $user->syncRoles('warehouse-supervisor');
+
+        $user = \App\Models\User::factory()->create([
             'name' => 'FG Warehouse',
             'email' => 'fg_warehouse@ghimli.com',
             'password' => Hash::make('123456789'),
             'department_id' => '3',
         ]);
-        $user->syncRoles('fg_warehouse');
+        $user->syncRoles('fg-warehouse');
+
     }
 }

@@ -22,7 +22,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-       Gate::before(function (User $user, $ability) {
+        Gate::before(function (User $user, $ability) {
            if ($user->hasRole('developer')) {
                return true;
            }
@@ -51,14 +51,22 @@ class AuthServiceProvider extends ServiceProvider
             $permitted_roles = [
                 'admin',
                 'user',
-                'fg_warehouse',
+                'warehouse-supervisor',
+                'fg-warehouse',
             ];
             if ($user->hasRole($permitted_roles)) { return true; }
         });
 
-         Gate::define('fg_warehouse-menu', function (User $user) {
+        Gate::define('warehouse-supervisor-menu', function (User $user) {
             $permitted_roles = [
-                'fg_warehouse',
+                'warehouse-supervisor',
+            ];
+            if ($user->hasRole($permitted_roles)) { return true; }
+        });
+
+        Gate::define('fg-warehouse-menu', function (User $user) {
+            $permitted_roles = [
+                'fg-warehouse',
             ];
             if ($user->hasRole($permitted_roles)) { return true; }
         });

@@ -43,7 +43,12 @@ class RolePermissionsSeeder extends Seeder
                 'description' => 'Guest User.',
             ],
             [
-                'name' => 'fg_warehouse',
+                'name' => 'warehouse-supervisor',
+                'title' => 'Warehouse Supervisor',
+                'description' => 'Warehouse Supervisor.',
+            ],
+            [
+                'name' => 'fg-warehouse',
                 'title' => 'FG Warehouse',
                 'description' => 'FG Warehouse.',
             ],
@@ -75,7 +80,12 @@ class RolePermissionsSeeder extends Seeder
                 'permission_category_id' => '1',
             ],
             [
-                'name' => 'fg_warehouse.access',
+                'name' => 'warehouse-supervisor.access',
+                'description' => 'Can access warehouse supervisor permissions.',
+                'permission_category_id' => '1',
+            ],
+            [
+                'name' => 'fg-warehouse.access',
                 'description' => 'Can access fg warehouse permissions.',
                 'permission_category_id' => '1',
             ],
@@ -225,7 +235,9 @@ class RolePermissionsSeeder extends Seeder
             'developer.access',
             'admin.access',
             'user.access',
-            'fg_warehouse.access',
+
+            'warehouse-supervisor.access',
+            'fg-warehouse.access',
         ]);
 
         $admin_role = Role::findByName('admin');
@@ -254,10 +266,16 @@ class RolePermissionsSeeder extends Seeder
             'user.access',
         ]);
 
-        $fg_warehouse_role = Role::findByName('fg_warehouse');
+        $warehouse_supervisor_role = Role::findByName('warehouse-supervisor');
+        $warehouse_supervisor_role->syncPermissions([
+            'user.access',
+            'warehouse-supervisor.access',
+        ]);
+
+        $fg_warehouse_role = Role::findByName('fg-warehouse');
         $fg_warehouse_role->syncPermissions([
             'user.access',
-            'fg_warehouse.access',
+            'fg-warehouse.access',
 
             'master-data.access',
             'rack.access',
