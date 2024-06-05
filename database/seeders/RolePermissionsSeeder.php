@@ -21,6 +21,7 @@ class RolePermissionsSeeder extends Seeder
 
         // ## Call individual seeders
         $this->call([
+            PermissionCategoriesTableSeeder::class,
             RolesSeeder::class,
             PermissionsSeeder::class,
             RolePermissionAssigner::class,
@@ -44,6 +45,7 @@ class RolePermissionsSeeder extends Seeder
         \DB::table('auth_role_has_permissions')->truncate();
         \DB::table('auth_permissions')->truncate();
         \DB::table('auth_roles')->truncate();
+        \DB::table('auth_permissions_categories')->truncate();
         
 
         // ## Enable foreign key checks

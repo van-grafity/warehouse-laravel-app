@@ -21,24 +21,25 @@ class PermissionCategoriesTableSeeder extends Seeder
             ],
             [
                 'id' => 2,
-                'name' => 'Master Data Menu',
-                'description' => 'Permission Category for Master Data Menu.',
-            ],
-            [
-                'id' => 3,
-                'name' => 'Master Data Manage',
-                'description' => 'Permission Category for Manage Master Data.',
-            ],
-            [
-                'id' => 4,
                 'name' => 'General Menu',
                 'description' => 'Permission Category for Master Data Menu.',
             ],
             [
-                'id' => 5,
-                'name' => 'Menu Print',
-                'description' => 'Permission Category for Print.',
+                'id' => 3,
+                'name' => 'Master Data Menu',
+                'description' => 'Permission Category for Master Data Menu.',
             ],
+            [
+                'id' => 4,
+                'name' => 'Manage Fabric Menu',
+                'description' => 'Permission Category for Manage Fabric Menu.',
+            ],
+            [
+                'id' => 5,
+                'name' => 'Manage Rack Menu',
+                'description' => 'Permission Category for Manage Rack Menu.',
+            ],
+            
         ];
 
         foreach ($data as $key => $permissionCategory) {

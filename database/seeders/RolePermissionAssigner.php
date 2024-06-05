@@ -19,12 +19,11 @@ class RolePermissionAssigner extends Seeder
                 'developer.access',
                 'admin.access',
                 'user.access',
-                'warehouse-supervisor.access',
-                'fg-warehouse.access',
             ],
             'admin' => [
                 'admin.access',
                 'user.access',
+                
                 'master-data.access',
                 'color.access',
                 'supplier.access',
@@ -35,19 +34,13 @@ class RolePermissionAssigner extends Seeder
                 'invoice.access',
                 'packinglist.access',
                 'manage-fabric.access',
-                'stock-in.access',
+                'fabric-stock-in.access',
                 'fabric-request.access',
             ],
             'user' => [
                 'user.access',
             ],
-            'warehouse-supervisor' => [
-                'user.access',
-                'warehouse-supervisor.access',
-            ],
             'fg-warehouse' => [
-                'user.access',
-                'fg-warehouse.access',
                 'master-data.access',
                 'rack.access',
                 'rack.print-barcode',

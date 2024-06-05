@@ -151,7 +151,7 @@
     const store_url = "{{ route('fabric-roll.store') }}";
     const update_url = "{{ route('fabric-roll.update',':id') }}";
     const delete_url = "{{ route('fabric-roll.destroy',':id') }}";
-    const mass_delete_url = "{{ route('fabric-roll.mass_delete') }}";
+    const mass_delete_url = "{{ route('fabric-roll.mass-delete') }}";
     const dtable_url = "{{ route('fabric-roll.dtable') }}";
     const packinglist_information_url = "{{ route('packinglist.information-card', ':id') }}";
     const print_qrcode_url = "{{ route('packinglist.print-qrcode') }}";
