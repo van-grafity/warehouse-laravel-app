@@ -5,281 +5,48 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\PermissionRegistrar;
-use Illuminate\Support\Facades\Hash;
+
 
 class RolePermissionsSeeder extends Seeder
 {
     /**
-     * Create the initial roles and permissions.
+     * Run the database seeds.
      *
      * @return void
      */
     public function run()
     {
+        // ## Clear existing roles and permissions
+        $this->clearRolesAndPermissions();
+
+        // ## Call individual seeders
+        $this->call([
+            RolesSeeder::class,
+            PermissionsSeeder::class,
+            RolePermissionAssigner::class,
+        ]);
+    }
+
+    /**
+     * Clear all roles and permissions from the database.
+     *
+     * @return void
+     */
+    protected function clearRolesAndPermissions()
+    {
         // ## Reset cached roles and permissions
-        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // ## create roles
-        $role_list = [
-            [
-                'name' => 'developer',
-                'title' => 'Developer',
-                'description' => 'IT Programmer',
-            ],
-            [
-                'name' => 'admin',
-                'title' => 'Admin',
-                'description' => 'Day to day administrators of the site.',
-            ],
-            [
-                'name' => 'user',
-                'title' => 'User',
-                'description' => 'General users of the site.',
-            ],
-            [
-                'name' => 'guest',
-                'title' => 'Guest',
-                'description' => 'Guest User.',
-            ],
-            [
-                'name' => 'warehouse-supervisor',
-                'title' => 'Warehouse Supervisor',
-                'description' => 'Warehouse Supervisor.',
-            ],
-            [
-                'name' => 'fg-warehouse',
-                'title' => 'FG Warehouse',
-                'description' => 'FG Warehouse.',
-            ],
-        ];
-        foreach ($role_list as $key => $role) {
-            Role::create($role);
-        }
+        // ## Disable foreign key checks
+        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        // ## create permissions
-        $permission_list = [
-            [
-                'name' => 'developer.access',
-                'description' => 'Access all permissions',
-                'permission_category_id' => '1',
-            ],
-            [
-                'name' => 'admin.access',
-                'description' => 'Can access admin permissions.',
-                'permission_category_id' => '1',
-            ],
-            [
-                'name' => 'user.access',
-                'description' => 'Can access default permissions.',
-                'permission_category_id' => '1',
-            ],
-            [
-                'name' => 'guest.access',
-                'description' => 'Can access guest permissions.',
-                'permission_category_id' => '1',
-            ],
-            [
-                'name' => 'warehouse-supervisor.access',
-                'description' => 'Can access warehouse supervisor permissions.',
-                'permission_category_id' => '1',
-            ],
-            [
-                'name' => 'fg-warehouse.access',
-                'description' => 'Can access fg warehouse permissions.',
-                'permission_category_id' => '1',
-            ],
-            [
-                'name' => 'master-data.access',
-                'description' => 'Can access Master Data Menu',
-                'permission_category_id' => '2',
-            ],
-            [
-                'name' => 'color.access',
-                'description' => 'Can access color features.',
-                'permission_category_id' => '2',
-            ],
-            [
-                'name' => 'color.manage',
-                'description' => 'Can manage color features.',
-                'permission_category_id' => '3',
-            ],
-            [
-                'name' => 'supplier.access',
-                'description' => 'Can access supplier features.',
-                'permission_category_id' => '2',
-            ],
-            [
-                'name' => 'supplier.manage',
-                'description' => 'Can manage supplier features.',
-                'permission_category_id' => '3',
-            ],
-            [
-                'name' => 'department.access',
-                'description' => 'Can access department features.',
-                'permission_category_id' => '2',
-            ],
-            [
-                'name' => 'department.manage',
-                'description' => 'Can manage department features.',
-                'permission_category_id' => '3',
-            ],
-            [
-                'name' => 'location-row.access',
-                'description' => 'Can access location row features.',
-                'permission_category_id' => '2',
-            ],
-            [
-                'name' => 'location-row.manage',
-                'description' => 'Can manage location row features.',
-                'permission_category_id' => '3',
-            ],
-            [
-                'name' => 'location.access',
-                'description' => 'Can access location features.',
-                'permission_category_id' => '2',
-            ],
-            [
-                'name' => 'location.manage',
-                'description' => 'Can manage location features.',
-                'permission_category_id' => '3',
-            ],
-            [
-                'name' => 'rack.access',
-                'description' => 'Can access rack features.',
-                'permission_category_id' => '2',
-            ],
-            [
-                'name' => 'rack.manage',
-                'description' => 'Can manage rack features.',
-                'permission_category_id' => '3',
-            ],
-            [
-                'name' => 'rack.print-barcode',
-                'description' => 'Can manage print barcode.',
-                'permission_category_id' => '5',
-            ],
-            [
-                'name' => 'invoice.access',
-                'description' => 'Can access invoice features.',
-                'permission_category_id' => '2',
-            ],
-            [
-                'name' => 'manage-fabric.access',
-                'description' => 'Can access Manage Fabric Menu.',
-                'permission_category_id' => '2',
-            ],
-            [
-                'name' => 'invoice.manage',
-                'description' => 'Can manage invoice features.',
-                'permission_category_id' => '3',
-            ],
-            [
-                'name' => 'packinglist.access',
-                'description' => 'Can access packinglist features.',
-                'permission_category_id' => '2',
-            ],
-            [
-                'name' => 'packinglist.manage',
-                'description' => 'Can manage packinglist features.',
-                'permission_category_id' => '3',
-            ],
-            [
-                'name' => 'stock-in.access',
-                'description' => 'Can access stock in features.',
-                'permission_category_id' => '2',
-            ],
-            [
-                'name' => 'stock-in.manage',
-                'description' => 'Can manage stock in features.',
-                'permission_category_id' => '3',
-            ],
-            [
-                'name' => 'fabric-request.access',
-                'description' => 'Can access fabric request features.',
-                'permission_category_id' => '2',
-            ],
-            [
-                'name' => 'fabric-request.manage',
-                'description' => 'Can manage fabric request features.',
-                'permission_category_id' => '3',
-            ],
-            [
-                'name' => 'fabric-status.access',
-                'description' => 'Can access fabric status features.',
-                'permission_category_id' => '2',
-            ],
-            [
-                'name' => 'fabric-status.manage',
-                'description' => 'Can manage fabric status features.',
-                'permission_category_id' => '3',
-            ],
-            [
-                'name' => 'instore-report.print',
-                'description' => 'Can manage instore report.',
-                'permission_category_id' => '5',
-            ],
-            [
-                'name' => 'packinglist.print-qrcode',
-                'description' => 'Can manage print barcode.',
-                'permission_category_id' => '5',
-            ],
-        ];
-        foreach ($permission_list as $key => $permission) {
-            Permission::create($permission);
-        }
+        // ## Truncate pivot tables and main tables
+        \DB::table('auth_role_has_permissions')->truncate();
+        \DB::table('auth_permissions')->truncate();
+        \DB::table('auth_roles')->truncate();
+        
 
-        // ## Give Permission to Role
-        $developer_role = Role::findByName('developer');
-        $developer_role->syncPermissions([
-            'developer.access',
-            'admin.access',
-            'user.access',
-
-            'warehouse-supervisor.access',
-            'fg-warehouse.access',
-        ]);
-
-        $admin_role = Role::findByName('admin');
-        $admin_role->syncPermissions([
-            'admin.access',
-            'user.access',
-            
-            'master-data.access',
-            'color.access',
-            'supplier.access',
-            'department.access',
-            'location-row.access',
-            'location.access',
-            'rack.access',
-
-            'invoice.access',
-            'packinglist.access',
-
-            'manage-fabric.access',
-            'stock-in.access',
-            'fabric-request.access',
-        ]);
-
-        $user_role = Role::findByName('user');
-        $user_role->syncPermissions([
-            'user.access',
-        ]);
-
-        $warehouse_supervisor_role = Role::findByName('warehouse-supervisor');
-        $warehouse_supervisor_role->syncPermissions([
-            'user.access',
-            'warehouse-supervisor.access',
-        ]);
-
-        $fg_warehouse_role = Role::findByName('fg-warehouse');
-        $fg_warehouse_role->syncPermissions([
-            'user.access',
-            'fg-warehouse.access',
-
-            'master-data.access',
-            'rack.access',
-            'rack.print-barcode',
-        ]);
+        // ## Enable foreign key checks
+        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
