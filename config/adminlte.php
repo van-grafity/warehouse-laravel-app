@@ -323,11 +323,6 @@ return [
                     'can'   => 'supplier.access',
                 ],
                 [
-                    'text' => 'Department',
-                    'url' => 'department',
-                    'can'   => 'department.access',
-                ],
-                [
                     'text' => 'Location Row',
                     'url' => 'location-row',
                     'can'   => 'location-row.access',
@@ -397,7 +392,19 @@ return [
         ],
         [
             'header' => 'Admin',
-            'can'   => 'admin-menu',
+            'can'   => ['admin-menu','admin-menu.access'],
+        ],
+        [
+            'text' => 'Master Data Admin',
+            'icon' => 'fas fa-server nav-icon',
+            'can'   => 'admin-menu.access',
+            'submenu' => [
+                [
+                    'text' => 'Department',
+                    'url' => 'department',
+                    'can'   => 'department.access',
+                ],
+            ],
         ],
         [
             'text' => 'User Management',

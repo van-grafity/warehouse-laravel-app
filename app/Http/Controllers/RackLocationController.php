@@ -17,7 +17,13 @@ use Yajra\Datatables\Datatables;
 
 class RackLocationController extends Controller
 {
-           /**
+    public function __construct()
+    {
+        Gate::define('manage', function ($user) {
+            return $user->hasPermissionTo('rack-location.manage');
+        });
+    }
+    /**
      * Display a listing of the resource.
      */
     public function index()

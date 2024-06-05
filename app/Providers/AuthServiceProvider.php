@@ -52,6 +52,7 @@ class AuthServiceProvider extends ServiceProvider
                 'admin',
                 'user',
                 'warehouse-supervisor',
+                'warehouse-clerk',
                 'fg-warehouse',
             ];
             if ($user->hasRole($permitted_roles)) { return true; }

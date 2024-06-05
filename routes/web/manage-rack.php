@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'middleware' => [
         'auth',
-        'can:rack-location',
+        'can:rack-location.access',
     ],
     'controller' => App\Http\Controllers\RackLocationController::class,
     'prefix' => 'rack-location',

@@ -21,21 +21,26 @@ class PermissionCategoriesTableSeeder extends Seeder
             ],
             [
                 'id' => 2,
+                'name' => 'Admin Menu',
+                'description' => 'Permission Category for Admin Menu.',
+            ],
+            [
+                'id' => 3,
                 'name' => 'General Menu',
                 'description' => 'Permission Category for Master Data Menu.',
             ],
             [
-                'id' => 3,
+                'id' => 4,
                 'name' => 'Master Data Menu',
                 'description' => 'Permission Category for Master Data Menu.',
             ],
             [
-                'id' => 4,
+                'id' => 5,
                 'name' => 'Manage Fabric Menu',
                 'description' => 'Permission Category for Manage Fabric Menu.',
             ],
             [
-                'id' => 5,
+                'id' => 6,
                 'name' => 'Manage Rack Menu',
                 'description' => 'Permission Category for Manage Rack Menu.',
             ],

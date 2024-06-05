@@ -16,10 +16,11 @@ class PermissionsSeeder extends Seeder
     {
         $permission_categories = [
             'permission_by_role' => 1,
-            'general_menu' => 2,
-            'master_data_menu' => 3,
-            'manage_fabric_menu' => 4,
-            'manage_rack_menu' => 5,
+            'admin_menu' => 2,
+            'general_menu' => 3,
+            'master_data_menu' => 4,
+            'manage_fabric_menu' => 5,
+            'manage_rack_menu' => 6,
         ];
 
         $permission_list = [
@@ -27,6 +28,11 @@ class PermissionsSeeder extends Seeder
             ['name' => 'admin.access', 'description' => 'Can access admin permissions.', 'permission_category_id' => $permission_categories['permission_by_role']],
             ['name' => 'user.access', 'description' => 'Can access default permissions.', 'permission_category_id' => $permission_categories['permission_by_role']],
             ['name' => 'guest.access', 'description' => 'Can access guest permissions.', 'permission_category_id' => $permission_categories['permission_by_role']],
+
+
+            ['name' => 'admin-menu.access', 'description' => 'Can access Admin Menu.', 'permission_category_id' => $permission_categories['admin_menu']],
+            ['name' => 'department.access', 'description' => 'Can access department features.', 'permission_category_id' => $permission_categories['admin_menu']],
+            ['name' => 'department.manage', 'description' => 'Can manage department features.', 'permission_category_id' => $permission_categories['admin_menu']],
             
             
             ['name' => 'master-data.access', 'description' => 'Can access Master Data Menu', 'permission_category_id' => $permission_categories['master_data_menu']],
@@ -34,8 +40,6 @@ class PermissionsSeeder extends Seeder
             ['name' => 'color.manage', 'description' => 'Can manage color features.', 'permission_category_id' => $permission_categories['master_data_menu']],
             ['name' => 'supplier.access', 'description' => 'Can access supplier features.', 'permission_category_id' => $permission_categories['master_data_menu']],
             ['name' => 'supplier.manage', 'description' => 'Can manage supplier features.', 'permission_category_id' => $permission_categories['master_data_menu']],
-            ['name' => 'department.access', 'description' => 'Can access department features.', 'permission_category_id' => $permission_categories['master_data_menu']],
-            ['name' => 'department.manage', 'description' => 'Can manage department features.', 'permission_category_id' => $permission_categories['master_data_menu']],
             ['name' => 'location-row.access', 'description' => 'Can access location row features.', 'permission_category_id' => $permission_categories['master_data_menu']],
             ['name' => 'location-row.manage', 'description' => 'Can manage location row features.', 'permission_category_id' => $permission_categories['master_data_menu']],
             ['name' => 'location.access', 'description' => 'Can access location features.', 'permission_category_id' => $permission_categories['master_data_menu']],

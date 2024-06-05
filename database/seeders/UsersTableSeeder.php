@@ -51,6 +51,14 @@ class UsersTableSeeder extends Seeder
             'department_id' => '3',
         ]);
         $user->syncRoles('warehouse-supervisor');
+        
+        $user = \App\Models\User::factory()->create([
+            'name' => 'Warehouse Clerk',
+            'email' => 'warehouse_clerk@example.com',
+            'password' => Hash::make('123456789'),
+            'department_id' => '3',
+        ]);
+        $user->syncRoles('warehouse-clerk');
 
         $user = \App\Models\User::factory()->create([
             'name' => 'FG Warehouse',
