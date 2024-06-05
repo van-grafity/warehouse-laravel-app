@@ -4,6 +4,11 @@
 @section('page_title', $page_title)
 
 @section('content')
+<div class="row mb-2">
+    <div class="col-sm-6">
+        <h3 class="">@yield('page_title')</h3>
+    </div>
+</div>
 <div class="row">
     <div class="col-12">
         

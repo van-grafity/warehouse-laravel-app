@@ -49,7 +49,7 @@ Route::group([
 Route::group([
     'middleware' => [
         'auth',
-        'can:fabric-roll.access',
+        'can:user-menu',
     ],
     'controller' => App\Http\Controllers\FabricRollController::class,
     'prefix' => 'fabric-roll',

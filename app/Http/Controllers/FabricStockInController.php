@@ -78,7 +78,7 @@ class FabricStockInController extends Controller
         $packinglist = Packinglist::find($id);
         $data = [
             'title' => 'Fabric Stock In',
-            'page_title' => 'Stock In',
+            'page_title' => 'Fabric Stock In',
             'packinglist' => $packinglist,
         ];
         return view('pages.fabric-stock-in.detail', $data);

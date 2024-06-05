@@ -182,7 +182,7 @@ class FabricStatusController extends Controller
         $packinglist = Packinglist::find($id);
         $data = [
             'title' => 'Fabric Status',
-            'page_title' => 'Fabric Status',
+            'page_title' => 'Fabric Status Detail',
             'packinglist' => $packinglist,
         ];
         return view('pages.fabric-status.detail', $data);
