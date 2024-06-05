@@ -350,12 +350,14 @@ class PackinglistController extends Controller
             
             foreach ($roll_data_from_excel as $key_data => $roll) {
                 $color = Color::where('color', $roll['color'])->first();
-                $packinglist = Packinglist::where('batch_number', $roll['batch'])->where('color_id', $color->id)->first();
+                $packinglist = Packinglist::where('batch_number', $roll['batch'])
+                    ->where('color_id', $color->id)
+                    ->first();
                 
                 $is_roll_number_exist = FabricRoll::is_roll_number_exist($packinglist->id, $roll['roll']);
                 
-                if($is_roll_number_exist){
-                    throw new \Exception("Roll ". $roll['roll'] ." is already on packinglist ". $packinglist->serial_number);
+                if ($is_roll_number_exist) {
+                    throw new \Exception("Roll {$roll['roll']} is already on packinglist {$packinglist->serial_number} - ({$packinglist->color->color} | {$packinglist->batch_number})");
                 }
 
                 $roll_data_to_insert = [

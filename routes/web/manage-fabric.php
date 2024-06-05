@@ -14,7 +14,7 @@ Route::group([
     Route::get('', 'index')->name('index');
     Route::get('dtable', 'dtable')->name('dtable');
     Route::get('dtable-roll-list', 'dtable_roll_list')->name('dtable-roll-list');
-    Route::get('{fabric-stock-in}/detail', 'detail')->name('detail');
+    Route::get('{packinglist}/detail', 'detail')->name('detail');
     Route::post('', 'store')->name('store');
 });
 
@@ -32,9 +32,9 @@ Route::group([
     Route::get('dtable', 'dtable')->name('dtable');
     Route::get('dtable-roll-list', 'dtable_roll_list')->name('dtable-roll-list');
 
-    Route::get('{packinglist_id}', 'show')->name('show');
-    Route::get('{packinglist_id}/detail', 'detail')->name('detail');
-    Route::get('{packinglist_id}/export', 'export')->name('export');
+    Route::get('{packinglist}', 'show')->name('show');
+    Route::get('{packinglist}/detail', 'detail')->name('detail');
+    Route::get('{packinglist}/export', 'export')->name('export');
 
     Route::post('', 'store')->name('store');
 });
@@ -52,5 +52,5 @@ Route::group([
     Route::get('', 'index')->name('index');
     Route::get('dtable', 'dtable')->name('dtable');
     Route::get('sync', 'sync')->name('sync');
-    Route::get('{fabric-request}/detail', 'detail')->name('detail');
+    Route::get('{fabric_request}/detail', 'detail')->name('detail');
 });

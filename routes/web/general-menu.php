@@ -32,7 +32,7 @@ Route::group([
     Route::get('', 'index')->name('index');
     Route::get('dtable', 'dtable')->name('dtable');
     Route::get('print-qrcode', 'print_qrcode')->name('print-qrcode');
-    Route::get('import', 'import')->name('import');
+    Route::post('import', 'import')->name('import');
 
 
 

@@ -16,7 +16,7 @@
                     <div class="col-sm-12 d-inline-flex justify-content-end">
                         <div class="action-wrapper mr-auto">
                             @can('manage')
-                                <button class="btn btn-primary" disabled="disabled" onclick="show_modal_change('modal_change_rack_location')">Change Location</button>
+                                <button class="btn btn-primary btn-sm" disabled="disabled" onclick="show_modal_change('modal_change_rack_location')">Change Location</button>
                             @endcan
                         </div>
                          <div class="filter_wrapper mr-2" style="width:200px;">
