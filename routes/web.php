@@ -123,8 +123,12 @@ Route::group([
 
     Route::prefix('fabric-request')->name('fabric-request.')->group(function () {
         Route::get('dtable', [App\Http\Controllers\FabricRequestController::class, 'dtable'])->name('dtable');
+        Route::get('dtable-roll-list', [App\Http\Controllers\FabricRequestController::class, 'dtable_roll_list'])->name('dtable-roll-list');
+        Route::get('dtable-roll-request', [App\Http\Controllers\FabricRequestController::class,'dtable_roll_request'])->name('dtable-roll-request');
         Route::get('{packinglist_id}/detail', [App\Http\Controllers\FabricRequestController::class, 'detail'])->name('detail');
         Route::post('sync', [App\Http\Controllers\FabricRequestController::class, 'sync'])->name('sync');
+        Route::get('{id}/issue-fabric', [App\Http\Controllers\FabricRequestController::class,'issue_fabric'])->name('issue-fabric');
+        Route::get('{id}/show-roll', [App\Http\Controllers\FabricRequestController::class,'show_roll'])->name('show-roll');
     });
     Route::resource('fabric-request', App\Http\Controllers\FabricRequestController::class);
 

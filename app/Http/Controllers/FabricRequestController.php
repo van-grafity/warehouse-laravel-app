@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\FabricRequest;
+use App\Models\FabricRollRack;
+use App\Models\FabricRoll;
+use App\Models\Packinglist;
+use App\Models\FabricIssue;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
@@ -24,13 +28,38 @@ class FabricRequestController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
+    {   
         $data = [
             'title' => 'Fabric request',
             'page_title' => 'Fabric request',
             'can_manage' => auth()->user()->can('manage'),
         ];
         return view('pages.fabric-request.index', $data);
+    }
+
+        /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        try {
+            $fabric_request = FabricRequest::find($id);
+            
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully get Fabric Request',
+                'data' => [
+                    'fabric_request' => $fabric_request,
+                ]
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
     }
 
     /**
@@ -45,8 +74,7 @@ class FabricRequestController extends Controller
             ->escapeColumns([])
             ->addColumn('action', function($row){
                 $action_button = "
-                    <a href='' class='btn btn-primary btn-sm' >Issue Fabric</a>
-                ";
+                    <a href='". route('fabric-request.issue-fabric',$row->id)."' class='btn btn-primary btn-sm' >Issue Fabric</a>                ";
                 return $action_button;
             })
             ->addColumn('serial_number', function($row){
@@ -121,6 +149,177 @@ class FabricRequestController extends Controller
             ];
             return response()->json($data_return);
         }
+    }
+
+    public function issue_fabric(string $id)
+    {
+        $fabric_request = FabricRequest::find($id);
+        $packinglist = Packinglist::select('gl_number')->distinct()->get();
+
+        $data = [
+            'title' => 'Fabric Issue',
+            'page_title' => 'Fabric Issue',
+            'fabric_request' => $fabric_request,
+            'packinglist' => $packinglist,
+        ];
+        return view('pages.fabric-request.issue-fabric', $data);
+        
+    }
+
+    /**
+     * For selected roll table.
+     */
+    public function show_roll(string $id) 
+    {
+        try {
+            $fabric_rolls = FabricRoll::leftJoin('fabric_roll_racks','fabric_roll_racks.fabric_roll_id','=','fabric_rolls.id')
+            ->leftJoin('racks','racks.id','=','fabric_roll_racks.rack_id')
+            ->leftJoin('rack_locations','rack_locations.rack_id','=','fabric_roll_racks.rack_id')
+            ->leftJoin('locations','locations.id','=','rack_locations.location_id')
+            ->where('fabric_rolls.racked_by','!=', null)
+            ->select(
+                'fabric_rolls.id',
+                'fabric_rolls.serial_number',
+                'fabric_rolls.width',
+                'fabric_rolls.yds',
+                'racks.serial_number as rack_number',        
+                'locations.location as rack_location',
+            )
+            ->get();
+            
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully get  selected fabric roll',
+                'data' => [
+                    'fabric_rolls' => $fabric_rolls,
+                ]
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $id_fbr = $request->id;
+            $id = FabricRequest::find($id_fbr);
+
+            $id_roll = $request->id;
+            $id = FabricRoll::find($id_roll);
+
+            $fabric_issue = FabricIssue::firstOrCreate([
+                'id_fbr' => $id_fbr,
+                'id_roll' => $id_roll,
+            ]);                          
+            
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully selected fabric roll',
+                'data' => [
+                    'fabric_issue' => $fabric_issue,
+                ]
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
+    }
+
+    public function update(Request $request, string $id)
+    {
+        try {
+            $fabric_roll_rack = FabricRollRack::find($id);
+            $stock_out_at-> date('Y-m-d H:i:s');
+            $fabric_roll_rack->save();
+            
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully updated fabric roll rack',
+                'data' => $fabric_roll_rack
+            ];
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
+    }
+
+    public function dtable_roll_list()
+    {
+        $query = FabricRoll::leftJoin('fabric_roll_racks','fabric_roll_racks.fabric_roll_id','=','fabric_rolls.id')
+            ->leftJoin('racks','racks.id','=','fabric_roll_racks.rack_id')
+            ->leftJoin('rack_locations','rack_locations.rack_id','=','fabric_roll_racks.rack_id')
+            ->leftJoin('locations','locations.id','=','rack_locations.location_id')
+            ->leftJoin('packinglists','packinglists.id','=','fabric_rolls.packinglist_id')
+            ->where('fabric_rolls.racked_by','!=', null)
+            ->select(
+                'fabric_rolls.id', 
+                'fabric_rolls.roll_number', 
+                'fabric_rolls.serial_number', 
+                'fabric_rolls.kgs', 
+                'fabric_rolls.lbs', 
+                'fabric_rolls.yds',
+                'fabric_rolls.width',  
+                'racks.serial_number as rack_number',
+                'locations.location as rack_location',
+                'packinglists.gl_number',
+                'packinglists.batch_number',
+            );
+        
+        return Datatables::of($query)
+                ->addIndexColumn()
+                ->escapeColumns([])
+
+                ->filter(function ($query){
+                    if (request('gl_filter')) {
+                            $query->where('gl_number', request()->gl_filter)->get();
+                        }
+
+                    if (request('color_filter')) {
+                            $query->where('color_id', request()->color_filter)->get();
+                        }
+                        
+                    if (request('batch_filter')) {
+                            $query->where('batch_number', request()->batch_filter)->get();
+                        }
+                    
+                }, true)
+
+                ->addColumn('checkbox', function ($row) {
+                        if($row->new_roll_id) { return null; }
+                        
+                        $checkbox_element = '
+                            <div class="form-group mb-0">
+                                <div class="custom-control custom-checkbox">
+                                    <input 
+                                        id="roll_checkbox_'. $row->id .'" 
+                                        name="selected_roll[]" 
+                                        class="custom-control-input checkbox-roll-control" 
+                                        type="checkbox" 
+                                        value="'. $row->id .'"
+                                        data-roll-number="'. $row->serial_number .'"
+                                        onchange="checkbox_clicked()" 
+                                    >
+                                    <label for="roll_checkbox_'. $row->id .'" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        ';
+                        return $checkbox_element;
+                    })
+                ->toJson();
     }
 
     public function detail(string $id)
