@@ -52,5 +52,9 @@ Route::group([
     Route::get('', 'index')->name('index');
     Route::get('dtable', 'dtable')->name('dtable');
     Route::get('sync', 'sync')->name('sync');
+    Route::get('dtable-roll-list', 'dtable_roll_list')->name('dtable-roll-list');
+    Route::get('{fabric_request}', 'show')->name('show');
     Route::get('{fabric_request}/detail', 'detail')->name('detail');
+    Route::get('{fabric_request}/issue-fabric', 'issue_fabric')->name('issue-fabric');
+    Route::post('{fabric_request}/issue-fabric', 'issue_fabric_store')->name('issue-fabric-store');
 });

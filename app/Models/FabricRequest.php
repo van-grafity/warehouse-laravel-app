@@ -62,4 +62,9 @@ class FabricRequest extends Model
 
         return true;
     }
+
+    public function fabric_rolls()
+    {
+        return $this->belongsToMany(Botol::class, 'fabric_issuances', 'fabric_request_id', 'fabric_roll_id');
+    }
 }
