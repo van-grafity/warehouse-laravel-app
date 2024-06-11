@@ -218,6 +218,7 @@ class FabricRequestController extends Controller
             ->join('rack_locations','rack_locations.rack_id','=','fabric_roll_racks.rack_id')
             ->join('locations','locations.id','=','rack_locations.location_id')
             ->join('packinglists','packinglists.id','=','fabric_rolls.packinglist_id')
+            ->join('colors','colors.id','=','packinglists.color_id')
             ->where('fabric_rolls.racked_at','!=', null)
             ->select(
                 'fabric_rolls.id', 
@@ -231,6 +232,7 @@ class FabricRequestController extends Controller
                 'locations.location as rack_location',
                 'packinglists.gl_number',
                 'packinglists.batch_number',
+                'colors.color',
             );
         
         return Datatables::of($query)
@@ -256,6 +258,9 @@ class FabricRequestController extends Controller
                     </div>
                 ';
                 return $checkbox_element;
+            })
+            ->addColumn('action', function ($row) {
+                return '<a href="javascript:void(0)" class="btn btn-primary btn-sm" onclick="move_to_fbr(this)">Move to FBR</a>';
             })
             ->filter(function ($query){
                 if (request('gl_filter')) {

@@ -55,12 +55,14 @@
                     <thead>
                         <tr class="">
                             <th width="50">No</th>
-                            <th width="" class="text-center">Serial Number</th>
-                            <th width="100">Width</th>
-                            <th width="100">YDs</th>
-                            <th width="">Rack No</th>
-                            <th width="">Location</th>
-                            <th width="80">Action</th>
+                            <th width="" class="text-center">Color</th>
+                            <th width="" class="text-center">Batch No.</th>
+                            <th width="" class="text-center">Roll No.</th>
+                            <th width="75">Width</th>
+                            <th width="50">YDs</th>
+                            <th width="100">Rack No.</th>
+                            <th width="75">Location</th>
+                            <th width="150">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -88,7 +90,7 @@
                 <div class="col-sm-12 d-inline-flex justify-content-end" style= "margin:30px 0 15px 0;">
                     <div class="action-wrapper mr-auto">
                         @can('manage')
-                            <button class="btn btn-success btn-submit" disabled="disabled" onclick="add_fabric_to_fbr()">Add to FBR</button>
+                            <button class="btn btn-success btn-submit" disabled="disabled" onclick="move_selected_roll_to_fbr()">Add to FBR</button>
                         @endcan
                     </div>
                     <div class="filter_wrapper mr-2" style="width:150px; height:10px">                         
@@ -113,8 +115,8 @@
                             <option value=""></option>  
                         </select>
                     </div>
-                    <div class="action-wrapper" id="reload_table_btn">
-                        <a href="javascript:void(0)" class="btn btn-info">Apply</a>
+                    <div class="action-wrapper">
+                        <button id="reload_table_btn" class="btn btn-info"> Apply </button>
                     </div>
                 </div>
                 <table id="fabric_roll_table" class="table table-bordered table-hover text-center table-vertical-align">
@@ -132,13 +134,14 @@
                                     </div>
                                 </div>
                             </th>
-                            <th width="" class="text-center">Serial Number</th>
-                            <th width="" class="text-center">Batch Number</th>
+                            <th width="" class="text-center">Color</th>
+                            <th width="" class="text-center">Batch No.</th>
                             <th width="" class="text-center">Roll No</th>
-                            <th width="">Width</th>
-                            <th width="">YDs</th>
-                            <th width="">Rack No</th>
-                            <th width="">Location</th>
+                            <th width="75">Width</th>
+                            <th width="50">YDs</th>
+                            <th width="100">Rack No</th>
+                            <th width="75">Location</th>
+                            <th width="120">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -430,17 +433,59 @@
 
         $(`#${modal_id}`).modal('hide');
     }
-
-    function add_fabric_to_fbr(){
-        alert("add fabric to fbr");
+    
+    // ## move single tr
+    const move_to_fbr = (element) => {
+        let row = $(element).closest('tr'); // ## get tr based on button clicked
+        let remove_button = '<a href="javascript:void(0)" class="btn btn-danger btn-sm" onclick="remove_from_fbr(this)">Remove from FBR</a>'; // ## create remove from fbr button
+        row.find('td:last').html(remove_button); // ## change last td of this tr to remove_button
+        
+        let number = $('#selected_roll_table').find('tr').length;
+        row.find('td:first').hide(); // ## hide first td of this tr (input checkbox)
+        row.find('input:checked').prop('checked', false); // ## find checked input and uncheck it
+        row.prepend('<td>' + number + '</td>'); // ## add number to before first td
+        
+        $('#selected_roll_table tbody').append(row); // ## insert tr to selected_roll_table
+        $('#fabric_roll_table').DataTable().row(row).remove().draw(); // ## remove row from datatable
     }
+
+    // ## remove single tr
+    const remove_from_fbr = (element) => {
+        let row = $(element).closest('tr'); // ## get tr based on button clicked
+        let move_button = '<a href="javascript:void(0)" class="btn btn-primary btn-sm" onclick="move_to_fbr(this)">Move to FBR</a>'; // ## create move to fbr button
+        row.find('td:last').html(move_button); // ## change last td of this tr to move_button
+
+        row.find('td:first').remove(); // ## remove first td of this tr (number)
+        row.find('td:first').show(); // ## show first td of this tr (input checkbox)
+        
+        $('#fabric_roll_table tbody').append(row); // ## insert tr to fabric_roll_table
+        $('#fabric_roll_table').DataTable().row.add(row).draw(); // ## add row to datatable
+    }
+
+    // ## move multiple tr via checkbox
+    const move_selected_roll_to_fbr = () => {
+        $('#fabric_roll_table tbody input:checked').each(function() {
+            move_to_fbr(this);
+            checkbox_clicked(); // ## for trigger checkbox function so checkbox all become unchecked
+        });
+    }
+
+
+    const get_total_selected_roll = () => {
+
+    }
+
+    // todo : avoid duplicate roll 
+    // todo : if apply filter deleted all selected roll and this alert 
+    // todo : auto calculation total roll and length 
+    // todo : first load page , only gl that related are show (auto select gl number)
 
 </script>
 
 <script type="text/javascript">
+
     let fabric_roll_table = $('#fabric_roll_table').DataTable({
         processing: true,
-        serverSide: true,
         ajax: {
             url: dtable_list_url,
             data: function (d) {
@@ -461,25 +506,24 @@
         order: [],
         columns: [
             { data: 'checkbox', name: 'checkbox',orderable: false, searchable: false },
-            { data: 'serial_number', name: 'fabric_rolls.serial_number'},
+            { data: 'color', name: 'colors.color'},
             { data: 'batch_number', name: 'packinglists.batch_number'},
             { data: 'roll_number', name: 'roll_number'},
             { data: 'width', name: 'fabric_rolls.width'},
             { data: 'yds', name: 'fabric_rolls.yds'},
             { data: 'rack_number', name: 'racks.serial_number'},
             { data: 'rack_location', name: 'locations.location'},
+            { data: 'action', name: 'action'},
         ],
         columnDefs: [
-            { targets: [0], orderable: false, searchable: false },
+            { targets: [0,-1], orderable: false, searchable: false },
         ],
-        
-        paging: true,
+        paging: false,
         responsive: true,
-        lengthChange: true,
+        lengthChange: false,
         searching: true,
         autoWidth: false,
         orderCellsTop: true,
-        searchDelay: 500,
     });
 
     $('#reload_table_btn').on('click', function(event) {
@@ -503,7 +547,7 @@
         },
     });
 
-     $('#color_filter.select2').select2({
+    $('#color_filter.select2').select2({
         ajax: {
             url: fetch_select_color_url,
             dataType: 'json',
@@ -528,24 +572,20 @@
         }
     });
 
-
-    $('#gl_filter, #color_filter, #batch_filter').change(function(event) {
-        reload_dtable();
-    }); 
 </script>
 
 <script>
     const is_all_checked = () => {
-    let all_roll_checkbox = document.getElementsByClassName('checkbox-roll-control');
-    if(all_roll_checkbox.length <= 0) { return false; }
-    for (let item of all_roll_checkbox) {
-        if(!item.checked) { return false; }
-    }
-    return true;
+        let all_roll_checkbox = document.querySelectorAll('#fabric_roll_table .checkbox-roll-control');
+        if(all_roll_checkbox.length <= 0) { return false; }
+        for (let item of all_roll_checkbox) {
+            if(!item.checked) { return false; }
+        }
+        return true;
     }
 
     const is_any_checked = () => {
-        let all_roll_checkbox = document.getElementsByClassName('checkbox-roll-control');
+        let all_roll_checkbox = document.querySelectorAll('#fabric_roll_table .checkbox-roll-control');
         for (let item of all_roll_checkbox) {
             if(item.checked) { return true; }
         }
