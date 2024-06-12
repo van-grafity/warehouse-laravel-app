@@ -72,14 +72,14 @@
                 <div class="row">
                     <div class="col-md-12">
                         <dl class="row">
-                            <dt class="col-md-4 col-sm-12">Total Roll : <span id="total_roll"></span> - </dt>
+                            <dt class="col-md-4 col-sm-12">Total Roll : <span id="total_selected_roll_qty"> 0 </span></dt>
                         </dl>
                     </div>
                 </div>
                     <div class="row">
                     <div class="col-md-12">
                         <dl class="row">
-                            <dt class="col-md-4 col-sm-12">Total Length : <span id="total_length"></span> - </dt>
+                            <dt class="col-md-4 col-sm-12">Total Length : <span id="total_selected_roll_length"> 0 </span> Yds </dt>
                         </dl>
                     </div>
                 </div>
@@ -322,7 +322,7 @@
                         <div class="col-md-12">
                             <dl class="row">
                                 <dt class="col-md-4 col-sm-12">Total Roll : </dt>
-                                <dd class="col-md-8 col-sm-12"><span id="total_roll"></span></dd>
+                                <dd class="col-md-8 col-sm-12"><span class="total-roll"></span></dd>
                             </dl>
                         </div>
                     </div>
@@ -358,6 +358,7 @@
 <script type="text/javascript">
 
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const fbr_qty_required = parseFloat(`{{ $fabric_request->qty_required }}`);
     
     // ## URL List
     const show_url = "{{ route('fabric-request.show',':id') }}";
@@ -447,6 +448,8 @@
         
         $('#selected_roll_table tbody').append(row); // ## insert tr to selected_roll_table
         $('#fabric_roll_table').DataTable().row(row).remove().draw(); // ## remove row from datatable
+
+        update_total_selected_roll();
     }
 
     // ## remove single tr
@@ -460,6 +463,8 @@
         
         $('#fabric_roll_table tbody').append(row); // ## insert tr to fabric_roll_table
         $('#fabric_roll_table').DataTable().row.add(row).draw(); // ## add row to datatable
+
+        update_total_selected_roll();
     }
 
     // ## move multiple tr via checkbox
@@ -471,8 +476,16 @@
     }
 
 
-    const get_total_selected_roll = () => {
-        
+    const update_total_selected_roll = () => {
+        let total_roll = $('#selected_roll_table tbody tr').length;
+        $('#total_selected_roll_qty').text(total_roll);
+
+        let total_length = 0;
+        $('#selected_roll_table tbody td:nth-child(7)').each(function() {
+            total_length += parseFloat($(this).text()) || 0;
+        });
+        let total_length_class = total_length >= fbr_qty_required ? 'text-success' : 'text-danger';
+        $('#total_selected_roll_length').text(total_length).attr('class', total_length_class);
     }
 
     const select2_preselected_option = async ({ select2_selector, select2_url, option_id }) => {
@@ -491,7 +504,7 @@
 
     // todo : avoid duplicate roll on table
     // todo : if apply filter deleted all selected roll and this alert 
-    // todo : auto calculation total roll and length 
+    // todo : auto calculation total roll and length ✅
     // todo : first load page , only gl that related are show (auto select gl number) ✅
     // todo : show selected roll to modal, for confirmation
     // todo : save selected roll to database and update fabric_roll status
