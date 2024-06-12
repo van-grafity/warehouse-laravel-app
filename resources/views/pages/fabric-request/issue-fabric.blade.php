@@ -367,8 +367,13 @@
     const fetch_select_color_url = "{{ route('fetch-select.color') }}";
 
     const reload_dtable = () => {
-        $('#reload_table_btn').trigger('click');
-    }
+        return new Promise((resolve, reject) => {
+            let fabric_roll_table = $('#fabric_roll_table').DataTable();
+            fabric_roll_table.ajax.reload(function(json) {
+                resolve();
+            });
+        });
+    };
 
     const show_modal_detail = async (modal_element_id,id) => {
         let modal_data = {
@@ -385,7 +390,7 @@
         result = await using_fetch(fetch_data);
      
         $(`#${modal_element_id}`).modal('show');
-    }
+    };
 
     const show_modal_issuance = async (modal_element_id, fabric_request_id) => {
         let modal_data = {
@@ -403,37 +408,38 @@
         result = await using_fetch(fetch_data);
      
         $(`#${modal_element_id}`).modal('show');
-    }
+    };
 
     const submitForm = async (modal_id) => {
-        try {
-            let modal = document.getElementById(modal_id);
+
+        // try {
+        //     let modal = document.getElementById(modal_id);
        
-            let form = modal.querySelector('form');
-            let formData = getFormData(form);
+        //     let form = modal.querySelector('form');
+        //     let formData = getFormData(form);
 
-            let fetch_data = {
-                url: issue_fabric_store_url,
-                method: "POST",
-                data: formData,
-                token: token,
-            }
+        //     let fetch_data = {
+        //         url: issue_fabric_store_url,
+        //         method: "POST",
+        //         data: formData,
+        //         token: token,
+        //     }
 
-            const response = await using_fetch(fetch_data);
-            if(response.status == 'success') {
-                swal_info({ title: response.message })
+        //     const response = await using_fetch(fetch_data);
+        //     if(response.status == 'success') {
+        //         swal_info({ title: response.message })
                 
-                reload_dtable();
-            } else {
-                swal_failed({ title: response.message })
-            }
+        //         reload_dtable();
+        //     } else {
+        //         swal_failed({ title: response.message })
+        //     }
 
-        } catch (error) {
-            console.error("Error:", error);
-        }
+        // } catch (error) {
+        //     console.error("Error:", error);
+        // }
 
-        $(`#${modal_id}`).modal('hide');
-    }
+        // $(`#${modal_id}`).modal('hide');
+    };
     
     // ## move single tr
     const move_to_fbr = (element) => {
@@ -449,8 +455,9 @@
         $('#selected_roll_table tbody').append(row); // ## insert tr to selected_roll_table
         $('#fabric_roll_table').DataTable().row(row).remove().draw(); // ## remove row from datatable
 
+        selected_roll_table_listener();
         update_total_selected_roll();
-    }
+    };
 
     // ## remove single tr
     const remove_from_fbr = (element) => {
@@ -464,18 +471,29 @@
         $('#fabric_roll_table tbody').append(row); // ## insert tr to fabric_roll_table
         $('#fabric_roll_table').DataTable().row.add(row).draw(); // ## add row to datatable
 
+        selected_roll_table_listener();
         update_total_selected_roll();
-    }
+    };
 
-    // ## move multiple tr via checkbox
+    // ## move multiple roll to fbr via checkbox
     const move_selected_roll_to_fbr = () => {
         $('#fabric_roll_table tbody input:checked').each(function() {
             move_to_fbr(this);
-            checkbox_clicked(); // ## for trigger checkbox function so checkbox all become unchecked
         });
-    }
+        checkbox_clicked(); // ## for trigger checkbox function so checkbox all become unchecked
+    };
 
+    // ## remove multiple roll from fbr
+    const remove_selected_roll_from_fbr = () => {
+        fill_table_with_default_data({
+            table_selector : '#selected_roll_table',
+            num_columns : 9,
+            default_data : 'No fabric roll selected'
+        });
+        checkbox_clicked(); // ## for trigger checkbox function so checkbox all become unchecked
+    };
 
+    // ## for always update value on total section
     const update_total_selected_roll = () => {
         let total_roll = $('#selected_roll_table tbody tr').length;
         $('#total_selected_roll_qty').text(total_roll);
@@ -486,8 +504,36 @@
         });
         let total_length_class = total_length >= fbr_qty_required ? 'text-success' : 'text-danger';
         $('#total_selected_roll_length').text(total_length).attr('class', total_length_class);
-    }
+    };
 
+    // ## check if the table data is empty including default data
+    const is_table_data_empty = () => {
+        let is_empty = true;
+        $('#selected_roll_table tbody tr').each(function() {
+            if ($(this).find('td').length > 1) {
+                is_empty = false;
+                return false; // ## exit loop early if non-default data found
+            }
+        });
+        return is_empty;
+    };
+
+    // ## Function to update the display of selected_roll_table based on its data availability
+    const selected_roll_table_listener = () => {
+        if(is_table_data_empty()) {
+            // ## Display default data if the table is empty
+            fill_table_with_default_data({
+                table_selector : '#selected_roll_table',
+                num_columns : 9,
+                default_data : 'No fabric roll selected'
+            });
+        } else {
+            // ## Remove default row if table is not empty
+            $('#selected_roll_table tbody tr.empty-row-table').remove();
+        }
+    };
+
+    // ## function to populate data into a select2 element
     const select2_preselected_option = async ({ select2_selector, select2_url, option_id }) => {
         const select2_element = $(select2_selector);
 
@@ -500,10 +546,10 @@
         
         const option = new Option(select_data.text, select_data.id, true, true);
         select2_element.append(option).trigger('change');
-    }
+    };
 
     // todo : avoid duplicate roll on table
-    // todo : if apply filter deleted all selected roll and this alert 
+    // todo : If applying the filter, then deletes all selected rolls and show an alert ✅
     // todo : auto calculation total roll and length ✅
     // todo : first load page , only gl that related are show (auto select gl number) ✅
     // todo : show selected roll to modal, for confirmation
@@ -555,11 +601,29 @@
         orderCellsTop: true,
     });
 
-    $('#reload_table_btn').on('click', function(event) {
-        $(this).addClass('loading').attr('disabled',true);
-        fabric_roll_table.ajax.reload(function(json){
+    $('#reload_table_btn').on('click', async function(event) {
+        try {
+            let swal_data = {
+                title: "Are you Sure?",
+                text: "Applying the filter will reset your selected fabric roll",
+                icon: "warning",
+                confirmButton: "OK",
+                confirmButtonClass: "btn-primary",
+                cancelButtonClass: "btn-secondary"
+            };
+            let confirm_delete = await swal_confirm(swal_data);
+            if(!confirm_delete) { return false; };
+
+
+            $(this).addClass('loading').attr('disabled',true);
+            await reload_dtable();
             $('#reload_table_btn').removeClass('loading').attr('disabled',false);
-        });
+
+            remove_selected_roll_from_fbr();
+
+        } catch (error) {
+            console.log(error);
+        }
     });
 
     let validator = $('#modal_detail_fabric_request form').validate({
@@ -605,7 +669,7 @@
 
     $(document).ready(async function() {
 
-        // ## if any data match the fabric request preselect select2 filter
+        // ## Preselect select2 filter if there is data matching the fabric request
         @if($is_gl_number_exist)
             $('#gl_filter').val(`{{ $fabric_request->gl_number }}`).trigger('change');
         @endif
@@ -620,6 +684,7 @@
         @endif
 
         reload_dtable(); // ## apply filter and reload the table according to the selected filter
+        selected_roll_table_listener();
     });
 
 </script>
@@ -632,7 +697,7 @@
             if(!item.checked) { return false; }
         }
         return true;
-    }
+    };
 
     const is_any_checked = () => {
         let all_roll_checkbox = document.querySelectorAll('#fabric_roll_table .checkbox-roll-control');
@@ -640,7 +705,7 @@
             if(item.checked) { return true; }
         }
         return false;
-    }
+    };
 
      // ## checkbox listener for always update roll_checkbox_all
     const checkbox_clicked = () => {
@@ -649,7 +714,7 @@
 
         let disabled_status_action_wrapper = is_any_checked() ? false : true;
         disabled_action_wrapper(disabled_status_action_wrapper);
-    }
+    };
 
      const disabled_action_wrapper = (disabled_status = false) => {
         let action_wrapper = document.getElementsByClassName('action-wrapper').item(0);
@@ -657,7 +722,7 @@
         buttons.forEach(function(button) {
             button.disabled = disabled_status;
         });
-    }
+    };
 
     const get_selected_item = () => {
         let selected_element = $('.checkbox-roll-control:checked').toArray();
@@ -672,18 +737,19 @@
         return {
             item_id,
             item_name,
-        }
-    }
+        };
+    };
+    
     // ## Checkbox Feature
     $('.checkbox-all-control').on('click', function(e) {
         let is_checked = $(this).prop('checked');
         let table = $(this).parents('table');
         table.find('.checkbox-roll-control').prop('checked',is_checked);
-    })
+    });
 
     $('#roll_checkbox_all').on('change', function(e) {
         checkbox_clicked();
-    })
+    });
 
 </script>
 @stop
