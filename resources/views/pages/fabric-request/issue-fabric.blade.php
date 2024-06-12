@@ -16,7 +16,7 @@
         <div class="row mb-3">
             <div class="col-sm-12"> 
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-sm-12 col-lg-8">
                         <dl class="row">
                             <dd class="col-md-12 col-sm-12"><b>Serial Number : {{ $fabric_request->fbr_serial_number }}</b></dd>
                             
@@ -30,12 +30,10 @@
                             <dd class="col-md-10 col-sm-12" id="qty_required">{{ $fabric_request->qty_required }} yds</dd>
                         </dl>
                     </div>  
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-sm-12 col-lg-4 text-right">
                         <div class="ml-auto" style="margin-bottom:50px;">
                             @can('manage')
-                                <a href="javascript:void(0)" type="button" class="btn btn-info" id="btn_modal_show" onclick="show_modal_detail('modal_detail_fabric_request', {{$fabric_request->id}})">More detail</a>
+                                <a href="javascript:void(0)" type="button" class="btn btn-info" id="btn_modal_show" onclick="show_modal_detail('modal_detail_fabric_request', {{$fabric_request->id}})">More detail FBR </a>
                             @endcan
                         </div>
                     </div>
@@ -66,7 +64,6 @@
                         </tr>
                     </thead>
                     <tbody>
-
                     </tbody>
                 </table>
                 <div class="row">
@@ -74,10 +71,6 @@
                         <dl class="row">
                             <dt class="col-md-4 col-sm-12">Total Roll : <span id="total_selected_roll_qty"> 0 </span></dt>
                         </dl>
-                    </div>
-                </div>
-                    <div class="row">
-                    <div class="col-md-12">
                         <dl class="row">
                             <dt class="col-md-4 col-sm-12">Total Length : <span id="total_selected_roll_length"> 0 </span> Yds </dt>
                         </dl>
@@ -151,7 +144,7 @@
         </div>
         <div class="action-wrapper mr-auto" style="float: right; margin-top: 50px">
             @can('manage')
-                <a href="javascript:void(0)" type="button" class="btn btn-primary"  id="btn_modal_show" onclick="show_modal_issuance('modal_fabric_issuance', {{$fabric_request->id}})">Save</a>
+                <a href="javascript:void(0)" type="button" class="btn btn-primary" id="btn_modal_show" onclick="show_modal_confirmation('modal_issuance_confirmation')"> Save </a>
             @endcan
         </div>
     </div>
@@ -159,7 +152,7 @@
 </div>
 <!-- /.card -->
 
-<!-- Modal Detail -->
+<!-- Modal More Detail -->
 <div class="modal fade" id="modal_detail_fabric_request" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
@@ -198,7 +191,6 @@
                                 </div>
                                 <div class="col-sm-7">
                                     <dl class="row">
-                                        
                                         <dt class="col-md-4 col-sm-12">Qty Issued</dt>
                                         <dd class="col-md-8 col-sm-12" id=""> - </dd>
                                         <dt class="col-md-4 col-sm-12">Difference</dt>
@@ -230,15 +222,15 @@
         </div>
     </div>
 </div>
-<!-- End Modal Detail -->
+<!-- End Modal More Detail -->
 
-<!-- Modal Save -->
-<div class="modal fade" id="modal_fabric_issuance" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+<!-- Modal Issuance Confirmation -->
+<div class="modal fade" id="modal_issuance_confirmation" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <form>
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ModalLabel">Fabric Request Information</h5>
+                    <h5 class="modal-title" id="ModalLabel">Confirm the Issuance</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -256,30 +248,29 @@
                                 <div class="col-sm-5">
                                     <dl class="row">
                                         <dt class="col-md-4 col-sm-12">GL Number</dt>
-                                        <dd class="col-md-8 col-sm-12" id="gl_number"> {{ $fabric_request->gl_number }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> {{ $fabric_request->gl_number }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Color</dt>
-                                        <dd class="col-md-8 col-sm-12" id="color"> {{ $fabric_request->color }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> {{ $fabric_request->color }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Style</dt>
-                                        <dd class="col-md-8 col-sm-12" id="style"> {{ $fabric_request->style }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> {{ $fabric_request->style }}  </dd>
                                         <dt class="col-md-4 col-sm-12">PO Number</dt>
-                                        <dd class="col-md-8 col-sm-12" id="gl_number"> {{ $fabric_request->fabric_po }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> {{ $fabric_request->fabric_po }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Table No</dt>
-                                        <dd class="col-md-8 col-sm-12" id="gl_number"> {{ $fabric_request->table_number }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> {{ $fabric_request->table_number }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Qty Required</dt>
-                                        <dd class="col-md-8 col-sm-12" id="color"> {{ $fabric_request->qty_required }}  yds</dd>
+                                        <dd class="col-md-8 col-sm-12"> {{ $fabric_request->qty_required }}  yds</dd>
                                     </dl>
                                 </div>
                                 <div class="col-sm-7">
                                     <dl class="row">
-                                        
                                         <dt class="col-md-4 col-sm-12">Qty Issued</dt>
-                                        <dd class="col-md-8 col-sm-12" id="color"> - </dd>
+                                        <dd class="col-md-8 col-sm-12"> <span id="confirm_qty_issued"> - </span> Yds </dd>
                                         <dt class="col-md-4 col-sm-12">Difference</dt>
-                                        <dd class="col-md-8 col-sm-12" id="color"> - </dd>
+                                        <dd class="col-md-8 col-sm-12"> <span id="confirm_qty_difference"> - </span> Yds </dd>
                                         <dt class="col-md-4 col-sm-12">Remark</dt>
-                                        <dd class="col-md-8 col-sm-12" id="color"> {{ ($fabric_request->fbr_remark) ? $fabric_request->fbr_remark : '-' }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> {{ ($fabric_request->fbr_remark) ? $fabric_request->fbr_remark : '-' }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Fabric Detail</dt>
-                                        <dd class="col-md-8 col-sm-12" id="color"> {{ $fabric_request->fabric_type }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> {{ $fabric_request->fabric_type }}  </dd>
                                     </dl>
                                 </div>
                             </div>
@@ -303,15 +294,18 @@
                             </dl>
                         </div>
                     </div>
-                    <table id="selected_rolls_allocated" class="table table-bordered table-hover text-center table-vertical-align">
+                    <table id="confirm_selected_roll_table" class="table table-bordered table-hover text-center table-vertical-align mb-4">
                         <thead>
                             <tr class="">
                                 <th width="50">No</th>
-                                <th width="" class="text-center">Serial Number</th>
-                                <th width="100">Width</th>
-                                <th width="100">YDs</th>
-                                <th width="">Rack No</th>
-                                <th width="">Location</th>
+                                <th width="" class="text-center">Color</th>
+                                <th width="" class="text-center">Batch No.</th>
+                                <th width="" class="text-center">Roll No.</th>
+                                <th width="75">Width</th>
+                                <th width="50">YDs</th>
+                                <th width="100">Rack No.</th>
+                                <th width="75">Location</th>
+                                <th width="150">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -321,16 +315,10 @@
                     <div class="row">
                         <div class="col-md-12">
                             <dl class="row">
-                                <dt class="col-md-4 col-sm-12">Total Roll : </dt>
-                                <dd class="col-md-8 col-sm-12"><span class="total-roll"></span></dd>
+                                <dt class="col-md-4 col-sm-12">Total Roll : <span id="confirm_total_selected_roll_qty"> 0 </span></dt>
                             </dl>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
                             <dl class="row">
-                                <dt class="col-md-4 col-sm-12">Total Length : </dt>
-                                <dd class="col-md-8 col-sm-12"><span id="total_length"></span></dd>
+                                <dt class="col-md-4 col-sm-12">Total Length : <span id="confirm_total_selected_roll_length"> 0 </span> Yds</dt>
                             </dl>
                         </div>
                     </div>
@@ -342,7 +330,7 @@
         </div>
     </div>
 </div>
-<!-- End Modal Save -->
+<!-- End Modal Issuance Confirmation -->
 
 <!-- Back Button -->
 <div class="row text-right mb-5">
@@ -392,21 +380,25 @@
         $(`#${modal_element_id}`).modal('show');
     };
 
-    const show_modal_issuance = async (modal_element_id, fabric_request_id) => {
-        let modal_data = {
-            modal_id : modal_element_id,
-            title : "Allocated Fabric to Fabric Request",
-            form_action_url : issue_fabric_store_url.replace(':id',fabric_request_id),
-        }
-        clear_form(modal_data);
+    const show_modal_confirmation = async (modal_element_id) => {
+
+        // ## get the necessary data and assign to variables
+        let total_selected_roll_qty = parseInt($('#total_selected_roll_qty').text());
+        let total_selected_roll_length = parseFloat($('#total_selected_roll_length').text());
+        let qty_difference = total_selected_roll_length > fbr_qty_required ? `+ ${(total_selected_roll_length - fbr_qty_required).toFixed(2)}` : `- ${(fbr_qty_required - total_selected_roll_length).toFixed(2)}`;
         
-        fetch_data = {
-            url: show_url.replace(':id', id),
-            method: "GET",
-            token: token,
-        }
-        result = await using_fetch(fetch_data);
-     
+        // ## complete fabric request data
+        $('#confirm_qty_issued').text(total_selected_roll_length);
+        $('#confirm_qty_difference').text(qty_difference);
+
+        // ## add selected fabric rolls to the preview table
+        let selected_roll_data_row = $('#selected_roll_table tbody tr').clone();
+        $('#confirm_selected_roll_table tbody').html(selected_roll_data_row);
+
+        // ## add total data
+        $('#confirm_total_selected_roll_qty').text(total_selected_roll_qty)
+        $('#confirm_total_selected_roll_length').text(total_selected_roll_length)
+
         $(`#${modal_element_id}`).modal('show');
     };
 
@@ -561,7 +553,7 @@
     // todo : If applying the filter, then deletes all selected rolls and show an alert ✅
     // todo : auto calculation total roll and length ✅
     // todo : first load page , only gl that related are show (auto select gl number) ✅
-    // todo : show selected roll to modal, for confirmation
+    // todo : show selected roll to modal, for confirmation ✅
     // todo : save selected roll to database and update fabric_roll status
 
 </script>
