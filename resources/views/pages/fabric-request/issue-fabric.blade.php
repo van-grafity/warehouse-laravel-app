@@ -447,7 +447,7 @@
         let remove_button = '<a href="javascript:void(0)" class="btn btn-danger btn-sm" onclick="remove_from_fbr(this)">Remove from FBR</a>'; // ## create remove from fbr button
         row.find('td:last').html(remove_button); // ## change last td of this tr to remove_button
         
-        let number = $('#selected_roll_table').find('tr').length;
+        let number = is_table_data_empty() ? 1 : $('#selected_roll_table').find('tr').length;
         row.find('td:first').hide(); // ## hide first td of this tr (input checkbox)
         row.find('input:checked').prop('checked', false); // ## find checked input and uncheck it
         row.prepend('<td>' + number + '</td>'); // ## add number to before first td
@@ -491,11 +491,12 @@
             default_data : 'No fabric roll selected'
         });
         checkbox_clicked(); // ## for trigger checkbox function so checkbox all become unchecked
+        update_total_selected_roll();
     };
 
     // ## for always update value on total section
     const update_total_selected_roll = () => {
-        let total_roll = $('#selected_roll_table tbody tr').length;
+        let total_roll = is_table_data_empty() ? 0 : $('#selected_roll_table tbody tr').length;
         $('#total_selected_roll_qty').text(total_roll);
 
         let total_length = 0;
@@ -530,8 +531,15 @@
         } else {
             // ## Remove default row if table is not empty
             $('#selected_roll_table tbody tr.empty-row-table').remove();
+            refresh_table_number({ table_selector: '#selected_roll_table'});
         }
     };
+
+    const refresh_table_number = ({ table_selector }) => {
+        $(`${table_selector} tbody tr:not(.empty-row-table)>td:first-child`).each(function(index, element) {
+            $(element).text(index + 1);
+        });
+    }
 
     // ## function to populate data into a select2 element
     const select2_preselected_option = async ({ select2_selector, select2_url, option_id }) => {
@@ -548,7 +556,8 @@
         select2_element.append(option).trigger('change');
     };
 
-    // todo : avoid duplicate roll on table
+
+    // todo : avoid duplicate roll on table ✅
     // todo : If applying the filter, then deletes all selected rolls and show an alert ✅
     // todo : auto calculation total roll and length ✅
     // todo : first load page , only gl that related are show (auto select gl number) ✅
