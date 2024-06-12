@@ -8,6 +8,7 @@ use App\Models\FabricRollRack;
 use App\Models\FabricRoll;
 use App\Models\Packinglist;
 use App\Models\FabricIssuance;
+use App\Models\Color;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
@@ -166,14 +167,27 @@ class FabricRequestController extends Controller
     public function issue_fabric(string $id)
     {
         $fabric_request = FabricRequest::find($id);
+        
         $gl_numbers = Packinglist::select('gl_number')->distinct()->get();
-        $batch_numbers = Packinglist::select('batch_number')->distinct()->get();
+        $is_gl_number_exist = in_array($fabric_request->gl_number, $gl_numbers->pluck('gl_number')->toArray());
+
+        $color = Color::where('color', 'like', '%' . $fabric_request->color . '%')->first();
+        $color_id = $color ? $color->id : null;
+
+        $batch_numbers = Packinglist::where('gl_number', $fabric_request->gl_number);
+        if ($color_id !== null) {
+            $batch_numbers->where('color_id', $color_id);
+        }
+        $batch_numbers = $batch_numbers->select('batch_number')
+            ->distinct()->get();
 
         $data = [
             'title' => 'Fabric Issue',
             'page_title' => 'Fabric Issue',
             'fabric_request' => $fabric_request,
             'gl_numbers' => $gl_numbers,
+            'is_gl_number_exist' => $is_gl_number_exist,
+            'color_id' => $color_id,
             'batch_numbers' => $batch_numbers,
         ];
         return view('pages.fabric-request.issue-fabric', $data);

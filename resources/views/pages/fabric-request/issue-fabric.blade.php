@@ -93,21 +93,21 @@
                             <button class="btn btn-success btn-submit" disabled="disabled" onclick="move_selected_roll_to_fbr()">Add to FBR</button>
                         @endcan
                     </div>
-                    <div class="filter_wrapper mr-2" style="width:150px; height:10px">                         
-                        <select name="gl_filter" id="gl_filter" class="form-control select2 no-search-box">
+                    <div class="filter_wrapper mr-2" style="width:120px; height:10px">                         
+                        <select name="gl_filter" id="gl_filter" class="form-control select2">
                             <option value="" selected>All GL</option>    
                             @foreach ($gl_numbers as $gl_number)
                                 <option value="{{$gl_number->gl_number}}">{{$gl_number->gl_number}}</option>    
                             @endforeach
                         </select>
                     </div>
-                    <div class="filter_wrapper mr-2" style="width:150px;">
+                    <div class="filter_wrapper mr-2" style="width:250px;">
                         <select name="color_filter" id="color_filter" class="form-control select2">
                             <option value="" selected >All Color</option>
                         </select>
                     </div>
                     <div class="filter_wrapper mr-2" style="width:150px;">                         
-                        <select name="batch_filter" id="batch_filter" class="form-control select2 no-search-box">
+                        <select name="batch_filter" id="batch_filter" class="form-control select2">
                             <option value="" selected>All Batch</option>
                             @foreach ($batch_numbers as $batch_number)
                                 <option value="{{$batch_number->batch_number}}">{{$batch_number->batch_number}}</option>    
@@ -472,13 +472,29 @@
 
 
     const get_total_selected_roll = () => {
-
+        
     }
 
-    // todo : avoid duplicate roll 
+    const select2_preselected_option = async ({ select2_selector, select2_url, option_id }) => {
+        const select2_element = $(select2_selector);
+
+        const fetch_result = await using_fetch({
+            url: select2_url,
+            method: "GET",
+            data: { id: option_id },
+        });
+        const select_data = fetch_result.data.items;
+        
+        const option = new Option(select_data.text, select_data.id, true, true);
+        select2_element.append(option).trigger('change');
+    }
+
+    // todo : avoid duplicate roll on table
     // todo : if apply filter deleted all selected roll and this alert 
     // todo : auto calculation total roll and length 
-    // todo : first load page , only gl that related are show (auto select gl number)
+    // todo : first load page , only gl that related are show (auto select gl number) ✅
+    // todo : show selected roll to modal, for confirmation
+    // todo : save selected roll to database and update fabric_roll status
 
 </script>
 
@@ -570,6 +586,27 @@
                 };
             },
         }
+    });
+
+    $('#gl_filter, #batch_filter').select2({})
+
+    $(document).ready(async function() {
+
+        // ## if any data match the fabric request preselect select2 filter
+        @if($is_gl_number_exist)
+            $('#gl_filter').val(`{{ $fabric_request->gl_number }}`).trigger('change');
+        @endif
+        
+        @if($color_id)
+            let preselect_color = {
+                select2_selector: '#color_filter.select2',
+                select2_url: fetch_select_color_url,
+                option_id: {{$color_id}},
+            };
+            await select2_preselected_option(preselect_color);
+        @endif
+
+        reload_dtable(); // ## apply filter and reload the table according to the selected filter
     });
 
 </script>
