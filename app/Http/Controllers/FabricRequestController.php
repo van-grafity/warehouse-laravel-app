@@ -194,25 +194,25 @@ class FabricRequestController extends Controller
     }
 
 
-    public function issue_fabric_store(Request $request)
+    public function issue_fabric_store(Request $request, $fbr_id)
     {
         try {
-            $id_fbr = $request->id;
-            $id = FabricRequest::find($id_fbr);
-
-            $id_roll = $request->id;
-            $id = FabricRoll::find($id_roll);
-
-            $fabric_issue = FabricIssuance::firstOrCreate([
-                'id_fbr' => $id_fbr,
-                'id_roll' => $id_roll,
-            ]);                          
+            $fabric_request = FabricRequest::find($fbr_id);
+            $fabric_roll_ids = $request->confirmed_fabric_roll;
+            
+            $inserted_roll = collect($fabric_roll_ids)->map(function ($fabric_roll_id) use ($fabric_request) {
+                return FabricIssuance::firstOrCreate([
+                    'fabric_request_id' => $fabric_request->id,
+                    'fabric_roll_id' => $fabric_roll_id,
+                ]);  
+            })->all();
             
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully selected fabric roll',
+                'message' => 'Successfully allocate ' . count($inserted_roll) . ' fabric roll to ' . $fabric_request->fbr_serial_number,
                 'data' => [
-                    'fabric_issue' => $fabric_issue,
+                    'fabric_request' => $fabric_request,
+                    'inserted_roll' => $inserted_roll,
                 ]
             ];
             return response()->json($data_return, 200);

@@ -32,9 +32,9 @@
                     </div>  
                     <div class="col-sm-12 col-lg-4 text-right">
                         <div class="ml-auto" style="margin-bottom:50px;">
-                            @can('manage')
-                                <a href="javascript:void(0)" type="button" class="btn btn-info" id="btn_modal_show" onclick="show_modal_detail('modal_detail_fabric_request', {{$fabric_request->id}})">More detail FBR </a>
-                            @endcan
+                            <a href="javascript:void(0)" type="button" class="btn btn-info" id="btn_modal_show" onclick="show_modal_detail('modal_detail_fabric_request')">
+                                More detail FBR 
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -52,15 +52,15 @@
                 <table id="selected_roll_table" class="table table-bordered table-hover text-center table-vertical-align">
                     <thead>
                         <tr class="">
-                            <th width="50">No</th>
-                            <th width="" class="text-center">Color</th>
-                            <th width="" class="text-center">Batch No.</th>
-                            <th width="" class="text-center">Roll No.</th>
-                            <th width="75">Width</th>
-                            <th width="50">YDs</th>
-                            <th width="100">Rack No.</th>
-                            <th width="75">Location</th>
-                            <th width="150">Action</th>
+                            <th style="width: 50px">No</th>
+                            <th style="width: auto" class="text-center">Color</th>
+                            <th style="width: auto" class="text-center">Batch No.</th>
+                            <th style="width: 100px" class="text-center">Roll No.</th>
+                            <th style="width: 75px">Width</th>
+                            <th style="width: 50px">YDs</th>
+                            <th style="width: 150px">Rack No.</th>
+                            <th style="width: 75px">Location</th>
+                            <th style="width: 150px">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -115,7 +115,7 @@
                 <table id="fabric_roll_table" class="table table-bordered table-hover text-center table-vertical-align">
                     <thead>
                         <tr class="">
-                            <th width="30">
+                            <th style="width:30px">
                                 <div class="form-group mb-0">
                                     <div class="custom-control custom-checkbox">
                                         <input 
@@ -127,14 +127,14 @@
                                     </div>
                                 </div>
                             </th>
-                            <th width="" class="text-center">Color</th>
-                            <th width="" class="text-center">Batch No.</th>
-                            <th width="" class="text-center">Roll No</th>
-                            <th width="75">Width</th>
-                            <th width="50">YDs</th>
-                            <th width="100">Rack No</th>
-                            <th width="75">Location</th>
-                            <th width="120">Action</th>
+                            <th style="width:auto" class="text-center">Color</th>
+                            <th style="width:auto" class="text-center">Batch No.</th>
+                            <th style="width:auto" class="text-center">Roll No</th>
+                            <th style="width:75px">Width</th>
+                            <th style="width:50px">YDs</th>
+                            <th style="width:100px">Rack No</th>
+                            <th style="width:75px">Location</th>
+                            <th style="width:120px">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -297,15 +297,14 @@
                     <table id="confirm_selected_roll_table" class="table table-bordered table-hover text-center table-vertical-align mb-4">
                         <thead>
                             <tr class="">
-                                <th width="50">No</th>
-                                <th width="" class="text-center">Color</th>
-                                <th width="" class="text-center">Batch No.</th>
-                                <th width="" class="text-center">Roll No.</th>
-                                <th width="75">Width</th>
-                                <th width="50">YDs</th>
-                                <th width="100">Rack No.</th>
-                                <th width="75">Location</th>
-                                <th width="150">Action</th>
+                                <th style="width: 50px">No</th>
+                                <th style="width: auto" class="text-center">Color</th>
+                                <th style="width: auto" class="text-center">Batch No.</th>
+                                <th style="width: 100px" class="text-center">Roll No.</th>
+                                <th style="width: 75px">Width</th>
+                                <th style="width: 50px">YDs</th>
+                                <th style="width: 150px">Rack No.</th>
+                                <th style="width: 75px">Location</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -324,7 +323,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="submitForm('modal_fabric_issuance')">Save</button>
+                    <button type="button" class="btn btn-primary" onclick="submitForm('modal_issuance_confirmation')">Save</button>
                 </div>
             </form>
         </div>
@@ -346,8 +345,10 @@
 <script type="text/javascript">
 
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const fbr_id = `{{ $fabric_request->id }}`;
     const fbr_qty_required = parseFloat(`{{ $fabric_request->qty_required }}`);
-    
+    let confirmed_fabric_roll = [];
+
     // ## URL List
     const show_url = "{{ route('fabric-request.show',':id') }}";
     const issue_fabric_store_url = "{{ route('fabric-request.issue-fabric-store',':id') }}";
@@ -363,24 +364,15 @@
         });
     };
 
-    const show_modal_detail = async (modal_element_id,id) => {
-        let modal_data = {
-            modal_id : modal_element_id,
-            title : "Fabric Request Information ",
-        }
-        clear_form(modal_data);
-        
-        fetch_data = {
-            url: show_url.replace(':id', id),
-            method: "GET",
-            token: token,
-        }
-        result = await using_fetch(fetch_data);
-     
+    const show_modal_detail = async (modal_element_id) => {
         $(`#${modal_element_id}`).modal('show');
     };
 
     const show_modal_confirmation = async (modal_element_id) => {
+        if(is_table_data_empty()){
+            swal_warning({title: "Please select at least one roll"});
+            return false;
+        }
 
         // ## get the necessary data and assign to variables
         let total_selected_roll_qty = parseInt($('#total_selected_roll_qty').text());
@@ -393,6 +385,7 @@
 
         // ## add selected fabric rolls to the preview table
         let selected_roll_data_row = $('#selected_roll_table tbody tr').clone();
+        selected_roll_data_row.find('td:last, td:nth-child(2)').remove();
         $('#confirm_selected_roll_table tbody').html(selected_roll_data_row);
 
         // ## add total data
@@ -404,38 +397,44 @@
 
     const submitForm = async (modal_id) => {
 
-        // try {
-        //     let modal = document.getElementById(modal_id);
-       
-        //     let form = modal.querySelector('form');
-        //     let formData = getFormData(form);
+        try {
+            let fetch_data = {
+                url: issue_fabric_store_url.replace(':id', fbr_id),
+                method: "POST",
+                data: {
+                    confirmed_fabric_roll : confirmed_fabric_roll,
+                },
+                token: token,
+            };
 
-        //     let fetch_data = {
-        //         url: issue_fabric_store_url,
-        //         method: "POST",
-        //         data: formData,
-        //         token: token,
-        //     }
-
-        //     const response = await using_fetch(fetch_data);
-        //     if(response.status == 'success') {
-        //         swal_info({ title: response.message })
+            
+            const response = await using_fetch(fetch_data);
+            if(response.status == 'success') {
+                swal_info({ title: response.message, reload_option: true })
                 
-        //         reload_dtable();
-        //     } else {
-        //         swal_failed({ title: response.message })
-        //     }
+            } else {
+                swal_failed({ title: response.message })
+            }
 
-        // } catch (error) {
-        //     console.error("Error:", error);
-        // }
+        } catch (error) {
+            console.error("Error:", error);
+        }
 
-        // $(`#${modal_id}`).modal('hide');
+        $(`#${modal_id}`).modal('hide');
     };
     
     // ## move single tr
     const move_to_fbr = (element) => {
         let row = $(element).closest('tr'); // ## get tr based on button clicked
+
+        // ## get selected_roll_id from input with name selected_roll[]
+        let selected_roll_id = row.find('input[name="selected_roll[]"]').val();
+
+        // ## add the selected_roll_id to confirmed_fabric_roll if not already exist
+        if (!confirmed_fabric_roll.includes(selected_roll_id)) {
+            confirmed_fabric_roll.push(selected_roll_id);
+        }
+
         let remove_button = '<a href="javascript:void(0)" class="btn btn-danger btn-sm" onclick="remove_from_fbr(this)">Remove from FBR</a>'; // ## create remove from fbr button
         row.find('td:last').html(remove_button); // ## change last td of this tr to remove_button
         
@@ -454,6 +453,16 @@
     // ## remove single tr
     const remove_from_fbr = (element) => {
         let row = $(element).closest('tr'); // ## get tr based on button clicked
+        
+        // ## get selected_roll_id from input with name selected_roll[]
+        let selected_roll_id = row.find('input[name="selected_roll[]"]').val();
+
+        // ## remove the selected_roll_id from confirmed_fabric_roll if exist
+        let index_of_fabric_roll_id = confirmed_fabric_roll.indexOf(selected_roll_id);
+        if (index_of_fabric_roll_id > -1) {
+            confirmed_fabric_roll.splice(index_of_fabric_roll_id, 1);
+        }
+
         let move_button = '<a href="javascript:void(0)" class="btn btn-primary btn-sm" onclick="move_to_fbr(this)">Move to FBR</a>'; // ## create move to fbr button
         row.find('td:last').html(move_button); // ## change last td of this tr to move_button
 
@@ -477,6 +486,8 @@
 
     // ## remove multiple roll from fbr
     const remove_selected_roll_from_fbr = () => {
+        confirmed_fabric_roll = [];
+
         fill_table_with_default_data({
             table_selector : '#selected_roll_table',
             num_columns : 9,
@@ -554,7 +565,9 @@
     // todo : auto calculation total roll and length ✅
     // todo : first load page , only gl that related are show (auto select gl number) ✅
     // todo : show selected roll to modal, for confirmation ✅
-    // todo : save selected roll to database and update fabric_roll status
+    // todo : save selected roll to database ✅
+    // todo : update fabric request, fabric roll status and all related data. make more synchronized to other data.
+    // todo : only show fabric rolls that not allocated yet
 
 </script>
 
