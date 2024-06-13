@@ -31,7 +31,7 @@ class FabricRequest extends Model
         'qty_required',
         'last_sync_by',
         'last_sync_at',
-        'flag_issued',
+        'issued_at',
     ];
 
     public function isFabricRequestExist( $fbr_id = null )
@@ -63,8 +63,8 @@ class FabricRequest extends Model
         return true;
     }
 
-    public function fabric_rolls()
+    public function allocatedFabricRolls()
     {
-        return $this->belongsToMany(Botol::class, 'fabric_issuances', 'fabric_request_id', 'fabric_roll_id');
+        return $this->belongsToMany(FabricRoll::class, 'fabric_issuances', 'fabric_request_id', 'fabric_roll_id');
     }
 }

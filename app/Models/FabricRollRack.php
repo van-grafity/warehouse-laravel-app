@@ -42,7 +42,7 @@ class FabricRollRack extends Model
             ->select('packinglists.gl_number')
             ->get();
 
-        $gl_numbers = $packinglists->pluck('gl_number')->implode(' | ');
+        $gl_numbers = $packinglists->pluck('gl_number')->unique()->implode(' | ');
         return $gl_numbers;
     }
 
@@ -58,7 +58,7 @@ class FabricRollRack extends Model
             ->select('colors.color')
             ->get();
 
-        $color_list = $colors->pluck('color')->implode(' | ');
+        $color_list = $colors->pluck('color')->unique()->implode(' | ');
         return $color_list;
     }
 

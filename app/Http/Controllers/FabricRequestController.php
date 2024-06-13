@@ -167,6 +167,8 @@ class FabricRequestController extends Controller
     public function issue_fabric(string $id)
     {
         $fabric_request = FabricRequest::find($id);
+        $fabric_request->qty_issued = $fabric_request->allocatedFabricRolls->sum('yds');
+        $fabric_request->qty_difference = $fabric_request->qty_issued - $fabric_request->qty_required;
         
         $gl_numbers = Packinglist::select('gl_number')->distinct()->get();
         $is_gl_number_exist = in_array($fabric_request->gl_number, $gl_numbers->pluck('gl_number')->toArray());
@@ -200,12 +202,18 @@ class FabricRequestController extends Controller
             $fabric_request = FabricRequest::find($fbr_id);
             $fabric_roll_ids = $request->confirmed_fabric_roll;
             
+            // ## allocate fabric roll to fbr. insert into relation table fabric_issuances
+            DB::beginTransaction();
             $inserted_roll = collect($fabric_roll_ids)->map(function ($fabric_roll_id) use ($fabric_request) {
                 return FabricIssuance::firstOrCreate([
                     'fabric_request_id' => $fabric_request->id,
                     'fabric_roll_id' => $fabric_roll_id,
                 ]);  
             })->all();
+            
+            // ## update fabric_requests it self
+            $fabric_request->issued_at = Carbon::now();
+            $fabric_request->save();
             
             $data_return = [
                 'status' => 'success',
@@ -215,8 +223,10 @@ class FabricRequestController extends Controller
                     'inserted_roll' => $inserted_roll,
                 ]
             ];
+            DB::commit();
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {
+            DB::rollBack();
             $data_return = [
                 'status' => 'error',
                 'message' => $th->getMessage(),
@@ -227,26 +237,28 @@ class FabricRequestController extends Controller
 
     public function dtable_roll_list()
     {
-        $query = FabricRoll::join('fabric_roll_racks','fabric_roll_racks.fabric_roll_id','=','fabric_rolls.id')
-            ->join('racks','racks.id','=','fabric_roll_racks.rack_id')
-            ->join('rack_locations','rack_locations.rack_id','=','fabric_roll_racks.rack_id')
-            ->join('locations','locations.id','=','rack_locations.location_id')
-            ->join('packinglists','packinglists.id','=','fabric_rolls.packinglist_id')
-            ->join('colors','colors.id','=','packinglists.color_id')
-            ->where('fabric_rolls.racked_at','!=', null)
+        $query = FabricRoll::leftJoin('fabric_issuances', 'fabric_rolls.id', '=', 'fabric_issuances.fabric_roll_id')
+            ->join('fabric_roll_racks', 'fabric_roll_racks.fabric_roll_id', '=', 'fabric_rolls.id')
+            ->join('racks', 'racks.id', '=', 'fabric_roll_racks.rack_id')
+            ->join('rack_locations', 'rack_locations.rack_id', '=', 'fabric_roll_racks.rack_id')
+            ->join('locations', 'locations.id', '=', 'rack_locations.location_id')
+            ->join('packinglists', 'packinglists.id', '=', 'fabric_rolls.packinglist_id')
+            ->join('colors', 'colors.id', '=', 'packinglists.color_id')
+            ->whereNotNull('fabric_rolls.racked_at')
+            ->whereNull('fabric_issuances.fabric_roll_id')
             ->select(
-                'fabric_rolls.id', 
-                'fabric_rolls.roll_number', 
-                'fabric_rolls.serial_number', 
-                'fabric_rolls.kgs', 
-                'fabric_rolls.lbs', 
+                'fabric_rolls.id',
+                'fabric_rolls.roll_number',
+                'fabric_rolls.serial_number',
+                'fabric_rolls.kgs',
+                'fabric_rolls.lbs',
                 'fabric_rolls.yds',
-                'fabric_rolls.width',  
+                'fabric_rolls.width',
                 'racks.serial_number as rack_number',
                 'locations.location as rack_location',
                 'packinglists.gl_number',
                 'packinglists.batch_number',
-                'colors.color',
+                'colors.color'
             );
         
         return Datatables::of($query)

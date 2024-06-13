@@ -31,7 +31,7 @@ return new class extends Migration
             $table->double('qty_required');
             $table->foreignId('last_sync_by')->nullable()->constrained('users');
             $table->datetime('last_sync_at')->nullable();
-            $table->char('flag_issued', 2)->default('N');
+            $table->datetime('issued_at')->nullable();
 
             $table->foreignId('created_by')->nullable()->constrained('users');
             $table->foreignId('updated_by')->nullable()->constrained('users');

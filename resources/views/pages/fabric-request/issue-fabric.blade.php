@@ -192,9 +192,9 @@
                                 <div class="col-sm-7">
                                     <dl class="row">
                                         <dt class="col-md-4 col-sm-12">Qty Issued</dt>
-                                        <dd class="col-md-8 col-sm-12" id=""> - </dd>
+                                        <dd class="col-md-8 col-sm-12" id=""> <span> {{ $fabric_request->qty_issued }} </span> Yds </dd>
                                         <dt class="col-md-4 col-sm-12">Difference</dt>
-                                        <dd class="col-md-8 col-sm-12" id=""> - </dd>
+                                        <dd class="col-md-8 col-sm-12" id=""> <span> {{ $fabric_request->qty_difference }} </span> Yds</dd>
                                         <dt class="col-md-4 col-sm-12">Remark</dt>
                                         <dd class="col-md-8 col-sm-12" id="fbr_remark"> {{ ($fabric_request->fbr_remark) ? $fabric_request->fbr_remark : '-' }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Fabric Detail</dt>
@@ -566,8 +566,9 @@
     // todo : first load page , only gl that related are show (auto select gl number) ✅
     // todo : show selected roll to modal, for confirmation ✅
     // todo : save selected roll to database ✅
-    // todo : update fabric request, fabric roll status and all related data. make more synchronized to other data.
-    // todo : only show fabric rolls that not allocated yet
+    // todo : update fabric request, fabric roll status and all related data. make more synchronized to other data. ✅
+    // todo : only show fabric rolls that not allocated yet ✅
+    // todo : edit fabric rolls that have already been allocated and update the data for new fabric roll allocation
 
 </script>
 
