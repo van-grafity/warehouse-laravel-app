@@ -169,6 +169,15 @@ class FabricRequestController extends Controller
         $fabric_request = FabricRequest::find($id);
         $fabric_request->qty_issued = $fabric_request->allocatedFabricRolls->sum('yds');
         $fabric_request->qty_difference = $fabric_request->qty_issued - $fabric_request->qty_required;
+        $allocated_fabric_roll = $fabric_request->allocatedFabricRolls;
+        
+        // todo : sorting lagi attribute yang akan dilempar ke view
+        $allocated_fabric_roll->map(function ($fabric_roll) {
+            $fabric_roll->color = $fabric_roll->packinglist->color->color;
+            $fabric_roll->batch = $fabric_roll->packinglist->batch_number;
+            $fabric_roll->rack_number = $fabric_roll->rack->serial_number;
+            $fabric_roll->location = $fabric_roll->rack->location->location;
+        });
         
         $gl_numbers = Packinglist::select('gl_number')->distinct()->get();
         $is_gl_number_exist = in_array($fabric_request->gl_number, $gl_numbers->pluck('gl_number')->toArray());
@@ -191,6 +200,7 @@ class FabricRequestController extends Controller
             'is_gl_number_exist' => $is_gl_number_exist,
             'color_id' => $color_id,
             'batch_numbers' => $batch_numbers,
+            'allocated_fabric_roll' => $allocated_fabric_roll,
         ];
         return view('pages.fabric-request.issue-fabric', $data);
     }

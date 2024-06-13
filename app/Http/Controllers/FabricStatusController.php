@@ -207,8 +207,7 @@ class FabricStatusController extends Controller
                 'fabric_rolls.yds',
                 'fabric_rolls.width',  
                 'racks.serial_number as rack_number'
-            )
-            ->get();
+            );
         
         return Datatables::of($query)
             ->addIndexColumn()

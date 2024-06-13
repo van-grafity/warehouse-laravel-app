@@ -347,6 +347,7 @@
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const fbr_id = `{{ $fabric_request->id }}`;
     const fbr_qty_required = parseFloat(`{{ $fabric_request->qty_required }}`);
+    const allocated_fabric_rolls = @json($allocated_fabric_roll);
     let confirmed_fabric_roll = [];
 
     // ## URL List
@@ -635,6 +636,8 @@
             $('#reload_table_btn').removeClass('loading').attr('disabled',false);
 
             remove_selected_roll_from_fbr();
+            // todo : nanti buat kan fungsi untuk insert data allocated_fabric_rolls ini kedalam table nya.
+            console.log(allocated_fabric_rolls);
 
         } catch (error) {
             console.log(error);

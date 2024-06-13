@@ -314,13 +314,13 @@
         order: [],
         columns: [
             { data: 'checkbox', name: 'checkbox',orderable: false, searchable: false },
-            { data: 'roll_number', name: 'CAST(fabric_rolls.roll_number AS SIGNED)'},
+            { data: 'roll_number', name: 'fabric_rolls.roll_number'},
             { data: 'serial_number', name: 'fabric_rolls.serial_number'},
             { data: 'kgs', name: 'fabric_rolls.kgs'},
             { data: 'lbs', name: 'fabric_rolls.lbs'},
             { data: 'yds', name: 'fabric_rolls.yds'},
             { data: 'width', name: 'fabric_rolls.width'},
-            { data: 'rack_number', name: 'racks.rack_number'},
+            { data: 'rack_number', name: 'racks.serial_number'},
         ],
         columnDefs: [
             { targets: [0], orderable: false, searchable: false },

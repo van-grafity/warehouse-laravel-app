@@ -30,6 +30,11 @@ class FabricRoll extends Model
         return $this->belongsTo(Packinglist::class, 'packinglist_id', 'id');
     }
 
+    public function rack()
+    {
+        return $this->hasOneThrough(Rack::class, FabricRollRack::class, 'fabric_roll_id', 'id', 'id', 'rack_id');
+    }
+
     public static function is_roll_number_exist($packinglist_id, $roll_number)
     {
         $fabric_roll = static::where('packinglist_id', $packinglist_id)->where('roll_number', $roll_number)->first();
