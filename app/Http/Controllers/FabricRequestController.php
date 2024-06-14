@@ -171,12 +171,18 @@ class FabricRequestController extends Controller
         $fabric_request->qty_difference = $fabric_request->qty_issued - $fabric_request->qty_required;
         $allocated_fabric_roll = $fabric_request->allocatedFabricRolls;
         
-        // todo : sorting lagi attribute yang akan dilempar ke view
-        $allocated_fabric_roll->map(function ($fabric_roll) {
-            $fabric_roll->color = $fabric_roll->packinglist->color->color;
-            $fabric_roll->batch = $fabric_roll->packinglist->batch_number;
-            $fabric_roll->rack_number = $fabric_roll->rack->serial_number;
-            $fabric_roll->location = $fabric_roll->rack->location->location;
+        $allocated_fabric_roll = $allocated_fabric_roll->map(function ($fabric_roll) {
+            return [
+                'id' => $fabric_roll->id,
+                'serial_number' => $fabric_roll->serial_number,
+                'roll_number' => $fabric_roll->roll_number,
+                'width' => $fabric_roll->width,
+                'yds' => $fabric_roll->yds,
+                'color' => $fabric_roll->packinglist->color->color,
+                'batch' => $fabric_roll->packinglist->batch_number,
+                'rack_number' => $fabric_roll->rack->serial_number,
+                'location' => $fabric_roll->rack->location->location,
+            ];
         });
         
         $gl_numbers = Packinglist::select('gl_number')->distinct()->get();
@@ -209,30 +215,58 @@ class FabricRequestController extends Controller
     public function issue_fabric_store(Request $request, $fbr_id)
     {
         try {
-            $fabric_request = FabricRequest::find($fbr_id);
-            $fabric_roll_ids = $request->confirmed_fabric_roll;
-            
-            // ## allocate fabric roll to fbr. insert into relation table fabric_issuances
             DB::beginTransaction();
-            $inserted_roll = collect($fabric_roll_ids)->map(function ($fabric_roll_id) use ($fabric_request) {
-                return FabricIssuance::firstOrCreate([
-                    'fabric_request_id' => $fabric_request->id,
-                    'fabric_roll_id' => $fabric_roll_id,
-                ]);  
-            })->all();
+
+            $currentTimestamp = Carbon::now();
+            $userId = auth()->user()->id;
             
-            // ## update fabric_requests it self
-            $fabric_request->issued_at = Carbon::now();
+            $fabric_request = FabricRequest::findOrFail($fbr_id);
+            $new_fabric_roll_ids = collect($request->confirmed_fabric_roll); // ## collect to ensure is in array
+            
+            $old_fabric_rolls = $fabric_request->allocatedFabricRolls()->pluck('fabric_roll_id');
+            
+            // ## Determine the fabric rolls to delete
+            $fabric_rolls_to_delete = $old_fabric_rolls->diff($new_fabric_roll_ids);
+            
+            // ## Determine the fabric rolls to add
+            $fabric_rolls_to_add = $new_fabric_roll_ids->diff($old_fabric_rolls);
+
+            // ## Delete fabric rolls that are not in the new list
+            if ($fabric_rolls_to_delete->isNotEmpty()) {
+                $fabric_request->allocatedFabricRolls()->detach($fabric_rolls_to_delete);
+            }
+
+            // ## Add new fabric rolls that are not in the old list
+            if ($fabric_rolls_to_add->isNotEmpty()) {
+                
+                
+                // ## using map for manual add UserRecord because using attach
+                $attachData = $fabric_rolls_to_add->mapWithKeys(function ($fabric_roll_id) use ($currentTimestamp, $userId) {
+                    return [
+                        $fabric_roll_id => [
+                            'created_at' => $currentTimestamp,
+                            'updated_at' => $currentTimestamp,
+                            'created_by' => $userId,
+                            'updated_by' => $userId
+                        ]
+                    ];
+                })->toArray();
+                $fabric_request->allocatedFabricRolls()->attach($attachData);
+            }
+            
+            // ## Update the issued_at timestamp of the fabric request
+            $fabric_request->issued_at = $currentTimestamp;
             $fabric_request->save();
-            
+
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully allocate ' . count($inserted_roll) . ' fabric roll to ' . $fabric_request->fbr_serial_number,
+                'message' => 'Successfully allocated fabric rolls to ' . $fabric_request->fbr_serial_number,
                 'data' => [
                     'fabric_request' => $fabric_request,
-                    'inserted_roll' => $inserted_roll,
+                    'new_fabric_rolls' => $new_fabric_roll_ids,
                 ]
             ];
+
             DB::commit();
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {

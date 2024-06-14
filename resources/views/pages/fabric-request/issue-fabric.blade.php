@@ -21,10 +21,10 @@
                             <dd class="col-md-12 col-sm-12"><b>Serial Number : {{ $fabric_request->fbr_serial_number }}</b></dd>
                             
                             <dt class="col-md-2 col-sm-12">Gl Number</dt>
-                            <dd class="col-md-10 col-sm-12" id="gl_number"> {{ $fabric_request->gl_number }}</dd>
+                            <dd class="col-md-10 col-sm-12"> {{ $fabric_request->gl_number }}</dd>
 
                             <dt class="col-md-2 col-sm-12">Color </dt>
-                            <dd class="col-md-10 col-sm-12" id="color">{{ $fabric_request->color }}</dd>
+                            <dd class="col-md-10 col-sm-12">{{ $fabric_request->color }}</dd>
 
                             <dt class="col-md-2 col-sm-12">Qty Required</dt>
                             <dd class="col-md-10 col-sm-12" id="qty_required">{{ $fabric_request->qty_required }} yds</dd>
@@ -176,29 +176,29 @@
                                 <div class="col-sm-5">
                                     <dl class="row">
                                         <dt class="col-md-4 col-sm-12">GL Number</dt>
-                                        <dd class="col-md-8 col-sm-12" id="gl_number"> {{ $fabric_request->gl_number }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->gl_number }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Color</dt>
-                                        <dd class="col-md-8 col-sm-12" id="color"> {{ $fabric_request->color }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->color }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Style</dt>
-                                        <dd class="col-md-8 col-sm-12" id="style"> {{ $fabric_request->style }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->style }}  </dd>
                                         <dt class="col-md-4 col-sm-12">PO Number</dt>
-                                        <dd class="col-md-8 col-sm-12" id="fabric_po"> {{ $fabric_request->fabric_po }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->fabric_po }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Table No</dt>
-                                        <dd class="col-md-8 col-sm-12" id="table_number"> {{ $fabric_request->table_number }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->table_number }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Qty Required</dt>
-                                        <dd class="col-md-8 col-sm-12" id="qty_required"> {{ $fabric_request->qty_required }}  yds</dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->qty_required }}  yds</dd>
                                     </dl>
                                 </div>
                                 <div class="col-sm-7">
                                     <dl class="row">
                                         <dt class="col-md-4 col-sm-12">Qty Issued</dt>
-                                        <dd class="col-md-8 col-sm-12" id=""> <span> {{ $fabric_request->qty_issued }} </span> Yds </dd>
+                                        <dd class="col-md-8 col-sm-12"> <span> : {{ $fabric_request->qty_issued }} </span> Yds </dd>
                                         <dt class="col-md-4 col-sm-12">Difference</dt>
-                                        <dd class="col-md-8 col-sm-12" id=""> <span> {{ $fabric_request->qty_difference }} </span> Yds</dd>
+                                        <dd class="col-md-8 col-sm-12"> <span> : {{ $fabric_request->qty_difference }} </span> Yds</dd>
                                         <dt class="col-md-4 col-sm-12">Remark</dt>
-                                        <dd class="col-md-8 col-sm-12" id="fbr_remark"> {{ ($fabric_request->fbr_remark) ? $fabric_request->fbr_remark : '-' }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ ($fabric_request->fbr_remark) ? $fabric_request->fbr_remark : '-' }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Fabric Detail</dt>
-                                        <dd class="col-md-8 col-sm-12" id="fabric_type"> {{ $fabric_request->fabric_type }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->fabric_type }}  </dd>
                                     </dl>
                                 </div>
                             </div>
@@ -206,7 +206,7 @@
                                 <div class="col-sm-5">
                                     <dl class="row">
                                         <dt class="col-md-4 col-sm-12">Status</dt>
-                                        <dd class="col-md-8 col-sm-12" id="gl_number"> {{ $fabric_request->fbr_status_print }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->fbr_status_print }}  </dd>
                                     </dl>
                                 </div>
                             </div>
@@ -248,29 +248,29 @@
                                 <div class="col-sm-5">
                                     <dl class="row">
                                         <dt class="col-md-4 col-sm-12">GL Number</dt>
-                                        <dd class="col-md-8 col-sm-12"> {{ $fabric_request->gl_number }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->gl_number }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Color</dt>
-                                        <dd class="col-md-8 col-sm-12"> {{ $fabric_request->color }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->color }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Style</dt>
-                                        <dd class="col-md-8 col-sm-12"> {{ $fabric_request->style }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->style }}  </dd>
                                         <dt class="col-md-4 col-sm-12">PO Number</dt>
-                                        <dd class="col-md-8 col-sm-12"> {{ $fabric_request->fabric_po }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->fabric_po }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Table No</dt>
-                                        <dd class="col-md-8 col-sm-12"> {{ $fabric_request->table_number }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->table_number }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Qty Required</dt>
-                                        <dd class="col-md-8 col-sm-12"> {{ $fabric_request->qty_required }}  yds</dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->qty_required }}  yds</dd>
                                     </dl>
                                 </div>
                                 <div class="col-sm-7">
                                     <dl class="row">
                                         <dt class="col-md-4 col-sm-12">Qty Issued</dt>
-                                        <dd class="col-md-8 col-sm-12"> <span id="confirm_qty_issued"> - </span> Yds </dd>
+                                        <dd class="col-md-8 col-sm-12"> : <span id="confirm_qty_issued"> - </span> Yds </dd>
                                         <dt class="col-md-4 col-sm-12">Difference</dt>
-                                        <dd class="col-md-8 col-sm-12"> <span id="confirm_qty_difference"> - </span> Yds </dd>
+                                        <dd class="col-md-8 col-sm-12"> : <span id="confirm_qty_difference"> - </span> Yds </dd>
                                         <dt class="col-md-4 col-sm-12">Remark</dt>
-                                        <dd class="col-md-8 col-sm-12"> {{ ($fabric_request->fbr_remark) ? $fabric_request->fbr_remark : '-' }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ ($fabric_request->fbr_remark) ? $fabric_request->fbr_remark : '-' }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Fabric Detail</dt>
-                                        <dd class="col-md-8 col-sm-12"> {{ $fabric_request->fabric_type }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->fabric_type }}  </dd>
                                     </dl>
                                 </div>
                             </div>
@@ -278,7 +278,7 @@
                                 <div class="col-sm-5">
                                     <dl class="row">
                                         <dt class="col-md-4 col-sm-12">Status</dt>
-                                        <dd class="col-md-8 col-sm-12" id="gl_number"> {{ $fabric_request->fbr_status_print }}  </dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->fbr_status_print }}  </dd>
                                     </dl>
                                 </div>
                             </div>
@@ -348,8 +348,11 @@
     const fbr_id = `{{ $fabric_request->id }}`;
     const fbr_qty_required = parseFloat(`{{ $fabric_request->qty_required }}`);
     const allocated_fabric_rolls = @json($allocated_fabric_roll);
-    let confirmed_fabric_roll = [];
 
+    let confirmed_fabric_roll = [];
+    if(allocated_fabric_rolls.length > 0) {
+        confirmed_fabric_roll = allocated_fabric_rolls.map(fabric_roll => fabric_roll.id.toString());
+    }
     // ## URL List
     const show_url = "{{ route('fabric-request.show',':id') }}";
     const issue_fabric_store_url = "{{ route('fabric-request.issue-fabric-store',':id') }}";
@@ -486,7 +489,7 @@
     };
 
     // ## remove multiple roll from fbr
-    const remove_selected_roll_from_fbr = () => {
+    const remove_all_selected_roll_from_fbr = () => {
         confirmed_fabric_roll = [];
 
         fill_table_with_default_data({
@@ -543,7 +546,7 @@
         $(`${table_selector} tbody tr:not(.empty-row-table)>td:first-child`).each(function(index, element) {
             $(element).text(index + 1);
         });
-    }
+    };
 
     // ## function to populate data into a select2 element
     const select2_preselected_option = async ({ select2_selector, select2_url, option_id }) => {
@@ -561,6 +564,34 @@
     };
 
 
+    const insert_into_selected_roll_table = (allocated_fabric_roll) => {
+        let selected_roll_data_rows = allocated_fabric_roll.map((fabric_roll, index) => {
+            return `
+                <tr role="row" class="odd">
+                    <td>${index + 1}</td>
+                    <td style="display: none;">
+                        <div class="form-group mb-0">
+                            <div class="custom-control custom-checkbox">
+                                <input id="roll_checkbox_${fabric_roll.id}" name="selected_roll[]" class="custom-control-input checkbox-roll-control" type="checkbox" value="${fabric_roll.id}" data-roll-number="${fabric_roll.serial_number}" onchange="checkbox_clicked()">
+                                <label for="roll_checkbox_${fabric_roll.id}" class="custom-control-label"></label>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${fabric_roll.color}</td>
+                    <td>${fabric_roll.batch}</td>
+                    <td>${fabric_roll.roll_number}</td>
+                    <td>${fabric_roll.width}</td>
+                    <td>${fabric_roll.yds}</td>
+                    <td>${fabric_roll.rack_number}</td>
+                    <td>${fabric_roll.location}</td>
+                    <td><a href="javascript:void(0)" class="btn btn-danger btn-sm" onclick="remove_from_fbr(this)">Remove from FBR</a></td>
+                </tr>`;
+        });
+
+        $('#selected_roll_table tbody').html(selected_roll_data_rows.join(''));
+    };
+
+
     // todo : avoid duplicate roll on table ✅
     // todo : If applying the filter, then deletes all selected rolls and show an alert ✅
     // todo : auto calculation total roll and length ✅
@@ -569,7 +600,7 @@
     // todo : save selected roll to database ✅
     // todo : update fabric request, fabric roll status and all related data. make more synchronized to other data. ✅
     // todo : only show fabric rolls that not allocated yet ✅
-    // todo : edit fabric rolls that have already been allocated and update the data for new fabric roll allocation
+    // todo : edit fabric rolls that have already been allocated and update the data for new fabric roll allocation ✅
 
 </script>
 
@@ -635,9 +666,8 @@
             await reload_dtable();
             $('#reload_table_btn').removeClass('loading').attr('disabled',false);
 
-            remove_selected_roll_from_fbr();
-            // todo : nanti buat kan fungsi untuk insert data allocated_fabric_rolls ini kedalam table nya.
-            console.log(allocated_fabric_rolls);
+            remove_all_selected_roll_from_fbr();
+            insert_into_selected_roll_table(allocated_fabric_rolls);
 
         } catch (error) {
             console.log(error);
@@ -683,7 +713,7 @@
         }
     });
 
-    $('#gl_filter, #batch_filter').select2({})
+    $('#gl_filter, #batch_filter').select2({});
 
     $(document).ready(async function() {
 
@@ -703,6 +733,8 @@
 
         reload_dtable(); // ## apply filter and reload the table according to the selected filter
         selected_roll_table_listener();
+        insert_into_selected_roll_table(allocated_fabric_rolls);
+        update_total_selected_roll();
     });
 
 </script>
