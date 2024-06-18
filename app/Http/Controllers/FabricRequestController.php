@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\ApiFabricRequest;
 use App\Models\FabricRequest;
 use App\Models\FabricRollRack;
 use App\Models\FabricRoll;
@@ -44,19 +45,30 @@ class FabricRequestController extends Controller
      */
     public function dtable()
     {
-        $query = FabricRequest::query();
+        $query = FabricRequest::with('apiFabricRequest')
+            ->select([
+                'fabric_requests.*',
+                'api_fabric_requests.fbr_serial_number',
+                'api_fabric_requests.fbr_gl_number',
+                'api_fabric_requests.fbr_color',
+                'api_fabric_requests.fbr_table_number',
+                'api_fabric_requests.fbr_qty_required',
+                'api_fabric_requests.fbr_requested_at'
+            ])
+            ->leftJoin('api_fabric_requests', 'fabric_requests.api_fabric_request_id', '=', 'api_fabric_requests.id');
         
         return Datatables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
             ->addColumn('action', function($row){
                 $action_button = "
-                    <a href='". route('fabric-request.issue-fabric',$row->id)."' class='btn btn-primary btn-sm' >Issue Fabric</a>                ";
+                    <a href='". route('fabric-request.issue-fabric',$row->id)."' class='btn btn-primary btn-sm'>Issue Fabric</a>";
                 return $action_button;
             })
             ->addColumn('serial_number', function($row){
-                $serial_number = "<a href='". route('fabric-request.detail',$row->id)."' class='' data-toggle='tooltip' data-placement='top' title='Click for Detail'>$row->fbr_serial_number</a>";
-                return $serial_number;
+                $serial_number = $row->apiFabricRequest ? $row->apiFabricRequest->fbr_serial_number : '';
+                $serial_number_link = "<a href='". route('fabric-request.detail',$row->id)."' class='' data-toggle='tooltip' data-placement='top' title='Click for Detail'>$serial_number</a>";
+                return $serial_number_link;
             })
             ->toJson();
     }
@@ -100,22 +112,23 @@ class FabricRequestController extends Controller
     }
 
     /**
-     * Syncronize data with Cutting App.
+     * Synchronize data with Cutting App.
      */
     public function sync(Request $request)
     {
         try {
             $fabric_requests = $request->fabric_requests;
             $fbr_counter = 0;
+
+            DB::beginTransaction();
             
-            DB::transaction(function () use ($fabric_requests, &$fbr_counter) {
-                $FabricRequestModel = new FabricRequest;
-                foreach ($fabric_requests as $key_fbr => $fabric_request) {
-                    $fabric_request = (object) $fabric_request;
-                    $FabricRequestModel->check_serial_number($fabric_request);
-                    $is_fabric_request_exist = $FabricRequestModel->isFabricRequestExist($fabric_request->fbr_id);
-                    
-                    $fabric_request_data = [
+            foreach ($fabric_requests as $key_fbr => $fabric_request) {
+                $fabric_request = (object) $fabric_request;
+
+                // Check for existing API fabric request
+                $api_fabric_request = ApiFabricRequest::firstOrCreate(
+                    ['fbr_id' => $fabric_request->fbr_id],
+                    [
                         'fbr_serial_number' => $fabric_request->fbr_serial_number,
                         'fbr_status_print' => $fabric_request->fbr_status_print,
                         'fbr_remark' => $fabric_request->fbr_remark,
@@ -123,30 +136,36 @@ class FabricRequestController extends Controller
                         'fbr_requested_by' => $fabric_request->fbr_requested_by,
                         'fbr_created_at' => $fabric_request->fbr_created_at,
                         'fbr_updated_at' => $fabric_request->fbr_updated_at,
-                        'gl_number' => $fabric_request->gl_number,
-                        'color' => $fabric_request->color,
-                        'style' => $fabric_request->style,
-                        'fabric_type' => $fabric_request->fabric_type,
-                        'fabric_po' => $fabric_request->fabric_po,
-                        'laying_planning_id' => $fabric_request->laying_planning_id,
-                        'laying_planning_serial_number' => $fabric_request->laying_planning_serial_number,
-                        'laying_planning_detail_id' => $fabric_request->laying_planning_detail_id,
-                        'table_number' => $fabric_request->table_number,
-                        'qty_required' => $fabric_request->qty_required,
-                        'last_sync_by' => auth()->user()->id,
-                        'last_sync_at' => date('Y-m-d H:i:s'),
-                    ];
-                    
-                    if(!$is_fabric_request_exist) {
-                        $fabric_request_data['fbr_id'] = $fabric_request->fbr_id;
-                        FabricRequest::firstOrCreate($fabric_request_data);
-                    } else {
-                        $fabric_request = FabricRequest::where('fbr_id', $fabric_request->fbr_id)->update($fabric_request_data);
-                    }
-    
-                    $fbr_counter++;
-                }
-            });
+                        'fbr_laying_planning_id' => $fabric_request->laying_planning_id,
+                        'fbr_laying_planning_serial_number' => $fabric_request->laying_planning_serial_number,
+                        'fbr_style' => $fabric_request->style,
+                        'fbr_fabric_type' => $fabric_request->fabric_type,
+                        'fbr_fabric_po' => $fabric_request->fabric_po,
+                        'fbr_laying_planning_detail_id' => $fabric_request->laying_planning_detail_id,
+                        'fbr_gl_number' => $fabric_request->gl_number,
+                        'fbr_color' => $fabric_request->color,
+                        'fbr_table_number' => $fabric_request->table_number,
+                        'fbr_qty_required' => $fabric_request->qty_required,
+                    ]
+                );
+
+                // Prepare data for fabric_requests table
+                $fabric_request_data = [
+                    'api_fabric_request_id' => $api_fabric_request->id,
+                    'last_sync_by' => auth()->user()->id,
+                    'last_sync_at' => now(),
+                ];
+
+                // Check if fabric request exists and update or create
+                FabricRequest::updateOrCreate(
+                    ['api_fabric_request_id' => $api_fabric_request->id],
+                    $fabric_request_data
+                );
+
+                $fbr_counter++;
+            }
+
+            DB::commit();
 
             $data_return = [
                 'status' => 'success',
@@ -158,6 +177,8 @@ class FabricRequestController extends Controller
             return response()->json($data_return);
 
         } catch (\Throwable $th) {
+            DB::rollback();
+            
             $data_return = [
                 'status' => 'error',
                 'message' => $th->getMessage(),
