@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('fbr_serial_number');
             $table->integer('fbr_status_print');
             $table->text('fbr_remark')->nullable();
+            $table->datetime('fbr_requested_at');
+            $table->string('fbr_requested_by');
             $table->datetime('fbr_created_at');
             $table->datetime('fbr_updated_at');
             $table->integer('laying_planning_id');

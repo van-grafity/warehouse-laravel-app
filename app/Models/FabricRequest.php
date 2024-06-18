@@ -17,6 +17,8 @@ class FabricRequest extends Model
         'fbr_serial_number',
         'fbr_status_print',
         'fbr_remark',
+        'fbr_requested_at',
+        'fbr_requested_by',
         'fbr_created_at',
         'fbr_updated_at',
         'laying_planning_id',

@@ -119,6 +119,8 @@ class FabricRequestController extends Controller
                         'fbr_serial_number' => $fabric_request->fbr_serial_number,
                         'fbr_status_print' => $fabric_request->fbr_status_print,
                         'fbr_remark' => $fabric_request->fbr_remark,
+                        'fbr_requested_at' => $fabric_request->fbr_requested_at,
+                        'fbr_requested_by' => $fabric_request->fbr_requested_by,
                         'fbr_created_at' => $fabric_request->fbr_created_at,
                         'fbr_updated_at' => $fabric_request->fbr_updated_at,
                         'gl_number' => $fabric_request->gl_number,
