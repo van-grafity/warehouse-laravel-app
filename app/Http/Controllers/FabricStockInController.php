@@ -115,7 +115,7 @@ class FabricStockInController extends Controller
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully '. count($inserted_roll) .' Roll to ' . $rack->rack,
+                'message' => 'Successfully '. count($inserted_roll) .' Roll to ' . $rack->serial_number,
                 'data' => [
                     'inserted_roll' => $inserted_roll
                 ]

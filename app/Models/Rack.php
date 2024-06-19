@@ -22,6 +22,11 @@ class Rack extends Model
             $rack->serial_number = Static::generateRackSerialNumber($rack->rack_type, $rack->basic_number);
         });
     }
+    
+    public function location()
+    {
+        return $this->hasOneThrough(Location::class, RackLocation::class, 'rack_id', 'id', 'id', 'location_id');
+    }
 
     public static function generateRackSerialNumber($rack_type, $basic_number)
     {

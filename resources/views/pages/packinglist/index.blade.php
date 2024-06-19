@@ -258,13 +258,14 @@
             method: "GET",
             data: params_data,
         }
-        result_invoice = await using_fetch(fetch_data);
-        invoice_select_data = result_invoice.data.items;
+       
+        fetch_result = await using_fetch(fetch_data);
+        select_data = fetch_result.data.items;
         
-        let option = new Option(invoice_select_data.text, invoice_select_data.id, true, true);
+        let option = new Option(select_data.text, select_data.id, true, true);
         select2_element.append(option).trigger('change');
     }
-
+    
     const submitForm = async (modal_id) => {
         let modal = document.getElementById(modal_id);
         let submit_btn = modal.querySelector('.btn-submit');

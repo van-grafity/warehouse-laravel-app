@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('fabric_roll_id')->constrained('fabric_rolls');
             $table->foreignId('created_by')->nullable()->constrained('users');
             $table->foreignId('updated_by')->nullable()->constrained('users');
-            $table->foreignId('deleted_by')->nullable()->constrained('users');
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fabric_issues');
+        Schema::dropIfExists('fabric_issuances');
     }
 };

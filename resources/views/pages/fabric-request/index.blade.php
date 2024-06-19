@@ -32,6 +32,7 @@
                             <th width="">Color</th>
                             <th width="">Table</th>
                             <th width="">Qty Required</th>
+                            <th width="">Requested at</th>
                             <th width="100">Action</th>
                         </tr>
                     </thead>
@@ -146,6 +147,7 @@
             },
         },
         order: [
+            [6, 'desc'],
             [2, 'asc'],
             [3, 'asc'],
             [4, 'asc'],
@@ -153,10 +155,11 @@
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
             { data: 'serial_number', name: 'serial_number', className: 'text-left'},
-            { data: 'gl_number', name: 'gl_number'},
-            { data: 'color', name: 'color'},
-            { data: 'table_number', name: 'table_number'},
-            { data: 'qty_required', name: 'qty_required'},
+            { data: 'fbr_gl_number', name: 'fbr_gl_number'},
+            { data: 'fbr_color', name: 'fbr_color'},
+            { data: 'fbr_table_number', name: 'fbr_table_number'},
+            { data: 'fbr_qty_required', name: 'fbr_qty_required'},
+            { data: 'fbr_requested_at', name: 'fbr_requested_at', visible: false },
             { data: 'action', name: 'action'},
         ],
         columnDefs: [

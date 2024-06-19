@@ -51,7 +51,7 @@ Route::group([
 ], function () {
     Route::get('', 'index')->name('index');
     Route::get('dtable', 'dtable')->name('dtable');
-    Route::get('sync', 'sync')->name('sync');
+    Route::post('sync', 'sync')->name('sync');
     Route::get('dtable-roll-list', 'dtable_roll_list')->name('dtable-roll-list');
     Route::get('{fabric_request}', 'show')->name('show');
     Route::get('{fabric_request}/detail', 'detail')->name('detail');

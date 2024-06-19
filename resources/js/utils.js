@@ -410,6 +410,18 @@ const load_component = async ({ url = "", data = {}, token = null, container_ele
     document.getElementById(container_element_id).innerHTML = result.component;
 }
 
+const fill_table_with_default_data = ({ table_selector, num_columns, default_data }) => {
+    const table = document.querySelector(table_selector);
+    const tbody = table.querySelector('tbody');
+    const row = document.createElement('tr');
+    row.classList.add('empty-row-table');
+    const cell = document.createElement('td');
+    cell.colSpan = num_columns;
+    cell.textContent = default_data;
+    row.appendChild(cell);
+    tbody.innerHTML = '';
+    tbody.appendChild(row);
+}
 
 window.stopFormSubmission = stopFormSubmission;
 window.clear_form = clear_form;
@@ -423,3 +435,4 @@ window.show_flash_message = show_flash_message;
 window.swal_warning = swal_warning;
 window.load_component = load_component;
 window.using_axios = using_axios;
+window.fill_table_with_default_data = fill_table_with_default_data;
