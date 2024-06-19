@@ -125,7 +125,7 @@ class FabricRequestController extends Controller
             foreach ($fabric_requests as $key_fbr => $fabric_request) {
                 $fabric_request = (object) $fabric_request;
 
-                // Check for existing API fabric request
+                // ## Check for existing API fabric request
                 $api_fabric_request = ApiFabricRequest::firstOrCreate(
                     ['fbr_id' => $fabric_request->fbr_id],
                     [
@@ -149,14 +149,14 @@ class FabricRequestController extends Controller
                     ]
                 );
 
-                // Prepare data for fabric_requests table
+                // ## Prepare data for fabric_requests table
                 $fabric_request_data = [
                     'api_fabric_request_id' => $api_fabric_request->id,
                     'last_sync_by' => auth()->user()->id,
                     'last_sync_at' => now(),
                 ];
 
-                // Check if fabric request exists and update or create
+                // ## Check if fabric request exists and update or create
                 FabricRequest::updateOrCreate(
                     ['api_fabric_request_id' => $api_fabric_request->id],
                     $fabric_request_data
@@ -189,9 +189,11 @@ class FabricRequestController extends Controller
 
     public function issue_fabric(string $id)
     {
-        $fabric_request = FabricRequest::find($id);
+        $fabric_request = FabricRequest::with('apiFabricRequest')->find($id);
+        
         $fabric_request->qty_issued = $fabric_request->allocatedFabricRolls->sum('yds');
-        $fabric_request->qty_difference = $fabric_request->qty_issued - $fabric_request->qty_required;
+        $qty_difference_value = $fabric_request->qty_issued - $fabric_request->apiFabricRequest->fbr_qty_required;
+        $fabric_request->qty_difference = $qty_difference_value > 0 ? '+'. $qty_difference_value : $qty_difference_value;
         $allocated_fabric_roll = $fabric_request->allocatedFabricRolls;
         
         $allocated_fabric_roll = $allocated_fabric_roll->map(function ($fabric_roll) {
@@ -209,17 +211,16 @@ class FabricRequestController extends Controller
         });
         
         $gl_numbers = Packinglist::select('gl_number')->distinct()->get();
-        $is_gl_number_exist = in_array($fabric_request->gl_number, $gl_numbers->pluck('gl_number')->toArray());
+        $is_gl_number_exist = in_array($fabric_request->apiFabricRequest->fbr_gl_number, $gl_numbers->pluck('gl_number')->toArray());
 
-        $color = Color::where('color', 'like', '%' . $fabric_request->color . '%')->first();
+        $color = Color::where('color', 'like', '%' . $fabric_request->apiFabricRequest->fbr_color . '%')->first();
         $color_id = $color ? $color->id : null;
 
-        $batch_numbers = Packinglist::where('gl_number', $fabric_request->gl_number);
+        $batch_numbers = Packinglist::where('gl_number', $fabric_request->apiFabricRequest->fbr_gl_number);
         if ($color_id !== null) {
             $batch_numbers->where('color_id', $color_id);
         }
-        $batch_numbers = $batch_numbers->select('batch_number')
-            ->distinct()->get();
+        $batch_numbers = $batch_numbers->select('batch_number')->distinct()->get();
 
         $data = [
             'title' => 'Fabric Issue',
@@ -283,7 +284,7 @@ class FabricRequestController extends Controller
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully allocated fabric rolls to ' . $fabric_request->fbr_serial_number,
+                'message' => 'Successfully allocated fabric rolls to ' . $fabric_request->apiFabricRequest->fbr_serial_number,
                 'data' => [
                     'fabric_request' => $fabric_request,
                     'new_fabric_rolls' => $new_fabric_roll_ids,
