@@ -391,6 +391,15 @@ return [
             ],
         ],
         [
+            'header' => 'Report',
+            'can'   => ['report-menu','report-menu.access'],
+        ],
+        [
+            'text' => 'Fabric Request Report',
+            'icon' => 'fas fa-fw fa fa-file-alt',
+            'url' => 'fabric-request/fabric-request-report'
+        ],
+        [
             'header' => 'Admin',
             'can'   => ['admin-menu','admin-menu.access'],
         ],

@@ -31,9 +31,14 @@ class FabricRequestController extends Controller
      */
     public function index()
     {   
+        $gl_numbers = ApiFabricRequest::select('fbr_gl_number')->distinct()->get();
+        $colors = ApiFabricRequest::select('fbr_color')->distinct()->get();
+
         $data = [
             'title' => 'Fabric request',
             'page_title' => 'Fabric request',
+            'gl_numbers' => $gl_numbers,
+            'colors' => $colors,
             'can_manage' => auth()->user()->can('manage'),
         ];
         return view('pages.fabric-request.index', $data);
@@ -70,6 +75,18 @@ class FabricRequestController extends Controller
                 $serial_number_link = "<a href='". route('fabric-request.detail',$row->id)."' class='' data-toggle='tooltip' data-placement='top' title='Click for Detail'>$serial_number</a>";
                 return $serial_number_link;
             })
+
+            ->filter(function ($query){
+                if (request('gl_filter')) {
+                        $query->where('api_fabric_requests.fbr_gl_number', request()->gl_filter)->get();
+                    }
+
+                if (request('color_filter')) {
+                        $query->where('api_fabric_requests.fbr_color', request()->color_filter)->get();
+                    }
+                
+            }, true)
+
             ->toJson();
     }
 
@@ -301,6 +318,21 @@ class FabricRequestController extends Controller
             ];
             return response()->json($data_return);
         }
+    }
+
+    public function fabric_request_report()
+    {   
+        $gl_numbers = ApiFabricRequest::select('fbr_gl_number')->distinct()->get();
+        $colors = ApiFabricRequest::select('fbr_color')->distinct()->get();
+
+        $data = [
+            'title' => 'Fabric Request Report',
+            'page_title' => 'Fabric Request Report',
+            'gl_numbers' => $gl_numbers,
+            'colors' => $colors,
+            'can_manage' => auth()->user()->can('manage'),
+        ];
+        return view('pages.fabric-request.fabric-request-report', $data);
     }
 
     public function dtable_roll_list()

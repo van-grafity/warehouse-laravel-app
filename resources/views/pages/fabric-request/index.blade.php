@@ -11,6 +11,9 @@
                 <h3 class="card-title p-3 my-auto"> Fabric Request List </h3>
                 
                 <div class="ml-auto p-3">
+                     <a id="report_fabric_request_btn" href="{{ route('fabric-request.fabric-request-report') }}" type="button"  class="btn btn-info">
+                        Report
+                    </a>
                     <button id="sync_fabric_request_btn" type="button" class="btn btn-default mr-2" onclick="show_modal('modal_sync_fabric_request')">
                         Sync Fabric Request
                     </button>
@@ -18,10 +21,28 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <div class="mb-3 text-right">
-                    <button id="reload_table_btn" class="btn btn-sm btn-info">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
+                <div class="mb-3">
+                     <div class="col-sm-12 d-inline-flex justify-content-end">
+                        <div class="filter_wrapper mr-2" style="width:200px;">     
+                            <select name="gl_filter" id="gl_filter" class="form-control select2">
+                                <option value="" selected>All GL Number</option>    
+                                @foreach ($gl_numbers as $gl_numbers)
+                                <option value="{{$gl_numbers->fbr_gl_number}}" >{{$gl_numbers->fbr_gl_number}}</option>    
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="filter_wrapper mr-2" style="width:200px;">
+                           <select name="color_filter" id="color_filter" class="form-control select2">
+                                <option value="" selected >All Color</option>
+                                @foreach ($colors as $colors)
+                                 <option value="{{$colors->fbr_color}}" >{{$colors->fbr_color}}</option>    
+                                @endforeach
+                            </select>
+                        </div>
+                        <button id="reload_table_btn" class="btn btn-sm btn-info">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
                 </div>
                 <table id="farbic_request_table" class="table table-bordered table-hover text-center">
                     <thead>
@@ -100,6 +121,7 @@
     // ## URL List
     const dtable_url = "{{ route('fabric-request.dtable') }}";
     const sync_url = "{{ route('fabric-request.sync') }}";
+    const report_fabric_url = "{{ route('fabric-request.fabric-request-report') }}";
 
     // ## Page Variable
     let start_date_filter = moment().format('YYYY-MM-DD');
@@ -136,6 +158,10 @@
         serverSide: true,
         ajax: {
             url: dtable_url,
+             data: function (d) {
+                d.gl_filter = $('#gl_filter').val();
+                d.color_filter = $('#color_filter').val();
+            },
             beforeSend: function() {
                 // ## Tambahkan kelas dimmed-table sebelum proses loading dimulai
                 $('#farbic_request_table').addClass('dimmed-table').append('<div class="datatable-overlay"></div>');
@@ -217,6 +243,8 @@
         end_date_filter = '';
         $(this).val('');
     });
+
+    $('#gl_filter, #color_filter').select2({});
 </script>
 
 <script type="text/javascript">
