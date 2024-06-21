@@ -47,11 +47,29 @@
                     <div class="form-group">
                         <label for="gl_filter">Gl Number</label>
                         <select name="gl_filter" id="gl_filter" class="form-control select2">
-                            <option value="" selected>-- Select GL Number --</option>    
+                            <option value="" selected> Select GL Number </option>    
                             @foreach ($gl_numbers as $gl_numbers)
                                 <option value="{{$gl_numbers->fbr_gl_number}}" >{{$gl_numbers->fbr_gl_number}}</option>    
                             @endforeach
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="color_filter">Color</label>
+                        <select name="color_filter" id="color_filter" class="form-control select2">
+                            <option value="" selected> Select Color </option>    
+                            @foreach ($colors as $colors)
+                                <option value="{{$colors->fbr_color}}" >{{$colors->fbr_color}}</option>    
+                            @endforeach
+                        </select>
+                    </div>
+                     <div class="form-group">
+                        <label for="date_filter" class="mb-0 align-self-center col-form-label" style="width:150px;">Date Filter</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-calendar"></i></span>
+                            </div>
+                            <input type="text" class="form-control daterangepicker-select" id="date_filter" name="date_filter" autocomplete="off" placeholder="Fabric Request Date Filter">
+                        </div>
                     </div>
 
                     <div class="d-flex justify-content-center">
@@ -67,19 +85,56 @@
 @push('js')
 
 <script type="text/javascript">
-    $(document).ready(function(){
-        $('#gl_filter').select2();
+    // ## Page Variable
+    let start_date_filter = moment().format('YYYY-MM-DD');
+    let end_date_filter = moment().format('YYYY-MM-DD');
+
+    const default_daterangepicker = () => {
+        start_date_filter = moment().format('YYYY-MM-DD');
+        end_date_filter = moment().format('YYYY-MM-DD');
+        $('#date_filter').data('daterangepicker').setStartDate(moment());
+        $('#date_filter').data('daterangepicker').setEndDate(moment());
+    }
+
+    $('#date_filter').daterangepicker({
+        maxDate: moment(),
+        opens: 'left',
+        locale: {
+            format: 'DD/MM/YYYY',
+            cancelLabel: 'Clear'
+        },
+        startDate: moment().startOf('month'),
+        endDate: moment().add(1, 'month').endOf('month'),
+        alwaysShowCalendars: true,
+        showCustomRangeLabel: false,
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 2 Weeks': [moment().subtract(13, 'days'), moment()],
+        },
+        maxSpan: {
+            "days": 13
+        },
         
-        $('#btn_print_report').click(function(){
-            var gl_number = $('#gl_filter').val();
-            if(gl_number){
-                window.open(url + '?gl_id=' + gl_number, '_blank');
-            } else {
-                alert('Please enter gl number');
-            }
-        });
+    }, function(start, end, label) {
+        start_date_filter = start.format('YYYY-MM-DD');
+        end_date_filter = end.format('YYYY-MM-DD');
     });
-</script>
+
+    $('#date_filter').on('apply.daterangepicker', function(ev, picker) {
+        start_date_filter = picker.startDate.format('YYYY-MM-DD');
+        end_date_filter = picker.endDate.format('YYYY-MM-DD');
+    });
+    $('#date_filter').on('cancel.daterangepicker', function(ev, picker) {
+        start_date_filter = '';
+        end_date_filter = '';
+        $(this).val('');
+    });
+
+    $(document).ready(function(){
+        $('#gl_filter, #color_filter').select2();
+    });
 </script>
 
 @endpush

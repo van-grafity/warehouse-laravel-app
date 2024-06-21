@@ -58,6 +58,7 @@ class FabricRequestController extends Controller
                 'api_fabric_requests.fbr_color',
                 'api_fabric_requests.fbr_table_number',
                 'api_fabric_requests.fbr_qty_required',
+                'api_fabric_requests.fbr_status_print',
                 'api_fabric_requests.fbr_requested_at'
             ])
             ->leftJoin('api_fabric_requests', 'fabric_requests.api_fabric_request_id', '=', 'api_fabric_requests.id');
@@ -66,14 +67,25 @@ class FabricRequestController extends Controller
             ->addIndexColumn()
             ->escapeColumns([])
             ->addColumn('action', function($row){
-                $action_button = "
+                if ($row->received_at == null){
+                    $action_button = '
+                    <a  href="javascript:void(0);" method="post" class="btn btn-danger btn-sm"  onclick="receive_store('.$row->id.')">Receive Request Form</a>';
+                } else {
+                    $action_button = "
                     <a href='". route('fabric-request.issue-fabric',$row->id)."' class='btn btn-primary btn-sm'>Issue Fabric</a>";
+                }
                 return $action_button;
             })
+            
             ->addColumn('serial_number', function($row){
                 $serial_number = $row->apiFabricRequest ? $row->apiFabricRequest->fbr_serial_number : '';
                 $serial_number_link = "<a href='". route('fabric-request.detail',$row->id)."' class='' data-toggle='tooltip' data-placement='top' title='Click for Detail'>$serial_number</a>";
                 return $serial_number_link;
+            })
+
+            ->addColumn('status', function($row){
+                $status = $this->getFabricStatus($row, true);
+                return $status;
             })
 
             ->filter(function ($query){
@@ -318,6 +330,60 @@ class FabricRequestController extends Controller
             ];
             return response()->json($data_return);
         }
+    }
+
+    // ## Untuk update data ketika klik tombol receive request form
+    public function request_form(string $id)
+    {
+        try {
+            $fabric_request = FabricRequest::find($id);
+
+            $fabric_request->received_at = Carbon::now();
+            $fabric_request->save();
+
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully update fabric request',
+                'data' => [
+                    'fabric_request' => $fabric_request,
+                ]
+            ];
+            
+            return response()->json($data_return, 200);
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
+    }
+
+    public function getFabricStatus($fabric_data, $pill_mode = false)
+    {
+        if($pill_mode){
+            if($fabric_data->issued_at != null){
+                $status = '<span class="badge badge-info">issued</span>';
+            } elseif($fabric_data->issued_at == null && $fabric_data->received_at != null){
+                $status = '<span class="badge badge-warning">Received</span>';
+            } elseif($fabric_data->fbr_requested_at != null){
+                $status = '<span class="badge badge-success">Requested</span>';
+            } else {
+                $status = '<span class="badge badge-danger">Unknown Status</span>';
+            }
+        } else {
+           if($fabric_data->issued_at != null){
+                $status = 'issued';
+            } elseif($fabric_data->issued_at == null && $fabric_data->received_at != null){
+                $status = 'Received';
+            } elseif($fabric_data->fbr_requested_at != null){
+                $status = 'Requested';
+            } else {
+                $status = 'Unknown Status';
+            }
+        }
+
+        return $status;
     }
 
     public function fabric_request_report()

@@ -54,6 +54,7 @@
                             <th width="">Table</th>
                             <th width="">Qty Required</th>
                             <th width="">Requested at</th>
+                            <th width="">Status</th>
                             <th width="100">Action</th>
                         </tr>
                     </thead>
@@ -122,6 +123,7 @@
     const dtable_url = "{{ route('fabric-request.dtable') }}";
     const sync_url = "{{ route('fabric-request.sync') }}";
     const report_fabric_url = "{{ route('fabric-request.fabric-request-report') }}";
+    const store_fabric_url = "{{ route('fabric-request.request-form',':id') }}";
 
     // ## Page Variable
     let start_date_filter = moment().format('YYYY-MM-DD');
@@ -149,6 +151,22 @@
 
     const reload_dtable = () => {
         $('#reload_table_btn').trigger('click');
+    }
+
+    const receive_store = async (id) => {
+       fetch_data = {
+            url: store_fabric_url.replace(':id', id),
+            method: "POST",
+            token: token,
+        }
+
+        result = await using_fetch(fetch_data);
+
+        if (result.status == "success") {
+            swal_info({ title: result.message, reload_option: true });
+        } else {
+            swal_failed({ title: result.message });
+        }
     }
 </script>
 
@@ -186,6 +204,7 @@
             { data: 'fbr_table_number', name: 'fbr_table_number'},
             { data: 'fbr_qty_required', name: 'fbr_qty_required'},
             { data: 'fbr_requested_at', name: 'fbr_requested_at', visible: false },
+            { data: 'status', name: 'status'},
             { data: 'action', name: 'action'},
         ],
         columnDefs: [
