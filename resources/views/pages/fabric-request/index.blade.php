@@ -49,7 +49,7 @@
                         <tr class="">
                             <th width="30">No</th>
                             <th width="" class="text-center">Serial Number</th>
-                            <th width="50">GL</th>
+                            <th width="75">GL</th>
                             <th width="">Color</th>
                             <th width="">Table</th>
                             <th width="">Qty Required</th>
