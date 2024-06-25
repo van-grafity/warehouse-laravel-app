@@ -423,7 +423,7 @@ class FabricRequestController extends Controller
             })
 
             ->addColumn('status', function($row){
-                $status = $this->getFabricStatus($row, true);
+                $status = $this->getFabricRequestStatus($row, true);
                 return $status;
             })
 
