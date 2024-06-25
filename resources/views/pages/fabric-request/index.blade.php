@@ -11,7 +11,7 @@
                 <h3 class="card-title p-3 my-auto"> Fabric Request List </h3>
                 
                 <div class="ml-auto p-3">
-                     <a id="report_fabric_request_btn" href="{{ route('fabric-request.fabric-request-report') }}" type="button"  class="btn btn-info">
+                     <a id="report_fabric_request_btn" href="{{ route('fabric-request.report') }}" type="button"  class="btn btn-info">
                         Report
                     </a>
                     <button id="sync_fabric_request_btn" type="button" class="btn btn-default mr-2" onclick="show_modal('modal_sync_fabric_request')">
@@ -24,7 +24,7 @@
                 <div class="mb-3">
                      <div class="col-sm-12 d-inline-flex justify-content-end">
                         <div class="filter_wrapper mr-2" style="width:200px;">     
-                            <select name="gl_filter" id="gl_filter" class="form-control select2">
+                            <select name="gl_filter" id="gl_filter" class="form-control select2 no-search-box">
                                 <option value="" selected>All GL Number</option>    
                                 @foreach ($gl_numbers as $gl_numbers)
                                 <option value="{{$gl_numbers->fbr_gl_number}}" >{{$gl_numbers->fbr_gl_number}}</option>    
@@ -32,16 +32,18 @@
                             </select>
                         </div>
                         <div class="filter_wrapper mr-2" style="width:200px;">
-                           <select name="color_filter" id="color_filter" class="form-control select2">
+                           <select name="color_filter" id="color_filter" class="form-control select2 no-search-box">
                                 <option value="" selected >All Color</option>
                                 @foreach ($colors as $colors)
                                  <option value="{{$colors->fbr_color}}" >{{$colors->fbr_color}}</option>    
                                 @endforeach
                             </select>
                         </div>
-                        <button id="reload_table_btn" class="btn btn-sm btn-info">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
+                        <div class="filter_wrapper text-right align-self-center">
+                            <button id="reload_table_btn" class="btn btn-sm btn-info">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <table id="farbic_request_table" class="table table-bordered table-hover text-center">
@@ -122,8 +124,8 @@
     // ## URL List
     const dtable_url = "{{ route('fabric-request.dtable') }}";
     const sync_url = "{{ route('fabric-request.sync') }}";
-    const report_fabric_url = "{{ route('fabric-request.fabric-request-report') }}";
-    const store_fabric_url = "{{ route('fabric-request.request-form',':id') }}";
+    const report_fabric_url = "{{ route('fabric-request.report') }}";
+    const store_fabric_url = "{{ route('fabric-request.receive-form',':id') }}";
 
     // ## Page Variable
     let start_date_filter = moment().format('YYYY-MM-DD');
@@ -173,7 +175,6 @@
 <script type="text/javascript">
     let farbic_request_table = $('#farbic_request_table').DataTable({
         processing: true,
-        serverSide: true,
         ajax: {
             url: dtable_url,
              data: function (d) {
@@ -190,12 +191,7 @@
                 $('[data-toggle="tooltip"]').tooltip();
             },
         },
-        order: [
-            [6, 'desc'],
-            [2, 'asc'],
-            [3, 'asc'],
-            [4, 'asc'],
-        ],
+        order: [],
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
             { data: 'serial_number', name: 'serial_number', className: 'text-left'},
@@ -208,7 +204,7 @@
             { data: 'action', name: 'action'},
         ],
         columnDefs: [
-            { targets: [0,-1], orderable: false, searchable: false },
+            { targets: [0,-1,-2], orderable: false, searchable: false },
         ],
         
         paging: true,
@@ -263,7 +259,10 @@
         $(this).val('');
     });
 
-    $('#gl_filter, #color_filter').select2({});
+    $('#gl_filter, #color_filter').change(function(event) {
+        reload_dtable();
+    }); 
+
 </script>
 
 <script type="text/javascript">

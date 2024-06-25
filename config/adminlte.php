@@ -397,7 +397,7 @@ return [
         [
             'text' => 'Fabric Request Report',
             'icon' => 'fas fa-fw fa fa-file-alt',
-            'url' => 'fabric-request/fabric-request-report'
+            'url' => 'fabric-request/report'
         ],
         [
             'header' => 'Admin',

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use Yajra\Datatables\Datatables;
-
+use PDF;
 
 class FabricRequestController extends Controller
 {
@@ -58,7 +58,6 @@ class FabricRequestController extends Controller
                 'api_fabric_requests.fbr_color',
                 'api_fabric_requests.fbr_table_number',
                 'api_fabric_requests.fbr_qty_required',
-                'api_fabric_requests.fbr_status_print',
                 'api_fabric_requests.fbr_requested_at'
             ])
             ->leftJoin('api_fabric_requests', 'fabric_requests.api_fabric_request_id', '=', 'api_fabric_requests.id');
@@ -333,7 +332,7 @@ class FabricRequestController extends Controller
     }
 
     // ## Untuk update data ketika klik tombol receive request form
-    public function request_form(string $id)
+    public function receive_form(string $id)
     {
         try {
             $fabric_request = FabricRequest::find($id);
@@ -343,7 +342,7 @@ class FabricRequestController extends Controller
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully update fabric request',
+                'message' => 'Successfully to receive fabric request ' . $fabric_request->apiFabricRequest->fbr_id,
                 'data' => [
                     'fabric_request' => $fabric_request,
                 ]
@@ -386,7 +385,7 @@ class FabricRequestController extends Controller
         return $status;
     }
 
-    public function fabric_request_report()
+    public function report()
     {   
         $gl_numbers = ApiFabricRequest::select('fbr_gl_number')->distinct()->get();
         $colors = ApiFabricRequest::select('fbr_color')->distinct()->get();
@@ -398,7 +397,84 @@ class FabricRequestController extends Controller
             'colors' => $colors,
             'can_manage' => auth()->user()->can('manage'),
         ];
-        return view('pages.fabric-request.fabric-request-report', $data);
+        return view('pages.fabric-request.report', $data);
+    }
+
+    public function dtable_preview()
+    {
+        $query = FabricRequest::with('apiFabricRequest')
+            ->select([
+                'fabric_requests.*',
+                'api_fabric_requests.fbr_serial_number',
+                'api_fabric_requests.fbr_gl_number as fbr_gl_number',
+                'api_fabric_requests.fbr_color',
+                'api_fabric_requests.fbr_table_number',
+                'api_fabric_requests.fbr_qty_required',
+                'api_fabric_requests.fbr_requested_at'
+            ])
+            ->leftJoin('api_fabric_requests', 'fabric_requests.api_fabric_request_id', '=', 'api_fabric_requests.id');
+        
+        return Datatables::of($query)
+            ->addIndexColumn()
+            ->escapeColumns([])
+            ->addColumn('serial_number', function($row){
+                $serial_number = $row->apiFabricRequest ? $row->apiFabricRequest->fbr_serial_number : '';
+                return $serial_number;
+            })
+
+            ->addColumn('status', function($row){
+                $status = $this->getFabricStatus($row, true);
+                return $status;
+            })
+
+            ->addColumn('issued_at', function($row) {
+                return $row->issued_at ?? '-';
+            })
+
+            ->addColumn('qty_issued', function($row) {
+                return $row->qty_issued ?? '-';
+            })
+
+            ->filter(function ($query){
+                if (request('gl_filter')) {
+                        $query->where('api_fabric_requests.fbr_gl_number', request()->gl_filter)->get();
+                    }
+
+                if (request('color_filter')) {
+                        $query->where('api_fabric_requests.fbr_color', request()->color_filter)->get();
+                    }
+
+                // if (request('date_filter')) {
+                //         $query->where('api_fabric_requests.fbr_requested_at', request()->date_filter)->get();
+                //     }
+                
+            }, true)
+
+            ->toJson();
+    }
+
+    public function print(Request $request) 
+    {   
+        $gl_number = explode(',', $request->gl_number);      
+        $gl_numbers = ApiFabricRequest::whereIn('fbr_gl_number', $gl_number)->get();
+
+        $fabric_request_details =FabricRequest::with('apiFabricRequest')
+            ->select([
+                'fabric_requests.*',
+                'api_fabric_requests.fbr_serial_number',
+                'api_fabric_requests.fbr_gl_number as fbr_gl_number',
+                'api_fabric_requests.fbr_color',
+                'api_fabric_requests.fbr_table_number',
+                'api_fabric_requests.fbr_qty_required',
+                'api_fabric_requests.fbr_requested_at'
+            ])
+            ->leftJoin('api_fabric_requests', 'fabric_requests.api_fabric_request_id', '=', 'api_fabric_requests.id')
+            ->whereIn('api_fabric_requests.fbr_gl_number', $gl_numbers->pluck('fbr_gl_number'))
+            ->get();
+
+        $filename = 'Fabric Request Report.pdf';
+        $pdf = PDF::loadview('pages.fabric-request.print', compact('fabric_request_details', 'gl_numbers'))->setPaper('a4', 'landscape');
+        return $pdf->stream($filename);
     }
 
     public function dtable_roll_list()
