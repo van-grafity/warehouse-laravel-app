@@ -83,7 +83,7 @@ class FabricRequestController extends Controller
             })
 
             ->addColumn('status', function($row){
-                $status = $this->getFabricStatus($row, true);
+                $status = $this->getFabricRequestStatus($row, true);
                 return $status;
             })
 
@@ -358,7 +358,7 @@ class FabricRequestController extends Controller
         }
     }
 
-    public function getFabricStatus($fabric_data, $pill_mode = false)
+    public function getFabricRequestStatus($fabric_data, $pill_mode = false)
     {
         if($pill_mode){
             if($fabric_data->issued_at != null){
