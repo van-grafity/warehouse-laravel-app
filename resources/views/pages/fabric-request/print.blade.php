@@ -51,18 +51,18 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($fabric_request_details as $key => $item)
+                @foreach ($fabric_requests as $key => $fabric_request)
                     <tr style="text-align: center;">
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->fbr_serial_number }}</td>
-                        <td>{{ $item->fbr_gl_number }}</td>
-                        <td>{{ $item->fbr_color }}</td>
-                        <td>{{ $item->fbr_table_number }}</td>
-                        <td>{{ $item->status }}</td>
-                        <td>{{ $item->fbr_qty_required }}</td>
-                        <td></td>
-                        <td>{{ $item->fbr_requested_at }}</td>
-                        <td>{{ $item->issued_at ?? '-' }}</td>
+                        <td>{{ $fabric_request->fbr_serial_number }}</td>
+                        <td>{{ $fabric_request->fbr_gl_number }}</td>
+                        <td>{{ $fabric_request->fbr_color }}</td>
+                        <td>{{ $fabric_request->fbr_table_number }}</td>
+                        <td>{{ $fabric_request->status }}</td>
+                        <td>{{ $fabric_request->fbr_qty_required }}</td>
+                        <td>{{ $fabric_request->qty_issued ?? '0' }}</td>
+                        <td>{{ $fabric_request->fbr_requested_at }}</td>
+                        <td>{{ $fabric_request->issued_at ?? '-' }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -70,30 +70,27 @@
     </div>
     </br>
     <div>
-        <table align="center" width="85%" class="table-request-report">
+        <table align="center" width="85%" class="table-request-report table-bordered">
             <thead>
                 <tr style="background-color: #d9d9d9;">
                     <th colspan="3" style="text-align: left; padding-left: 10px;">Summary : </th>
-                    <tr>
-                        <th width="">Total Form Requested : </th>
-                        <th width="">Total Form Qty Requested : </th>
-                        <th width="">Actual Roll Qty Issued : </th>
-                    </tr>
-                    <tr>
-                        <th width="">Total Form Issued : </th>
-                        <th width="">Total Form Qty Issued : </th>
-                        <th width="">Actual Length Issued : </th>
-                    </tr>
-                    <tr>
-                        <th width="">Total Form Pending : </th>
-                        <th width="">Total Form Qty Pending : </th>
-                        <th width="">Actual Length Pending : </th>
-                    </tr>
+                </tr>
+                <tr>
+                    <th width="">Total Form Requested : {{ $total_form_requested}} </th>
+                    <th width="">Total Form Qty Requested : {{ $total_form_qty_requested }} Yds </th>
+                    <th width="">Actual Roll Qty Issued : {{ $actual_roll_qty_issued }} Roll </th>
+                </tr>
+                <tr>
+                    <th width="">Total Form Issued : {{ $total_form_issued }} </th>
+                    <th width="">Total Form Qty Issued : {{ $total_form_qty_issued }} Yds </th>
+                    <th width="">Actual Length Issued : {{ $actual_length_issued }} Yds </th>
+                </tr>
+                <tr>
+                    <th width="">Total Form Pending : {{ $total_form_pending }} </th>
+                    <th width="">Total Form Qty Pending : {{ $total_form_qty_pending }} Yds</th>
+                    <th width="">Actual Length Pending : {{ $actual_length_pending }} Yds </th>
                 </tr>
             </thead>
-            <tbody>
-
-            </tbody>
         </table>
     </div>
 </body>

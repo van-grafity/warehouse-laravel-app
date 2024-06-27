@@ -24,7 +24,7 @@
                 <div class="mb-3">
                      <div class="col-sm-12 d-inline-flex justify-content-end">
                         <div class="filter_wrapper mr-2" style="width:200px;">     
-                            <select name="gl_filter" id="gl_filter" class="form-control select2 no-search-box">
+                            <select name="gl_filter" id="gl_filter" class="form-control select2">
                                 <option value="" selected>All GL Number</option>    
                                 @foreach ($gl_numbers as $gl_numbers)
                                 <option value="{{$gl_numbers->fbr_gl_number}}" >{{$gl_numbers->fbr_gl_number}}</option>    
@@ -32,7 +32,7 @@
                             </select>
                         </div>
                         <div class="filter_wrapper mr-2" style="width:200px;">
-                           <select name="color_filter" id="color_filter" class="form-control select2 no-search-box">
+                           <select name="color_filter" id="color_filter" class="form-control select2">
                                 <option value="" selected >All Color</option>
                                 @foreach ($colors as $colors)
                                  <option value="{{$colors->fbr_color}}" >{{$colors->fbr_color}}</option>    
@@ -259,7 +259,7 @@
         $(this).val('');
     });
 
-    $('#gl_filter, #color_filter').change(function(event) {
+    $('#gl_filter, #color_filter').select2({}).change(function(event) {
         reload_dtable();
     }); 
 

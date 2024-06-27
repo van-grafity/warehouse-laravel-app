@@ -67,6 +67,8 @@
                         </div>
                         <input type="text" class="form-control daterangepicker-select" id="date_filter" name="date_filter" autocomplete="off" placeholder="Fabric Request Date Filter">
                     </div>
+                    <input type="hidden" id="date_start_filter" name="date_start_filter">
+                    <input type="hidden" id="date_end_filter" name="date_end_filter">
                 </div>
             </div>
             <div class="ml-auto p-3">
@@ -75,7 +77,7 @@
             </div>
         </div>
     </div>
-    <div class="col-12">
+    <div class="col-12" id="preview_card">
         <div class="card">
             <div class="card-body">
                 <table id="fabric_request_table" class="table table-bordered table-hover text-center">
@@ -124,8 +126,7 @@
         $('#date_filter').data('daterangepicker').setEndDate(moment());
     }
 
-    $('#date_filter').daterangepicker({
-        maxDate: moment(),
+        $('#date_filter').daterangepicker({
         opens: 'left',
         locale: {
             format: 'DD/MM/YYYY',
@@ -141,23 +142,22 @@
             'Last 7 Days': [moment().subtract(6, 'days'), moment()],
             'Last 2 Weeks': [moment().subtract(13, 'days'), moment()],
         },
-        maxSpan: {
-            "days": 13
-        },
         
     }, function(start, end, label) {
-        start_date_filter = start.format('YYYY-MM-DD');
-        end_date_filter = end.format('YYYY-MM-DD');
+        $('#date_start_filter').val(start.format('YYYY-MM-DD'));
+        $('#date_end_filter').val(end.format('YYYY-MM-DD'));
     });
 
+    $('#date_start_filter').val(moment().startOf('month').format('YYYY-MM-DD'))
+    $('#date_end_filter').val(moment().add(1, 'month').endOf('month').format('YYYY-MM-DD'))
     $('#date_filter').on('apply.daterangepicker', function(ev, picker) {
-        start_date_filter = picker.startDate.format('YYYY-MM-DD');
-        end_date_filter = picker.endDate.format('YYYY-MM-DD');
+
     });
     $('#date_filter').on('cancel.daterangepicker', function(ev, picker) {
-        start_date_filter = '';
-        end_date_filter = '';
-        $(this).val('');
+        $('#date_start_filter').val('');
+        $('#date_end_filter').val('');
+        $('#date_filter').val('');
+        reload_dtable();
     });
 
     $(document).ready(function(){
@@ -167,25 +167,28 @@
 
             var gl_filter = $('#gl_filter').val();
             var color_filter = $('#color_filter').val();
-            var date_filter = $('#date_filter').val();
+            var date_start_filter = $('#date_start_filter').val();
+            var date_end_filter = $('#date_end_filter').val();
 
-            window.open(url + '?gl_number=' + gl_filter, '_blank');
-            // window.open(url + '&gl_number=' + gl_filter + '&color_name=' + color_filter, '_blank');
-            // window.open(url + '&gl_number=' + gl_filter + '&color_name=' + color_filter + '?range_date=' + date_filter + , '_blank');
+            window.open(url + '?gl_number=' + gl_filter + '&color_name=' + color_filter + '&start_date=' + date_start_filter + '&end_date=' + date_end_filter, '_blank');
         });
     });
 </script>
 
 <script type="text/javascript">
+    $('#preview_card').hide();
+    
     let fabric_request_table = $('#fabric_request_table').DataTable({
         processing: true,
         serverSide: true,
+        deferLoading: 0,
         ajax: {
             url: dtable_preview_url,
             data: function (d) {
                 d.gl_filter = $('#gl_filter').val();
                 d.color_filter = $('#color_filter').val();
-                d.date_filter = $('#date_filter').val();
+                d.date_start_filter = $('#date_start_filter').val();
+                d.date_end_filter = $('#date_end_filter').val();
             },
             beforeSend: function() {
                 // ## Tambahkan kelas dimmed-table sebelum proses loading dimulai
@@ -213,21 +216,22 @@
         columnDefs: [
             { targets: [0,1,2,3,4,5,6,7,8,9], orderable: false, searchable: false },
         ],
-        
-        paging: true,
+        orderable: false,
+        paging: false,
         responsive: true,
         lengthChange: true,
         searching: false,
         autoWidth: false,
         searchDelay: 500,
-    })
+    });
 
     $('#btn_preview_report').on('click', function(event) {
+        $('#preview_card').show();
         $(this).addClass('loading').attr('disabled',true);
         fabric_request_table.ajax.reload(function(json){
             $('#btn_preview_report').removeClass('loading').attr('disabled',false);
         });
     });
-</script>
 
+</script>
 @endpush
