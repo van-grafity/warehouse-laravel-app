@@ -165,7 +165,9 @@
         result = await using_fetch(fetch_data);
 
         if (result.status == "success") {
-            swal_info({ title: result.message, reload_option: true });
+            swal_info({ title: result.message })
+                
+            reload_dtable();
         } else {
             swal_failed({ title: result.message });
         }
