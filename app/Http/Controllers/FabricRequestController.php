@@ -83,7 +83,7 @@ class FabricRequestController extends Controller
             })
 
             ->addColumn('status', function($row){
-                $status = $this->getFabricRequestStatus($row, true);
+                $status = $this->getFabricStatus($row, true);
                 return $status;
             })
 
@@ -113,7 +113,6 @@ class FabricRequestController extends Controller
         
     }
 
-    
     /**
      * Display the specified resource.
      */
@@ -358,7 +357,7 @@ class FabricRequestController extends Controller
         }
     }
 
-    public function getFabricRequestStatus($fabric_data, $pill_mode = false)
+    public function getFabricStatus($fabric_data, $pill_mode = false)
     {
         if($pill_mode){
             if($fabric_data->issued_at != null){
@@ -383,6 +382,19 @@ class FabricRequestController extends Controller
         }
 
         return $status;
+    }
+
+    public function getQtyIssued($fabric_request)
+    {
+        $fabric_rolls = FabricIssuance::join('fabric_rolls', 'fabric_issuances.fabric_roll_id', '=', 'fabric_rolls.id')
+            ->where('fabric_issuances.fabric_request_id', $fabric_request->id)
+            ->get();
+
+        $total_qty_issued = 0;
+        foreach( $fabric_rolls as $key => $roll ) {
+            $total_qty_issued += $roll->yds;
+        }
+        return $total_qty_issued;
     }
 
     public function report()
@@ -421,60 +433,100 @@ class FabricRequestController extends Controller
                 $serial_number = $row->apiFabricRequest ? $row->apiFabricRequest->fbr_serial_number : '';
                 return $serial_number;
             })
-
             ->addColumn('status', function($row){
-                $status = $this->getFabricRequestStatus($row, true);
+                $status = $this->getFabricStatus($row, true);
                 return $status;
             })
-
             ->addColumn('issued_at', function($row) {
                 return $row->issued_at ?? '-';
             })
-
             ->addColumn('qty_issued', function($row) {
-                return $row->qty_issued ?? '-';
+                $qty_issued = $this->getQtyIssued($row);
+                return $qty_issued;
             })
-
-            ->filter(function ($query){
+            ->filter(function ($query) {
                 if (request('gl_filter')) {
-                        $query->where('api_fabric_requests.fbr_gl_number', request()->gl_filter)->get();
-                    }
-
+                    $query->where('api_fabric_requests.fbr_gl_number', request()->gl_filter);
+                }
                 if (request('color_filter')) {
-                        $query->where('api_fabric_requests.fbr_color', request()->color_filter)->get();
-                    }
+                    $query->where('api_fabric_requests.fbr_color', request()->color_filter);
+                }
+                if (request()->query('date_start_filter')) {
+                    $query->where('api_fabric_requests.fbr_requested_at','>=', request()->date_start_filter);
+                }
+                if (request()->query('date_end_filter')) {
+                    $query->where('api_fabric_requests.fbr_requested_at','<=', request()->date_end_filter);
+                }
 
-                // if (request('date_filter')) {
-                //         $query->where('api_fabric_requests.fbr_requested_at', request()->date_filter)->get();
-                //     }
-                
             }, true)
-
             ->toJson();
     }
 
     public function print(Request $request) 
     {   
-        $gl_number = explode(',', $request->gl_number);      
-        $gl_numbers = ApiFabricRequest::whereIn('fbr_gl_number', $gl_number)->get();
+        $gl_number = $request->gl_number;      
+        $color_name = $request->color_name;
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
 
-        $fabric_request_details =FabricRequest::with('apiFabricRequest')
+        $fabric_requests = FabricRequest::with('apiFabricRequest')
             ->select([
                 'fabric_requests.*',
                 'api_fabric_requests.fbr_serial_number',
-                'api_fabric_requests.fbr_gl_number as fbr_gl_number',
+                'api_fabric_requests.fbr_gl_number',
                 'api_fabric_requests.fbr_color',
                 'api_fabric_requests.fbr_table_number',
                 'api_fabric_requests.fbr_qty_required',
                 'api_fabric_requests.fbr_requested_at'
             ])
-            ->leftJoin('api_fabric_requests', 'fabric_requests.api_fabric_request_id', '=', 'api_fabric_requests.id')
-            ->whereIn('api_fabric_requests.fbr_gl_number', $gl_numbers->pluck('fbr_gl_number'))
+            ->join('api_fabric_requests', 'fabric_requests.api_fabric_request_id', '=', 'api_fabric_requests.id')
+            ->where('api_fabric_requests.fbr_gl_number', $gl_number)
+            ->where('api_fabric_requests.fbr_color', $color_name)
+            ->where('api_fabric_requests.fbr_requested_at', '>=', $start_date)
+            ->where('api_fabric_requests.fbr_requested_at', '<=', $end_date)
             ->get();
+        
+        $total_form_qty_requested = 0;
+        $actual_roll_qty_issued = 0;
+        $actual_length_issued = 0;
+
+        foreach ($fabric_requests as $key => $fabric_request) {
+            $fabric_request->qty_issued = $this->getQtyIssued($fabric_request);
+            $fabric_request->status = $this->getFabricStatus($fabric_request);
+            $actual_length_issued += $fabric_request->qty_issued;
+            $total_form_qty_requested += $fabric_request->fbr_qty_required;
+            $actual_roll_qty_issued += $fabric_request->allocatedFabricRolls->count();
+        }
+
+        // ## Penjumlahan untuk Summary table
+        $total_form_requested = $fabric_requests->count();
+        $total_form_issued = $fabric_requests->whereNotNull('issued_at')->count();
+        $total_form_pending = $total_form_requested - $total_form_issued;
+
+        $total_form_qty_requested = $total_form_qty_requested;
+        $total_form_qty_issued = $fabric_requests->whereNotNull('issued_at')->sum('fbr_qty_required');
+        $total_form_qty_pending = $total_form_qty_requested - $total_form_qty_issued ;
+
+        $actual_roll_qty_issued =  $actual_roll_qty_issued;
+        $actual_length_issued = $actual_length_issued;
+        $actual_length_pending = $total_form_qty_requested - $actual_length_issued;
+
+        $data = [
+            'fabric_requests' => $fabric_requests,
+            'total_form_requested' => $total_form_requested,
+            'total_form_issued' => $total_form_issued,
+            'total_form_pending' => $total_form_pending,
+            'total_form_qty_requested' => $total_form_qty_requested,
+            'total_form_qty_issued' => $total_form_qty_issued,
+            'total_form_qty_pending' => $total_form_qty_pending,
+            'actual_roll_qty_issued' => $actual_roll_qty_issued,
+            'actual_length_issued' => $actual_length_issued,
+            'actual_length_pending' => $actual_length_pending,
+        ];
 
         $filename = 'Fabric Request Report.pdf';
-        $pdf = PDF::loadview('pages.fabric-request.print', compact('fabric_request_details', 'gl_numbers'))->setPaper('a4', 'landscape');
-        return $pdf->stream($filename);
+        $pdf = PDF::loadview('pages.fabric-request.print', $data)->setPaper('a4', 'landscape');
+        return $pdf->stream($filename);      
     }
 
     public function dtable_roll_list()

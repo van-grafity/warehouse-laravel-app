@@ -162,12 +162,11 @@ class FabricStatusController extends Controller
 
             ->filter(function ($query, $gl_filter){
                 if (request('gl_filter')) {
-                        $query->where('gl_number', request()->gl_filter)->get();
-                    }
-
+                    $query->where('gl_number', request()->gl_filter);
+                }
                 if (request('color_filter')) {
-                        $query->where('color_id', request()->color_filter)->get();
-                    }
+                    $query->where('color_id', request()->color_filter);
+                }
                 
             }, true)
 

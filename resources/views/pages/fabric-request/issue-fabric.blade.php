@@ -72,7 +72,7 @@
                             <dt class="col-md-4 col-sm-12">Total Roll : <span id="total_selected_roll_qty"> 0 </span></dt>
                         </dl>
                         <dl class="row">
-                            <dt class="col-md-4 col-sm-12">Total Length : <span id="total_selected_roll_length"> 0 </span> Yds </dt>
+                            <dt class="col-md-4 col-sm-12">Total Length : <span id="total_selected_roll_length"> 0 </span> (<span id="qty_difference"></span>) Yds </dt>
                         </dl>
                     </div>
                 </div>
@@ -86,7 +86,7 @@
                             <button class="btn btn-success btn-submit" disabled="disabled" onclick="move_selected_roll_to_fbr()">Add to FBR</button>
                         @endcan
                     </div>
-                    <div class="filter_wrapper mr-2" style="width:120px; height:10px">                         
+                    <div class="filter_wrapper mr-2" style="width:200px; height:10px">                         
                         <select name="gl_filter" id="gl_filter" class="form-control select2">
                             <option value="" selected>All GL</option>    
                             @foreach ($gl_numbers as $gl_number)
@@ -258,7 +258,7 @@
                                         <dt class="col-md-4 col-sm-12">Table No</dt>
                                         <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_table_number }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Qty Required</dt>
-                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->qty_required }}  yds</dd>
+                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_qty_required }}  Yds</dd>
                                     </dl>
                                 </div>
                                 <div class="col-sm-7">
@@ -512,6 +512,12 @@
         });
         let total_length_class = total_length >= fbr_qty_required ? 'text-success' : 'text-danger';
         $('#total_selected_roll_length').text(total_length).attr('class', total_length_class);
+
+        let total_selected_roll_length = parseFloat($('#total_selected_roll_length').text());
+
+        let qty_difference = total_selected_roll_length > fbr_qty_required ? `+ ${(total_selected_roll_length - fbr_qty_required).toFixed(2)}` : `- ${(fbr_qty_required - total_selected_roll_length).toFixed(2)}`;
+        $('#qty_difference').text(qty_difference);
+       
     };
 
     // ## check if the table data is empty including default data
