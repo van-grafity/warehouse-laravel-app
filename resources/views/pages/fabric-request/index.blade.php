@@ -57,7 +57,7 @@
                             <th width="">Qty Required</th>
                             <th width="">Requested at</th>
                             <th width="">Status</th>
-                            <th width="100">Action</th>
+                            <th width="150">Action</th>
                         </tr>
                     </thead>
                     <tbody>
