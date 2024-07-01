@@ -366,8 +366,8 @@
             format: 'DD/MM/YYYY',
             cancelLabel: 'Clear'
         },
-        startDate: moment().startOf('month'),
-        endDate: moment().add(1, 'month').endOf('month'),
+        startDate: moment().subtract(2,'month').startOf('month'),
+        endDate: moment().add(2, 'month').endOf('month'),
         alwaysShowCalendars: true,
         showCustomRangeLabel: false,
         ranges: {
@@ -385,8 +385,8 @@
         $('#incoming_date_end_filter').val(end.format('YYYY-MM-DD'));
     });
 
-    $('#incoming_date_start_filter').val(moment().startOf('month').format('YYYY-MM-DD'))
-    $('#incoming_date_end_filter').val(moment().add(1, 'month').endOf('month').format('YYYY-MM-DD'))
+    $('#incoming_date_start_filter').val(moment().subtract(2,'month').startOf('month').format('YYYY-MM-DD'))
+    $('#incoming_date_end_filter').val(moment().add(2, 'month').endOf('month').format('YYYY-MM-DD'))
 
     $('#incoming_date_filter').on('apply.daterangepicker', function(ev, picker) {
         // $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
