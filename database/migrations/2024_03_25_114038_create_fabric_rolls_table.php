@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('serial_number', 100)->unique();
             $table->foreignId('packinglist_id')->constrained('packinglists');
             $table->string('roll_number', 150);
-            $table->double('kgs');
-            $table->double('lbs');
+            $table->double('kgs')->nullable();
+            $table->double('lbs')->nullable();
             $table->double('yds');
-            $table->double('width');
+            $table->double('width')->nullable();
             $table->datetime('racked_at')->nullable();
             $table->foreignId('racked_by')->nullable()->constrained('users');
             $table->foreignId('created_by')->nullable()->constrained('users');
