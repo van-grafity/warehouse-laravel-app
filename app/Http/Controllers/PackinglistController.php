@@ -354,6 +354,10 @@ class PackinglistController extends Controller
                     ->where('color_id', $color->id)
                     ->first();
                 
+                if(!$packinglist){
+                    throw new \Exception("Packinglist Not Found. There is strange data. Please contant the Administrator");
+                }
+
                 $is_roll_number_exist = FabricRoll::is_roll_number_exist($packinglist->id, $roll['roll']);
                 
                 if ($is_roll_number_exist) {
