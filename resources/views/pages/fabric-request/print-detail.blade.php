@@ -41,13 +41,13 @@
                     <td width="100"> Gl Number </td>
                     <td width="200">: {{ $fabric_request->apiFabricRequest->fbr_gl_number }} </td>
                     <td width="100"> Qty Issued</td>
-                    <td width="200">: {{ $fabric_request->qty_issued }} </td>
+                    <td width="200">: {{ $fabric_request->qty_issued }} Yds</td>
                 </tr>
                 <tr>
                     <td width="100" class="no-border"> Color </td>
                     <td width="200">: {{ $fabric_request->apiFabricRequest->fbr_color }} </td>
                     <td width="100"> Difference</td>
-                    <td width="200">: {{ $fabric_request->qty_difference }} </td>
+                    <td width="200">: {{ $fabric_request->qty_difference }} Yds</td>
                 </tr>
                 <tr>
                     <td width="100"> Style </td>
@@ -67,9 +67,7 @@
                 </tr>
                 <tr>
                     <td width="100"> Qty Required </td>
-                    <td width="200">: {{ $fabric_request->apiFabricRequest->fbr_qty_required }} </td>
-                </tr>
-                
+                    <td width="200">: {{ $fabric_request->apiFabricRequest->fbr_qty_required }} Yds</td>
                 </tr>
             </thead>
         </table>

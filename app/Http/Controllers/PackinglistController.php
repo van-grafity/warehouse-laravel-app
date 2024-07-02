@@ -369,7 +369,7 @@ class PackinglistController extends Controller
                     'serial_number' => FabricRoll::generate_serial_number($color->code, $roll['batch'], $roll['roll']),
                     'roll_number' => $roll['roll'],
                     'kgs' => $roll['kgs'] ? $roll['kgs'] : null,
-                    'lbs' => $roll['lbs'] ? $roll['lbs'] : null,
+                    'lbs' => $roll['lbs'] ? round($roll['lbs'],2) : null,
                     'yds' => $roll['yds'] ? $roll['yds'] : null,
                     'width' => $roll['width'] ? $roll['width'] : null,
                 ];
