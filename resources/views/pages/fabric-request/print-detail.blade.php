@@ -8,35 +8,38 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 
     <style type="text/css">
-        .table-request-report thead th {
-            border: 1px black solid;
-            text-align: center;
-            vertical-align: middle;
+        .table-print-header tbody td {
             font-size: 12px;
-            padding-top: 2 !important;
-            padding-bottom: 2 !important;
+            font-weight: bold;
+        }
+        .table-print tbody td,
+        .table-print thead th {
+            border: 1px black solid;
+            vertical-align: middle;
+            text-align: center;
+            padding: 2px 5px;
+        }
+        .table-print thead th {
+            font-size: 11px;
         }
 
-        .table-request-report tbody td {
-            border: 1px black solid;
-            vertical-align: middle;
-            font-size: 12px;
-            padding-top: 2 !important;
-            padding-bottom: 2 !important;
-            padding-left: 5 !important;
-            padding-right: 5 !important;
+        .table-print tbody td {
+            font-size: 10px;
         }
 	</style>
 </head>
 <body>
     <div>
-        <div class="row">
-            <div class="col-lg-12 text-center mb-3">
-                <h4>Fabric Request Detail Report</h4>
-            </div>
-        </div>
-        <table class="">
-            <thead>
+        <table class="" width="100%" style="margin-bottom:12px;">
+            <tr>
+                <td style="font-weight: bold; font-size: 24px; text-align:center">
+                    Fabric Request Detail Report
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table class="table-print-header">
+            <tbody>
                 <tr>
                     <td width="100"> Gl Number </td>
                     <td width="200">: {{ $fabric_request->apiFabricRequest->fbr_gl_number }} </td>
@@ -44,7 +47,7 @@
                     <td width="200">: {{ $fabric_request->qty_issued }} Yds</td>
                 </tr>
                 <tr>
-                    <td width="100" class="no-border"> Color </td>
+                    <td width="100"> Color </td>
                     <td width="200">: {{ $fabric_request->apiFabricRequest->fbr_color }} </td>
                     <td width="100"> Difference</td>
                     <td width="200">: {{ $fabric_request->qty_difference }} Yds</td>
@@ -69,10 +72,10 @@
                     <td width="100"> Qty Required </td>
                     <td width="200">: {{ $fabric_request->apiFabricRequest->fbr_qty_required }} Yds</td>
                 </tr>
-            </thead>
+            </tbody>
         </table>
         <br>
-        <table width="100%" class="table-request-report table-bordered">
+        <table width="100%" class="table-print table-bordered">
             <thead>
                 <tr style="background-color: #d9d9d9;">
                     <th width="3%">No.</th>
@@ -89,13 +92,13 @@
                 @foreach ($fabric_roll_issuance as $fabric_roll)
                 <tr style="text-align: center;">
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{$fabric_roll['color']}}</td>
-                    <td>{{$fabric_roll['batch']}}</td>
-                    <td>{{$fabric_roll['roll_number']}}</td>
-                    <td>{{$fabric_roll['width']}}</td>
-                    <td>{{$fabric_roll['yds']}}</td>
-                    <td>{{$fabric_roll['rack_number']}}</td>
-                    <td>{{$fabric_roll['location']}}</td>
+                    <td>{{ $fabric_roll['color'] }}</td>
+                    <td>{{ $fabric_roll['batch'] }}</td>
+                    <td>{{ $fabric_roll['roll_number'] }}</td>
+                    <td>{{ $fabric_roll['width'] }}</td>
+                    <td>{{ $fabric_roll['yds'] }}</td>
+                    <td>{{ $fabric_roll['rack_number'] }}</td>
+                    <td>{{ $fabric_roll['location'] }}</td>
                 </tr>
                 @endforeach
             </tbody>
