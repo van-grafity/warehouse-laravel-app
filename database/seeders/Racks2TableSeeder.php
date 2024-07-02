@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use App\Models\Rack;
 
-class RacksTableSeeder extends Seeder
+class Racks2TableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,14 +17,15 @@ class RacksTableSeeder extends Seeder
         // ## Rack Setup
         $rack_code = ['MV', 'FX']; // ## MV = moveable, FX = fixed
         $rack_type = ['moveable', 'fixed'];
-        $rack_total = [350,72]; // ## [{movable}, {fixed}]
+        $rack_total = [31,0]; // ## [{movable}, {fixed}]
         $racks_data = [];
         $timestamps = Carbon::now();
 
+        $number_start = 320;
         foreach ($rack_code as $key_code => $code) {
             $rack_total_this_code = $rack_total[$key_code];
             for ($i=0; $i < $rack_total_this_code; $i++) { 
-                $basic_number = $i+1;
+                $basic_number = $i+$number_start;
                 $normalize_number = str_pad($basic_number, 3, '0', STR_PAD_LEFT); // ## running number for each rack type
                 $serial_number = 'WHA-RCK-'. $code . '-' . $normalize_number;
                 $rack = [
