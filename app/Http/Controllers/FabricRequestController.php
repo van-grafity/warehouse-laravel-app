@@ -493,7 +493,7 @@ class FabricRequestController extends Controller
         $start_date = $request->start_date;
         $end_date = $request->end_date;
 
-        $fabric_requests = FabricRequest::with('apiFabricRequest')
+        $query = FabricRequest::with('apiFabricRequest')
             ->select([
                 'fabric_requests.*',
                 'api_fabric_requests.fbr_serial_number',
@@ -505,10 +505,14 @@ class FabricRequestController extends Controller
             ])
             ->join('api_fabric_requests', 'fabric_requests.api_fabric_request_id', '=', 'api_fabric_requests.id')
             ->where('api_fabric_requests.fbr_gl_number', $gl_number)
-            ->where('api_fabric_requests.fbr_color', $color_name)
             ->where('api_fabric_requests.fbr_requested_at', '>=', $start_date)
-            ->where('api_fabric_requests.fbr_requested_at', '<=', $end_date)
-            ->get();
+            ->where('api_fabric_requests.fbr_requested_at', '<=', $end_date);
+
+        if (!empty($color_name)) {
+            $query->where('api_fabric_requests.fbr_color', $color_name);
+        }
+
+        $fabric_requests = $query->get();
         
         $total_form_qty_requested = 0;
         $actual_roll_qty_issued = 0;
