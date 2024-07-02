@@ -107,11 +107,12 @@
 @push('js')
 
 <script type="text/javascript">
-    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    const url = "{{ route('fabric-request.print') }}";
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');   
 
     // ## URL List
     const dtable_preview_url = "{{ route('fabric-request.dtable-preview') }}";
+    const url = "{{ route('fabric-request.print') }}";
+    
 </script>
 
 <script type="text/javascript">
