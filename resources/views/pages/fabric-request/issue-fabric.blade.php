@@ -14,29 +14,49 @@
     <!-- /.card-header -->
     <div class="card-body">
         <div class="row mb-3">
-            <div class="col-sm-12"> 
-                <div class="row">
-                    <div class="col-sm-12 col-lg-8">
-                        <dl class="row">
-                            <dd class="col-md-12 col-sm-12"><b>Serial Number : {{ $fabric_request->apiFabricRequest->fbr_serial_number }}</b></dd>
-                            
-                            <dt class="col-md-2 col-sm-12">Gl Number</dt>
-                            <dd class="col-md-10 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_gl_number }}</dd>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h5 style="font-weight:bold">Serial Number :  {{ $fabric_request->apiFabricRequest->fbr_serial_number }} </h5>
+                </div> 
+                <div class="col-sm-5">
+                    <dl class="row"> 
+                        <dt class="col-md-4 col-sm-12">Gl Number</dt>
+                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_gl_number }}</dd>
 
-                            <dt class="col-md-2 col-sm-12">Color </dt>
-                            <dd class="col-md-10 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_color }}</dd>
+                        <dt class="col-md-4 col-sm-12">Color </dt>
+                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_color }}</dd>
 
-                            <dt class="col-md-2 col-sm-12">Qty Required</dt>
-                            <dd class="col-md-10 col-sm-12" id="qty_required"> : {{ $fabric_request->apiFabricRequest->fbr_qty_required }} yds</dd>
-                        </dl>
-                    </div>  
-                    <div class="col-sm-12 col-lg-4 text-right">
-                        <div class="ml-auto" style="margin-bottom:50px;">
-                            <a href="javascript:void(0)" type="button" class="btn btn-info" id="btn_modal_show" onclick="show_modal_detail('modal_detail_fabric_request')">
-                                More detail FBR 
-                            </a>
-                        </div>
-                    </div>
+                        <dt class="col-md-4 col-sm-12">Style</dt>
+                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_style }} </dd>
+                    
+                        <dt class="col-md-4 col-sm-12">Po Number</dt>
+                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_fabric_po }} </dd>
+
+                        <dt class="col-md-4 col-sm-12">Table No</dt>
+                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_table_number }} </dd>
+
+                        <dt class="col-md-4 col-sm-12">Status</dt>
+                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_status_print }} </dd>
+                    </dl>
+                </div>
+                <div class="col-sm-7">
+                    <dl class="row">
+                        <dt class="col-md-4 col-sm-12">Qty Required</dt>
+                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_qty_required }} Yds</dd>
+
+                        <dt class="col-md-4 col-sm-12">Qty Issued</dt>
+                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->qty_issued }} Yds </dd>
+                        
+                        <dt class="col-md-4 col-sm-12">Difference</dt>
+                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->qty_difference }} Yds </dd>
+
+                        <dt class="col-md-4 col-sm-12">Remark</dt>
+                        <dd class="col-md-8 col-sm-12"> : {{ ($fabric_request->apiFabricRequest->fbr_remark) ? $fabric_request->apiFabricRequest->fbr_remark : '-' }} </dd>
+
+                        <dt class="col-md-4 col-sm-12">Fabric Detail</dt>
+                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_fabric_type }} </dd>
+
+                    </dl>
                 </div>
             </div>
         </div>
@@ -151,78 +171,6 @@
     <!-- /.card-body -->
 </div>
 <!-- /.card -->
-
-<!-- Modal More Detail -->
-<div class="modal fade" id="modal_detail_fabric_request" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <form>
-                <div class="modal-header">
-                    <h5 class="modal-title" id="ModalLabel">Fabric Request Information</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>        
-                <!-- /.card-header -->
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-lg-12">
-                            <div class="row mb-3">
-                                <div class="col-sm-12">
-                                    <h5 style="font-weight:bold">Serial Number : {{ $fabric_request->apiFabricRequest->fbr_serial_number }} </h5>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-5">
-                                    <dl class="row">
-                                        <dt class="col-md-4 col-sm-12">GL Number</dt>
-                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_gl_number }}  </dd>
-                                        <dt class="col-md-4 col-sm-12">Color</dt>
-                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_color }}  </dd>
-                                        <dt class="col-md-4 col-sm-12">Style</dt>
-                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_style }}  </dd>
-                                        <dt class="col-md-4 col-sm-12">PO Number</dt>
-                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_fabric_po }}  </dd>
-                                        <dt class="col-md-4 col-sm-12">Table No</dt>
-                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_table_number }}  </dd>
-                                        <dt class="col-md-4 col-sm-12">Qty Required</dt>
-                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_qty_required }}  yds</dd>
-                                    </dl>
-                                </div>
-                                <div class="col-sm-7">
-                                    <dl class="row">
-                                        <dt class="col-md-4 col-sm-12">Qty Issued</dt>
-                                        <dd class="col-md-8 col-sm-12"> <span> : {{ $fabric_request->qty_issued }} </span> Yds </dd>
-                                        <dt class="col-md-4 col-sm-12">Difference</dt>
-                                        <dd class="col-md-8 col-sm-12"> <span> : {{ $fabric_request->qty_difference }} </span> Yds</dd>
-                                        <dt class="col-md-4 col-sm-12">Remark</dt>
-                                        <dd class="col-md-8 col-sm-12"> : {{ ($fabric_request->apiFabricRequest->fbr_remark) ? $fabric_request->apiFabricRequest->fbr_remark : '-' }}  </dd>
-                                        <dt class="col-md-4 col-sm-12">Fabric Detail</dt>
-                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_fabric_type }}  </dd>
-                                    </dl>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-5">
-                                    <dl class="row">
-                                        <dt class="col-md-4 col-sm-12">Status</dt>
-                                        <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_status_print }}  </dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        <!-- /.card-body -->
-                        </div>
-                    <!-- /.card -->
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- End Modal More Detail -->
 
 <!-- Modal Issuance Confirmation -->
 <div class="modal fade" id="modal_issuance_confirmation" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
@@ -355,7 +303,6 @@
     }
 
     // ## URL List
-    const show_url = "{{ route('fabric-request.show',':id') }}";
     const issue_fabric_store_url = "{{ route('fabric-request.issue-fabric-store',':id') }}";
     const dtable_list_url = "{{ route('fabric-request.dtable-roll-list') }}";
     const fetch_select_color_url = "{{ route('fetch-select.color') }}";
@@ -367,10 +314,6 @@
                 resolve();
             });
         });
-    };
-
-    const show_modal_detail = async (modal_element_id) => {
-        $(`#${modal_element_id}`).modal('show');
     };
 
     const show_modal_confirmation = async (modal_element_id) => {

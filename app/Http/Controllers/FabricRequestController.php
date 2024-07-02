@@ -89,11 +89,11 @@ class FabricRequestController extends Controller
 
             ->filter(function ($query){
                 if (request('gl_filter')) {
-                        $query->where('api_fabric_requests.fbr_gl_number', request()->gl_filter)->get();
+                        $query->where('api_fabric_requests.fbr_gl_number', request()->gl_filter);
                     }
 
                 if (request('color_filter')) {
-                        $query->where('api_fabric_requests.fbr_color', request()->color_filter)->get();
+                        $query->where('api_fabric_requests.fbr_color', request()->color_filter);
                     }
                 
             }, true)
@@ -103,14 +103,34 @@ class FabricRequestController extends Controller
 
     public function detail(string $id)
     {
-        $fabric_request = FabricRequest::find($id);
+        $fabric_request = FabricRequest::with('apiFabricRequest')->find($id);
+
+        $fabric_request->qty_issued = $fabric_request->allocatedFabricRolls->sum('yds');
+        $qty_difference_value = $fabric_request->qty_issued - $fabric_request->apiFabricRequest->fbr_qty_required;
+        $fabric_request->qty_difference = $qty_difference_value > 0 ? '+'. $qty_difference_value : $qty_difference_value;
+        $fabric_roll_issuance = $fabric_request->allocatedFabricRolls;
+
+        $fabric_roll_issuance = $fabric_roll_issuance->map(function ($fabric_roll) {
+            return [
+                'id' => $fabric_roll->id,
+                'serial_number' => $fabric_roll->serial_number,
+                'roll_number' => $fabric_roll->roll_number,
+                'width' => $fabric_roll->width,
+                'yds' => $fabric_roll->yds,
+                'color' => $fabric_roll->packinglist->color->color,
+                'batch' => $fabric_roll->packinglist->batch_number,
+                'rack_number' => $fabric_roll->rack->serial_number,
+                'location' => $fabric_roll->rack->location->location,
+            ];
+        });
+
         $data = [
             'title' => 'Fabric Request Detail',
             'page_title' => 'Fabric Request Detail',
             'fabric_request' => $fabric_request,
+            'fabric_roll_issuance' => $fabric_roll_issuance,
         ];
         return view('pages.fabric-request.detail', $data);
-        
     }
 
     /**
@@ -527,6 +547,41 @@ class FabricRequestController extends Controller
         $filename = 'Fabric Request Report.pdf';
         $pdf = PDF::loadview('pages.fabric-request.print', $data)->setPaper('a4', 'landscape');
         return $pdf->stream($filename);      
+    }
+
+    public function print_detail(string $id) 
+    {   
+        $fabric_request = FabricRequest::with('apiFabricRequest')->find($id);
+
+        $fabric_request->qty_issued = $fabric_request->allocatedFabricRolls->sum('yds');
+        $qty_difference_value = $fabric_request->qty_issued - $fabric_request->apiFabricRequest->fbr_qty_required;
+        $fabric_request->qty_difference = $qty_difference_value > 0 ? '+'. $qty_difference_value : $qty_difference_value;
+        $fabric_roll_issuance = $fabric_request->allocatedFabricRolls;
+
+        $fabric_roll_issuance = $fabric_roll_issuance->map(function ($fabric_roll) {
+            return [
+                'id' => $fabric_roll->id,
+                'serial_number' => $fabric_roll->serial_number,
+                'roll_number' => $fabric_roll->roll_number,
+                'width' => $fabric_roll->width,
+                'yds' => $fabric_roll->yds,
+                'color' => $fabric_roll->packinglist->color->color,
+                'batch' => $fabric_roll->packinglist->batch_number,
+                'rack_number' => $fabric_roll->rack->serial_number,
+                'location' => $fabric_roll->rack->location->location,
+            ];
+        });
+
+        $data = [
+            'title' => 'Fabric Request Detail',
+            'page_title' => 'Fabric Request Detail',
+            'fabric_request' => $fabric_request,
+            'fabric_roll_issuance' => $fabric_roll_issuance,
+        ];
+
+        $filename = 'Fabric Request Report Detail.pdf';
+        $pdf = PDF::loadview('pages.fabric-request.print-detail', $data)->setPaper('a4', 'landscape');
+        return $pdf->stream($filename);
     }
 
     public function dtable_roll_list()
