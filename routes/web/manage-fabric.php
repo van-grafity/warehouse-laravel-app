@@ -58,6 +58,7 @@ Route::group([
     Route::get('dtable-preview', 'dtable_preview')->name('dtable-preview');
     Route::get('print','print')->name('print');
     Route::get('{fabric_request}/print-detail','print_detail')->name('print-detail');
+    Route::get('{fabric_request}/print-compact','print_compact')->name('print-compact');
     Route::get('{fabric_request}', 'show')->name('show');
     Route::get('{fabric_request}/detail', 'detail')->name('detail');
     Route::get('{fabric_request}/issue-fabric', 'issue_fabric')->name('issue-fabric');

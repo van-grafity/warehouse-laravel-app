@@ -24,6 +24,10 @@ class FabricRequestController extends Controller
         Gate::define('manage', function ($user) {
             return $user->hasPermissionTo('fabric-request.manage');
         });
+
+        Gate::define('print', function ($user) {
+            return $user->hasPermissionTo('fabric-request.print-compact');
+        });
     }
 
     /**
@@ -581,6 +585,43 @@ class FabricRequestController extends Controller
 
         $filename = 'Fabric Request Report Detail.pdf';
         $pdf = PDF::loadview('pages.fabric-request.print-detail', $data)->setPaper('a4', 'landscape');
+        return $pdf->stream($filename);
+    }
+
+    public function print_compact(string $id) 
+    {   
+        $fabric_request = FabricRequest::with('apiFabricRequest')->find($id);
+
+        $fabric_request->qty_issued = $fabric_request->allocatedFabricRolls->sum('yds');
+        $qty_difference_value = $fabric_request->qty_issued - $fabric_request->apiFabricRequest->fbr_qty_required;
+        $fabric_request->qty_difference = $qty_difference_value > 0 ? '+'. $qty_difference_value : $qty_difference_value;
+        $fabric_roll_issuance = $fabric_request->allocatedFabricRolls;
+
+        $fabric_roll_issuance = $fabric_roll_issuance->map(function ($fabric_roll) {
+            return [
+                'id' => $fabric_roll->id,
+                'serial_number' => $fabric_roll->serial_number,
+                'roll_number' => $fabric_roll->roll_number,
+                'width' => $fabric_roll->width,
+                'yds' => $fabric_roll->yds,
+                'color' => $fabric_roll->packinglist->color->color,
+                'batch' => $fabric_roll->packinglist->batch_number,
+                'rack_number' => $fabric_roll->rack->serial_number,
+                'location' => $fabric_roll->rack->location->location,
+            ];
+        });
+
+        $data = [
+            'title' => 'Fabric Request Report Compact',
+            'page_title' => 'Fabric Request Report Compact',
+            'fabric_request' => $fabric_request,
+            'fabric_roll_issuance' => $fabric_roll_issuance,
+        ];
+
+        // ## 102mm x 127mm uk paper (to point)
+        $customPaper = array(0,0,289.13, 360.00);
+        $filename = 'Fabric Request Report Compact.pdf';
+        $pdf = PDF::loadview('pages.fabric-request.print-compact', $data)->setPaper($customPaper, 'potrait');
         return $pdf->stream($filename);
     }
 

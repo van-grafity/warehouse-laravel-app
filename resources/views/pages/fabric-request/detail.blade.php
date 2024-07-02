@@ -14,11 +14,17 @@
                     <i class="fas fa-info-circle mr-1"></i>
                     Fabric Request Information :
                 </h3>
-
                 <div class="card-tools ml-auto p-3">
-                    <a id="report_fabric_request_btn" href="{{ route('fabric-request.print-detail', $fabric_request->id) }}" type="button"  class="btn btn-info">
-                        Report
-                    </a>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Print </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            @can('print')
+                                <a class="dropdown-item" href="{{ route('fabric-request.print-compact', $fabric_request->id) }}" target="_blank">Issuance note</a>
+                            @endcan
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ route('fabric-request.print-detail', $fabric_request->id) }}" target="_blank">Issuance note (full)</a>
+                        </div>
+                    </div>
                     <button type="button" class="btn btn-default mr-2" 
                         data-fbr-serial-number = "{{$fabric_request->fbr_serial_number }}"
                         onclick="sync_fabric_request(this)">
