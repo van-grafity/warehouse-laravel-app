@@ -68,7 +68,7 @@ class FabricRequestController extends Controller
             ->addColumn('action', function($row){
                 if ($row->received_at == null){
                     $action_button = '
-                    <a  href="javascript:void(0);" method="post" class="btn btn-danger btn-sm"  onclick="receive_store('.$row->id.')">Receive Request Form</a>';
+                    <a  href="javascript:void(0);" method="post" class="btn btn-primary btn-sm"  onclick="receive_store('.$row->id.')">Receive Request Form</a>';
                 } else {
                     $action_button = "
                     <a href='". route('fabric-request.issue-fabric',$row->id)."' class='btn btn-primary btn-sm'>Issue Fabric</a>";
@@ -381,11 +381,11 @@ class FabricRequestController extends Controller
     {
         if($pill_mode){
             if($fabric_data->issued_at != null){
-                $status = '<span class="badge badge-info">issued</span>';
+                $status = '<span class="badge badge-success">issued</span>';
             } elseif($fabric_data->issued_at == null && $fabric_data->received_at != null){
                 $status = '<span class="badge badge-warning">Received</span>';
             } elseif($fabric_data->fbr_requested_at != null){
-                $status = '<span class="badge badge-success">Requested</span>';
+                $status = '<span class="badge badge-danger">Requested</span>';
             } else {
                 $status = '<span class="badge badge-danger">Unknown Status</span>';
             }
