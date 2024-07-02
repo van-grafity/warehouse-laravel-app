@@ -545,6 +545,8 @@ class FabricRequestController extends Controller
         ];
 
         $filename = 'Fabric Request Report.pdf';
+        // return view('pages.fabric-request.print', $data);
+
         $pdf = PDF::loadview('pages.fabric-request.print', $data)->setPaper('a4', 'landscape');
         return $pdf->stream($filename);      
     }
