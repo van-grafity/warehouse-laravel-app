@@ -116,7 +116,7 @@ class FabricRequestController extends Controller
 
         $fabric_request->qty_issued = $fabric_request->allocatedFabricRolls->sum('yds');
         $qty_difference_value = $fabric_request->qty_issued - $fabric_request->apiFabricRequest->fbr_qty_required;
-        $fabric_request->qty_difference = $qty_difference_value > 0 ? '+'. $qty_difference_value : $qty_difference_value;
+        $fabric_request->qty_difference = round($qty_difference_value > 0 ? '+'. $qty_difference_value : $qty_difference_value, 2);
         $fabric_roll_issuance = $fabric_request->allocatedFabricRolls;
 
         $fabric_roll_issuance = $fabric_roll_issuance->map(function ($fabric_roll) {
@@ -249,7 +249,7 @@ class FabricRequestController extends Controller
         
         $fabric_request->qty_issued = $fabric_request->allocatedFabricRolls->sum('yds');
         $qty_difference_value = $fabric_request->qty_issued - $fabric_request->apiFabricRequest->fbr_qty_required;
-        $fabric_request->qty_difference = $qty_difference_value > 0 ? '+'. $qty_difference_value : $qty_difference_value;
+        $fabric_request->qty_difference = round($qty_difference_value > 0 ? '+'. $qty_difference_value : $qty_difference_value, 2);
         $allocated_fabric_roll = $fabric_request->allocatedFabricRolls;
         
         $allocated_fabric_roll = $allocated_fabric_roll->map(function ($fabric_roll) {
