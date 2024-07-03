@@ -38,8 +38,8 @@ class PackinglistController extends Controller
     {
         $suppliers = Supplier::get();
         $data = [
-            'title' => 'Packinglist',
-            'page_title' => 'Packinglist',
+            'title' => 'Packing List',
+            'page_title' => 'Packing List',
             'suppliers' => $suppliers,
             'can_manage' => auth()->user()->can('manage'),
         ];
@@ -108,7 +108,7 @@ class PackinglistController extends Controller
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully added new packinglist (' . $packinglist->serial_number . ')',
+                'message' => 'Successfully added new packing list (' . $packinglist->serial_number . ')',
                 'data' => [
                     'packinglist' => $packinglist,
                 ]
@@ -133,7 +133,7 @@ class PackinglistController extends Controller
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully get packinglist (' . $packinglist->packinglist . ')',
+                'message' => 'Successfully get packing list (' . $packinglist->packinglist . ')',
                 'data' => [
                     'packinglist' => $packinglist,
                 ]
@@ -167,7 +167,7 @@ class PackinglistController extends Controller
             
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully updated packinglist ('. $packinglist->serial_number .')',
+                'message' => 'Successfully updated packing list ('. $packinglist->serial_number .')',
                 'data' => $packinglist
             ];
             return response()->json($data_return, 200);
@@ -191,7 +191,7 @@ class PackinglistController extends Controller
             $data_return = [
                 'status' => 'success',
                 'data'=> $packinglist,
-                'message'=> 'Packinglist '.$packinglist->packinglist.' successfully Deleted!',
+                'message'=> 'Packing list '.$packinglist->packinglist.' successfully Deleted!',
             ];
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {
@@ -211,8 +211,8 @@ class PackinglistController extends Controller
         $packinglist = Packinglist::find($id);
 
         $data = [
-            'title' => 'Packinglist Detail',
-            'page_title' => 'Packinglist Detail',
+            'title' => 'Packing List Detail',
+            'page_title' => 'Packing List Detail',
             'packinglist' => $packinglist,
             'can_manage' => auth()->user()->can('manage'),
             'can_print' => auth()->user()->can('print'),
@@ -261,7 +261,7 @@ class PackinglistController extends Controller
                 $inserted_packinglist = $this->insertPackinglist($cleaned_data);
                 $inserted_roll = $this->insertFabricRoll($cleaned_data);
                 
-                $message = 'Successfully inserted '. count($inserted_packinglist) . ' packinglist and '. count($inserted_roll) . ' rolls';
+                $message = 'Successfully inserted '. count($inserted_packinglist) . ' packing list and '. count($inserted_roll) . ' rolls';
             });
             return redirect()->route('packinglist.index')->with('success', $message);
 
@@ -357,7 +357,7 @@ class PackinglistController extends Controller
                 $is_roll_number_exist = FabricRoll::is_roll_number_exist($packinglist->id, $roll['roll']);
                 
                 if ($is_roll_number_exist) {
-                    throw new \Exception("Roll {$roll['roll']} is already on packinglist {$packinglist->serial_number} - ({$packinglist->color->color} | {$packinglist->batch_number})");
+                    throw new \Exception("Roll {$roll['roll']} is already on packing list {$packinglist->serial_number} - ({$packinglist->color->color} | {$packinglist->batch_number})");
                 }
 
                 $roll_data_to_insert = [

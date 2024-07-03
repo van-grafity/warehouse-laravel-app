@@ -8,7 +8,7 @@
             <div class="btn-group">
                 <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Related Page </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="{{ route('packinglist.detail', $packinglist->id) }}">Packinglist</a>
+                    <a class="dropdown-item" href="{{ route('packinglist.detail', $packinglist->id) }}">Packing List</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('fabric-stock-in.detail', $packinglist->id) }}">Fabric Stock in</a>
                     <div class="dropdown-divider"></div>
