@@ -70,7 +70,6 @@ class RolePermissionAssigner extends Seeder
                 'fabric-status.manage',
                 'fabric-request.print',
                 'fabric-request.issuance-note',
-                'fabric-request.issuance-note-full',
 
 
                 'manage-rack.access',
