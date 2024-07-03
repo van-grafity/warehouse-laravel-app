@@ -63,8 +63,11 @@ class PermissionsSeeder extends Seeder
             ['name' => 'fabric-request.manage', 'description' => 'Can manage fabric request features.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
             ['name' => 'fabric-status.access', 'description' => 'Can access fabric status features.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
             ['name' => 'fabric-status.manage', 'description' => 'Can manage fabric status features.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
-            
+            ['name' => 'fabric-request.print', 'description' => 'Can manage print fabric request.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
+            ['name' => 'fabric-request.issuance-note', 'description' => 'Can manage print issuance note.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
+            ['name' => 'fabric-request.issuance-note-full', 'description' => 'Can manage print issuance note full.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
 
+            
             ['name' => 'manage-rack.access', 'description' => 'Can access Manage Fabric Menu.', 'permission_category_id' => $permission_categories['manage_rack_menu']],
             ['name' => 'rack-location.access', 'description' => 'Can access rack location features.', 'permission_category_id' => $permission_categories['manage_rack_menu']],
             ['name' => 'rack-location.manage', 'description' => 'Can manage rack location features.', 'permission_category_id' => $permission_categories['manage_rack_menu']],

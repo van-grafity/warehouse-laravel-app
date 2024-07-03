@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fabric Request Detail Report</title>
+    <title>Fabric Issuance Note Full</title>
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
 
     <style type="text/css">
@@ -32,7 +32,7 @@
     <div>
         <div class="row">
             <div class="col-lg-12 text-center mb-3">
-                <h4>Fabric Request Detail Report</h4>
+                <h4>Fabric Issuance Note Full</h4>
             </div>
         </div>
         <table class="">

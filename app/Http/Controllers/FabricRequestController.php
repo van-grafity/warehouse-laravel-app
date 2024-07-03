@@ -24,9 +24,14 @@ class FabricRequestController extends Controller
         Gate::define('manage', function ($user) {
             return $user->hasPermissionTo('fabric-request.manage');
         });
-
         Gate::define('print', function ($user) {
-            return $user->hasPermissionTo('fabric-request.print-compact');
+            return $user->hasPermissionTo('fabric-request.print');
+        });
+        Gate::define('issuance-note', function ($user) {
+            return $user->hasPermissionTo('fabric-request.issuance-note');
+        });
+        Gate::define('issuance-note-full', function ($user) {
+            return $user->hasPermissionTo('fabric-request.issuance-note-full');
         });
     }
 
@@ -557,7 +562,7 @@ class FabricRequestController extends Controller
         return $pdf->stream($filename);      
     }
 
-    public function print_detail(string $id) 
+    public function issuance_note_full(string $id) 
     {   
         $fabric_request = FabricRequest::with('apiFabricRequest')->find($id);
 
@@ -588,11 +593,11 @@ class FabricRequestController extends Controller
         ];
 
         $filename = 'Fabric Request Report Detail.pdf';
-        $pdf = PDF::loadview('pages.fabric-request.print-detail', $data)->setPaper('a4', 'landscape');
+        $pdf = PDF::loadview('pages.fabric-request.issuance-note-full', $data)->setPaper('a4', 'landscape');
         return $pdf->stream($filename);
     }
 
-    public function print_compact(string $id) 
+    public function issuance_note(string $id) 
     {   
         $fabric_request = FabricRequest::with('apiFabricRequest')->find($id);
 
@@ -625,7 +630,7 @@ class FabricRequestController extends Controller
         // ## 102mm x 127mm uk paper (to point)
         $customPaper = array(0,0,289.13, 360.00);
         $filename = 'Fabric Request Report Compact.pdf';
-        $pdf = PDF::loadview('pages.fabric-request.print-compact', $data)->setPaper($customPaper, 'potrait');
+        $pdf = PDF::loadview('pages.fabric-request.issuance-note', $data)->setPaper($customPaper, 'potrait');
         return $pdf->stream($filename);
     }
 

@@ -16,13 +16,17 @@
                 </h3>
                 <div class="card-tools ml-auto p-3">
                     <div class="btn-group">
+                        @can('print')
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Print </button>
+                        @endcan
                         <div class="dropdown-menu dropdown-menu-right">
-                            @can('print')
-                                <a class="dropdown-item" href="{{ route('fabric-request.print-compact', $fabric_request->id) }}" target="_blank">Issuance note</a>
+                            @can('issuance-note')    
+                            <a class="dropdown-item" href="{{ route('fabric-request.issuance-note', $fabric_request->id) }}" target="_blank">Issuance note</a>
                             @endcan
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ route('fabric-request.print-detail', $fabric_request->id) }}" target="_blank">Issuance note (full)</a>
+                            
+                            @can('issuance-note-full')
+                            <a class="dropdown-item" href="{{ route('fabric-request.issuance-note-full', $fabric_request->id) }}" target="_blank">Issuance note (full)</a>
+                            @endcan
                         </div>
                     </div>
                     <button type="button" class="btn btn-default mr-2" 
