@@ -333,9 +333,11 @@ class FabricRequestController extends Controller
                 })->toArray();
                 $fabric_request->allocatedFabricRolls()->attach($attachData);
             }
-            
+
             // ## Update the issued_at timestamp of the fabric request
             $fabric_request->issued_at = $currentTimestamp;
+            $fabric_request->remark = $request->remark;
+
             $fabric_request->save();
 
             $data_return = [

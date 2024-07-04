@@ -18,6 +18,7 @@ return new class extends Migration
             $table->datetime('last_sync_at')->nullable();
             $table->datetime('received_at')->nullable();
             $table->datetime('issued_at')->nullable();
+            $table->string('remark')->nullable();
             $table->datetime('relaxing_at')->nullable();
             $table->datetime('relaxed_at')->nullable();
 

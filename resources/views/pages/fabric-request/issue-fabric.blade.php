@@ -176,7 +176,7 @@
 <div class="modal fade" id="modal_issuance_confirmation" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
-            <form>
+            <form action="" method="post" onsubmit="stopFormSubmission(event)">
                 <div class="modal-header">
                     <h5 class="modal-title" id="ModalLabel">Confirm the Issuance</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -268,10 +268,16 @@
                                 <dt class="col-md-4 col-sm-12">Total Length : <span id="confirm_total_selected_roll_length"> 0 </span> Yds</dt>
                             </dl>
                         </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="remark" class="col-form-label">Remark</label> <i>(Optional)</i>
+                                <textarea class="form-control" name="remark" id="remark" required>{{ $fabric_request->remark }}</textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="submitForm('modal_issuance_confirmation')">Save</button>
+                    <button type="submit" class="btn btn-primary btn-submit" onclick="submitForm('modal_issuance_confirmation')">Save</button>
                 </div>
             </form>
         </div>
@@ -345,16 +351,22 @@
 
     const submitForm = async (modal_id) => {
         try {
-            let fetch_data = {
+            let modal = document.getElementById(modal_id);
+            let submit_btn = modal.querySelector('.btn-submit');
+            
+            let form = modal.querySelector('form');
+            let formData = getFormData(form);
+
+            fetch_data = {
                 url: issue_fabric_store_url.replace(':id', fbr_id),
                 method: "POST",
                 data: {
                     confirmed_fabric_roll : confirmed_fabric_roll,
+                    remark : formData.remark,
                 },
                 token: token,
             };
 
-            
             const response = await using_fetch(fetch_data);
             if(response.status == 'success') {
                 swal_info({ title: response.message, reload_option: true })

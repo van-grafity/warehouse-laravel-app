@@ -17,6 +17,7 @@ class FabricRequest extends Model
         'last_sync_at',
         'received_at',
         'issued_at',
+        'remark',
         'relaxing_at',
         'relaxed_at',
         'created_by',

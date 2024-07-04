@@ -119,6 +119,9 @@
                                 <dl class="row">
                                     <dt class="col-md-4 col-sm-12">Total Length : <span> {{ $fabric_request->qty_issued }} </span> Yds</dt>
                                 </dl>
+                                <dl class="row">
+                                    <dt class="col-md-4 col-sm-12">Remark : <span> {{ ($fabric_request->remark) ? $fabric_request->remark : '-' }}</span></dt>
+                                </dl>
                             </div>
                         </div>
                     </div>
