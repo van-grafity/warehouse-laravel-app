@@ -37,6 +37,7 @@ Route::group([
     Route::get('{packinglist}/export', 'export')->name('export');
 
     Route::post('', 'store')->name('store');
+    Route::delete('delete-roll', 'delete_roll')->name('delete-roll');
 });
 
 
