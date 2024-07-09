@@ -52,20 +52,31 @@ class PackinglistController extends Controller
     public function dtable()
     {
         $query = Packinglist::query();
-        
+
         return DataTables::of($query)
-            ->addIndexColumn()
-            ->escapeColumns([])
-            ->editColumn('serial_number', function($row){
+        ->addIndexColumn()
+        ->escapeColumns([])
+        ->editColumn('serial_number', function($row){
                 $serial_number = "<a href='". route('packinglist.detail',$row->id)."' class='' data-toggle='tooltip' data-placement='top' title='Packing List Detail'>$row->serial_number</a>";
                 return $serial_number;
             })
+            
             ->addColumn('action', function($row){
-                return '
+                $action_button = "";
+                if($row->getRollSummaryInPackinglist($row->id, 'stock_in')){
+                    $action_button .= '
                     <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_packinglist\', '.$row->id.')">Edit</a>
-                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>
-                ';
+                    <div data-toggle="tooltip" data-placement="top" title="There are fabric rolls that already stock in" class="btn btn-danger btn-sm disabled" >Delete</div>
+                    ';
+                } else {
+                    $action_button .= '
+                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_packinglist\', '.$row->id.')">Edit</a>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')" >Delete</a>
+                    ';
+                }
+                return $action_button; 
             })
+            
             ->addColumn('invoice', function($row){
                 return $row->invoice->invoice_number;
             })
@@ -133,7 +144,7 @@ class PackinglistController extends Controller
 
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully get packing list (' . $packinglist->packinglist . ')',
+                'message' => 'Successfully get packing list (' . $packinglist->serial_number . ')',
                 'data' => [
                     'packinglist' => $packinglist,
                 ]
@@ -191,7 +202,7 @@ class PackinglistController extends Controller
             $data_return = [
                 'status' => 'success',
                 'data'=> $packinglist,
-                'message'=> 'Packing list '.$packinglist->packinglist.' successfully Deleted!',
+                'message'=> 'Packing list '.$packinglist->serial_number.' successfully Deleted!',
             ];
             return response()->json($data_return, 200);
         } catch (\Throwable $th) {
