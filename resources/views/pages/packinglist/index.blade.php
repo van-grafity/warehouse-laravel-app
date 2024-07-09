@@ -8,11 +8,11 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header d-flex p-0">
-                <h3 class="card-title p-3 my-auto"> Packinglist </h3>
+                <h3 class="card-title p-3 my-auto"> Packing List </h3>
 
                 <div class="ml-auto p-3">
                     @can('manage')
-                        <button type="button" class="btn btn-default mr-2" onclick="show_import_modal()"><i class="fas fa-upload"></i> Upload Packinglist</button>
+                        <button type="button" class="btn btn-default mr-2" onclick="show_import_modal()"><i class="fas fa-upload"></i>Upload Packing List</button>
                         <a href="javascript:void(0)" class="btn btn-success " id="btn_modal_create" onclick="show_modal_create('modal_packinglist')">Create</a>
                     @endcan
                 </div>
@@ -32,7 +32,7 @@
                     <thead>
                         <tr>
                             <th width="25">No</th>
-                            <th width="" class="text-center">Packinglist No</th>
+                            <th width="" class="text-center">Packing List No</th>
                             <th width="">Invoice</th>
                             <th width="">Buyer</th>
                             <th width="50">GL</th>
@@ -62,7 +62,7 @@
                 <input type="hidden" name="edit_packinglist_id" value="" id="edit_packinglist_id">
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ModalLabel">Add New Packinglist</h5>
+                    <h5 class="modal-title" id="ModalLabel">Add New Packing List</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -193,7 +193,7 @@
     const show_modal_create = (modal_element_id) => {
         let modal_data = {
             modal_id : modal_element_id,
-            title : "Add New Packinglist",
+            title : "Add New Packing List",
             btn_submit : "Save",
             form_action_url : store_url,
         }
@@ -204,7 +204,7 @@
     const show_modal_edit = async (modal_element_id, packinglist_id) => {
         let modal_data = {
             modal_id : modal_element_id,
-            title : "Edit Packinglist",
+            title : "Edit Packing List",
             btn_submit : "Save",
             form_action_url : update_url.replace(':id',packinglist_id),
         }
@@ -319,7 +319,7 @@
     const show_modal_delete = async (packinglist_id) => {
         swal_data = {
             title: "Are you Sure?",
-            text: "Want to delete the packinglist",
+            text: "Want to delete the packing list",
             icon: "warning",
             confirmButton: "Delete",
             confirmButtonClass: "btn-danger",

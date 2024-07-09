@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fabric Request Detail Report</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <title>Fabric Issuance Note Full</title>
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
 
     <style type="text/css">
         .table-print-header tbody td {
@@ -33,7 +33,7 @@
         <table class="" width="100%" style="margin-bottom:12px;">
             <tr>
                 <td style="font-weight: bold; font-size: 24px; text-align:center">
-                    Fabric Request Detail Report
+                    Fabric Issuance Note Full
                 </td>
             </tr>
         </table>

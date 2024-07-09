@@ -198,16 +198,16 @@ class FabricStatusController extends Controller
             ->whereNotNull('fabric_rolls.racked_at')
             ->where('fabric_rolls.packinglist_id', $packinglist_id)
             ->select(
-                'fabric_rolls.id', 
-                'fabric_rolls.roll_number', 
-                'fabric_rolls.serial_number', 
-                'fabric_rolls.kgs', 
-                'fabric_rolls.lbs', 
+                'fabric_rolls.id',
+                'fabric_rolls.roll_number',
+                'fabric_rolls.serial_number',
+                'fabric_rolls.kgs',
+                'fabric_rolls.lbs',
                 'fabric_rolls.yds',
-                'fabric_rolls.width',  
+                'fabric_rolls.width',
                 'racks.serial_number as rack_number'
             );
-        
+
         return Datatables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
@@ -241,5 +241,41 @@ class FabricStatusController extends Controller
         $packinglist = Packinglist::find($id);
         
         return Excel::download(new InstoreReportExport, 'Instore-Report.xlsx');
+    }
+    
+    public function delete_roll(Request $request)
+    {
+        try {
+            $selected_roll_ids = $request->selected_roll_id;
+
+            $deleted_roll = [];
+            DB::transaction(function () use ($selected_roll_ids, &$deleted_roll) {
+
+                foreach ($selected_roll_ids as $key => $fabric_roll_id) {
+                    $fabric_roll_racks = FabricRollRack::where('fabric_roll_id', $fabric_roll_id)->delete();
+                    $roll = FabricRoll::find($fabric_roll_id);
+                    $roll->racked_at = NULL;
+                    $roll->racked_by = NULL;
+                    $roll->save();
+                    $deleted_roll[] = $roll;
+                }
+            });
+
+            $data_return = [
+                'status' => 'success',
+                'message' => 'Successfully removed ' . count($deleted_roll) . ' selected Roll',
+                'data' => [
+                    'deleted_roll' => $deleted_roll,
+                ]
+            ];
+            return response()->json($data_return);
+            
+        } catch (\Throwable $th) {
+            $data_return = [
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($data_return);
+        }
     }
 }

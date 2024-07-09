@@ -14,11 +14,21 @@
                     <i class="fas fa-info-circle mr-1"></i>
                     Fabric Request Information :
                 </h3>
-
                 <div class="card-tools ml-auto p-3">
-                    <a id="report_fabric_request_btn" href="{{ route('fabric-request.print-detail', $fabric_request->id) }}" type="button"  class="btn btn-info">
-                        Report
-                    </a>
+                    <div class="btn-group">
+                        @can('print')
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Print </button>
+                        @endcan
+                        <div class="dropdown-menu dropdown-menu-right">
+                            @can('issuance-note')    
+                            <a class="dropdown-item" href="{{ route('fabric-request.issuance-note', $fabric_request->id) }}" target="_blank">Issuance note</a>
+                            @endcan
+                            
+                            @can('issuance-note-full')
+                            <a class="dropdown-item" href="{{ route('fabric-request.issuance-note-full', $fabric_request->id) }}" target="_blank">Issuance note (full)</a>
+                            @endcan
+                        </div>
+                    </div>
                     <button type="button" class="btn btn-default mr-2" 
                         data-fbr-serial-number = "{{$fabric_request->fbr_serial_number }}"
                         onclick="sync_fabric_request(this)">
@@ -108,6 +118,9 @@
                                 </dl>
                                 <dl class="row">
                                     <dt class="col-md-4 col-sm-12">Total Length : <span> {{ $fabric_request->qty_issued }} </span> Yds</dt>
+                                </dl>
+                                <dl class="row">
+                                    <dt class="col-md-4 col-sm-12">Remark : <span> {{ ($fabric_request->remark) ? $fabric_request->remark : '-' }}</span></dt>
                                 </dl>
                             </div>
                         </div>

@@ -34,7 +34,9 @@
                         <div class="action-wrapper mr-auto">
                             @can('manage')
                                 <button class="btn btn-info btn-sm" onclick="show_modal_change('modal_change_rack')">Change Rack</button>
+                                <button class="btn btn-sm btn-danger" onclick="delete_roll()" ><i class="fas fa-trash-alt"></i></button>
                             @endcan
+                            
                         </div>
                         <div class="filter-wrapper text-right ml-auto align-self-center">
                             <button id="reload_table_btn" class="btn btn-sm btn-info"> 
@@ -142,6 +144,7 @@
     const packinglist_information_url = "{{ route('packinglist.information-card', ':id') }}";
     const store_url = "{{ route('fabric-status.store') }}";
     const fetch_select_rack_url = "{{ route('fetch-select.rack') }}";
+    const delete_url = "{{ route('fabric-status.delete-roll') }}";
 
     const reload_dtable = () => {
         $('#reload_table_btn').trigger('click');
@@ -155,6 +158,22 @@
                 collapsed_card_class : is_card_collapsed ? 'collapsed-card' : '',
             }
         })
+    }
+
+    const get_selected_item = () => {
+        let selected_element = $('.checkbox-roll-control:checked').toArray();
+        let item_id = [];
+        let item_name = [];
+
+        selected_element.forEach(element => {
+            item_id.push($(element).val());
+            item_name.push($(element).data('roll-number'));
+        });
+
+        return {
+            item_id,
+            item_name
+        }
     }
 
     const show_modal_change = (modal_element_id) => {
@@ -224,6 +243,42 @@
         $(`#${modal_id}`).modal('hide');
     }
 
+    const delete_roll = async () => {
+        let selected_roll = get_selected_item();
+
+        swal_data = {
+            title: `Want to delete ${selected_roll.item_id.length} selected roll?`,
+            text: "selected roll will be remove from stock in",
+            icon: "warning",
+            confirmButton: "Delete Roll",
+            confirmButtonClass: "btn-danger",
+            cancelButtonClass: "btn-secondary"
+        };
+        let confirm_delete = await swal_confirm(swal_data);
+        if(!confirm_delete) { return false; };
+
+        params_data = { selected_roll_id : selected_roll.item_id };
+        fetch_data = {
+            url: delete_url,
+            method: "DELETE",
+            data: params_data,
+            token: token,
+        }
+        result = await using_fetch(fetch_data);
+
+        if(result.status == "success"){
+            swal_info({
+                title : result.message,
+            });
+            disabled_action_wrapper(true); // ## disabled button inside action_wrapper
+            reload_dtable();
+        } else {
+            swal_failed({ title: result.message });
+        }
+
+        $('#roll_checkbox_all').prop('checked', false);
+    }
+
     const getValidationRules = () => {
         return {
             rack: {
@@ -271,22 +326,6 @@
         buttons.forEach(function(button) {
             button.disabled = disabled_status;
         });
-    }
-
-    const get_selected_item = () => {
-        let selected_element = $('.checkbox-roll-control:checked').toArray();
-        let item_id = [];
-        let item_name = [];
-
-        selected_element.forEach(element => {
-            item_id.push($(element).val());
-            item_name.push($(element).data('roll-number'));
-        });
-
-        return {
-            item_id,
-            item_name
-        }
     }
 
 </script>

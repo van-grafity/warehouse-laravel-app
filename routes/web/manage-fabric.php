@@ -37,6 +37,7 @@ Route::group([
     Route::get('{packinglist}/export', 'export')->name('export');
 
     Route::post('', 'store')->name('store');
+    Route::delete('delete-roll', 'delete_roll')->name('delete-roll');
 });
 
 
@@ -57,7 +58,8 @@ Route::group([
     Route::get('report','report')->name('report');
     Route::get('dtable-preview', 'dtable_preview')->name('dtable-preview');
     Route::get('print','print')->name('print');
-    Route::get('{fabric_request}/print-detail','print_detail')->name('print-detail');
+    Route::get('{fabric_request}/issuance-note-full','issuance_note_full')->name('issuance-note-full');
+    Route::get('{fabric_request}/issuance-note','issuance_note')->name('issuance-note');
     Route::get('{fabric_request}', 'show')->name('show');
     Route::get('{fabric_request}/detail', 'detail')->name('detail');
     Route::get('{fabric_request}/issue-fabric', 'issue_fabric')->name('issue-fabric');
