@@ -17,7 +17,7 @@ class RacksTableSeeder extends Seeder
         // ## Rack Setup
         $rack_code = ['MV', 'FX']; // ## MV = moveable, FX = fixed
         $rack_type = ['moveable', 'fixed'];
-        $rack_total = [319,72]; // ## [{movable}, {fixed}]
+        $rack_total = [350,72]; // ## [{movable}, {fixed}]
         $racks_data = [];
         $timestamps = Carbon::now();
 

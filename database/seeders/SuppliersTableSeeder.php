@@ -13,12 +13,12 @@ class SuppliersTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $max_data = 100;
+        $max_data = 1;
         
         for ($i=0; $i < $max_data; $i++) { 
             $supplier = [
-                'supplier' => 'Maxim '. $i + 1,
-                'description' => 'Official Supplier Ghimli Indonesia Number '.$i + 1,
+                'supplier' => 'Maxim',
+                'description' => 'Official Supplier Ghimli Indonesia',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];

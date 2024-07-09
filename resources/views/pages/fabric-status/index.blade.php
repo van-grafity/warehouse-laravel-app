@@ -57,7 +57,7 @@
                         </tr> 
                         <tr>      
                             <th width="">Roll Qty</th>
-                            <th width="">Length (YDs)</th>
+                            <th width="" style="border-right-width:1px">Length (YDs)</th>
                         </tr>
                     </thead>
                     <tbody>

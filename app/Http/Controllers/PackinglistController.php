@@ -249,7 +249,7 @@ class PackinglistController extends Controller
             }
 
             // ## set required Column. cannot be empty / null on excel
-            $required_column = ['invoice','buyer','gl_number','po_number','color','batch','style','fabric_content','roll','kgs','lbs','yds','width'];
+            $required_column = ['invoice','buyer','gl_number','po_number','color','batch','style','fabric_content','roll','kgs','yds','width'];
     
             // ## cleaning data
             $cleaned_data = removeEmptyData($packinglist_data, $required_column);
@@ -365,6 +365,10 @@ class PackinglistController extends Controller
                     ->where('color_id', $color->id)
                     ->first();
                 
+                if(!$packinglist){
+                    throw new \Exception("Packinglist Not Found. There is strange data. Please contant the Administrator");
+                }
+
                 $is_roll_number_exist = FabricRoll::is_roll_number_exist($packinglist->id, $roll['roll']);
                 
                 if ($is_roll_number_exist) {
@@ -375,10 +379,10 @@ class PackinglistController extends Controller
                     'packinglist_id' => $packinglist->id,
                     'serial_number' => FabricRoll::generate_serial_number($color->code, $roll['batch'], $roll['roll']),
                     'roll_number' => $roll['roll'],
-                    'kgs' => $roll['kgs'],
-                    'lbs' => round($roll['lbs'],2),
-                    'yds' => $roll['yds'],
-                    'width' => $roll['width'],
+                    'kgs' => $roll['kgs'] ? $roll['kgs'] : null,
+                    'lbs' => $roll['lbs'] ? round($roll['lbs'],2) : null,
+                    'yds' => $roll['yds'] ? $roll['yds'] : null,
+                    'width' => $roll['width'] ? $roll['width'] : null,
                 ];
 
                 $inserted_roll[] = FabricRoll::create($roll_data_to_insert);
