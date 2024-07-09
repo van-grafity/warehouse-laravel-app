@@ -271,7 +271,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="remark" class="col-form-label">Remark</label> <i>(Optional)</i>
-                                <textarea class="form-control" name="remark" id="remark" required>{{ $fabric_request->remark }}</textarea>
+                                <textarea class="form-control" name="remark" id="remark">{{ $fabric_request->remark }}</textarea>
                             </div>
                         </div>
                     </div>
