@@ -50,7 +50,7 @@
                         <dt class="col-md-4 col-sm-12">Difference</dt>
                         <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->qty_difference }} Yds </dd>
 
-                        <dt class="col-md-4 col-sm-12">Remark</dt>
+                        <dt class="col-md-4 col-sm-12">Cutting Remark</dt>
                         <dd class="col-md-8 col-sm-12"> : {{ ($fabric_request->apiFabricRequest->fbr_remark) ? $fabric_request->apiFabricRequest->fbr_remark : '-' }} </dd>
 
                         <dt class="col-md-4 col-sm-12">Fabric Detail</dt>
@@ -270,7 +270,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="remark" class="col-form-label">Remark</label> <i>(Optional)</i>
+                                <label for="remark" class="col-form-label">Warehouse Remark</label> <i>(Optional)</i>
                                 <textarea class="form-control" name="remark" id="remark">{{ $fabric_request->remark }}</textarea>
                             </div>
                         </div>

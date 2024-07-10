@@ -55,7 +55,7 @@
                 <tr>
                     <td width="100"> Style </td>
                     <td width="200">: {{ $fabric_request->apiFabricRequest->fbr_style }} </td>
-                    <td width="100"> Remark </td>
+                    <td width="100"> Cutting Remark </td>
                     <td width="200">: {{ ($fabric_request->apiFabricRequest->fbr_remark) ? $fabric_request->apiFabricRequest->fbr_remark : '-' }} </td>
                 </tr>
                 <tr>
@@ -67,6 +67,8 @@
                 <tr>
                     <td width="100"> Table Number </td>
                     <td width="200">: {{ $fabric_request->apiFabricRequest->fbr_table_number }} </td>
+                     <td width="100"> Warehouse Remark </td>
+                    <td width="200">: {{ ($fabric_request->remark) ? $fabric_request->remark : '-' }} </td>
                 </tr>
                 <tr>
                     <td width="100"> Qty Required </td>
