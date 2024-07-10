@@ -55,10 +55,10 @@ Route::group([
     'prefix' => 'fabric-roll',
     'as' => 'fabric-roll.',
 ], function () {
+    Route::delete('mass-delete', 'mass_delete')->name('mass-delete');
     Route::get('dtable', 'dtable')->name('dtable');
     Route::get('{packinglist}', 'show')->name('show');
     Route::post('', 'store')->name('store');
     Route::put('{packinglist}', 'update')->name('update');
     Route::delete('{packinglist}', 'destroy')->name('destroy');
-    Route::delete('mass-delete', 'mass_delete')->name('mass-delete');
 });
