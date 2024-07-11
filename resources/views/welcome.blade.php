@@ -17,7 +17,6 @@
         <link href="{{ asset('css/grayscale-template.css') }}" rel="stylesheet" />
         <style>
             .btn-action-login:hover {
-                /* background-color: rgba(0, 0, 0, 0.1); */
                 opacity: 0.8;
             }
         </style>
