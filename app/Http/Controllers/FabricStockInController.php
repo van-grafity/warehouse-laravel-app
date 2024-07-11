@@ -178,6 +178,9 @@ class FabricStockInController extends Controller
                 ";
                 return $action_button;
             })
+            ->editColumn('lbs', function($row) {
+                return $row->lbs ?? '-';
+            })
             ->addColumn('checkbox', function ($row) {
                 $FabricRollRackModel = new FabricRollRack;
                 $roll_rack = $FabricRollRackModel->where('fabric_roll_id', $row->id)->first();

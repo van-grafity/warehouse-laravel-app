@@ -232,9 +232,9 @@
                 <tr style="text-align: center">
                     <td style="font-weight:bold" >Total</td>
                     <td class="text-bold">${fabric_rolls_data.length} Roll</td>
-                    <td class="text-bold">${(total_roll_weight).toFixed(2)}Kgs</td> 
+                    <td class="text-bold">${(total_roll_weight).toFixed(2)} Kgs</td> 
                     <td class="text-bold">${(total_roll_pound).toFixed(2)} Lbs</td> 
-                    <td class="text-bold">${total_roll_length} Yds</td>
+                    <td class="text-bold">${(total_roll_length).toFixed(2)} Yds</td>
                     <td colspan="3"></td>
                 </tr>
             `;

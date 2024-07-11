@@ -305,7 +305,7 @@ return [
         [
             'text' => 'Dashboard',
             'icon' => 'fas fa-home nav-icon',
-            'url' => '/'
+            'url' => '/home'
         ],
         [
             'text' => 'Master Data',

@@ -311,7 +311,7 @@
         return false;
     }
 
-     // ## checkbox listener for always update roll_checkbox_all
+    // ## checkbox listener for always update roll_checkbox_all
     const checkbox_clicked = () => {
         let checked_status_checkbox_all = is_all_checked() ? true : false;
         document.getElementById('roll_checkbox_all').checked = checked_status_checkbox_all;

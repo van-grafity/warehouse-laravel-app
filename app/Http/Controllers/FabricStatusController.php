@@ -62,7 +62,7 @@ class FabricStatusController extends Controller
                     'fabric_rolls.roll_number',
                     'fabric_rolls.serial_number',
                     'fabric_rolls.kgs',
-                    'fabric_rolls.lbs', 
+                    'fabric_rolls.lbs',
                     'fabric_rolls.yds',
                     'fabric_rolls.width',
                     'racks.serial_number as rack_number',        
@@ -211,6 +211,9 @@ class FabricStatusController extends Controller
         return Datatables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
+            ->editColumn('lbs', function($row) {
+                return $row->lbs ?? '-';
+            })
             ->addColumn('checkbox', function ($row) {
                     if($row->change_rack_id) { return null; }
                     

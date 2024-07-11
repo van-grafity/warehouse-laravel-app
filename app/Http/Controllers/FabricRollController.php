@@ -53,6 +53,9 @@ class FabricRollController extends Controller
                     <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>
                 ';
             })
+            ->editColumn('lbs', function($row) {
+                return $row->lbs ?? '-';
+            })
             ->addColumn('checkbox', function ($row) {
                 if($row->roll_rack_id) { return null; }
                 
