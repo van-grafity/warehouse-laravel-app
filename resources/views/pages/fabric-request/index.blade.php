@@ -313,7 +313,7 @@
                 return false;
             }
             
-            swal_info({'title': response_sync.message, timer: 3000});
+            swal_info({'title': response_sync.message, timer: 3000, reload_option: true});
             reload_dtable();
             $(e).closest('.modal').modal('hide');
 
