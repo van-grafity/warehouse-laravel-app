@@ -215,7 +215,7 @@
                                         <dd class="col-md-8 col-sm-12"> : <span id="confirm_qty_issued"> - </span> Yds </dd>
                                         <dt class="col-md-4 col-sm-12">Difference</dt>
                                         <dd class="col-md-8 col-sm-12"> : <span id="confirm_qty_difference"> - </span> Yds </dd>
-                                        <dt class="col-md-4 col-sm-12">Remark</dt>
+                                        <dt class="col-md-4 col-sm-12">Cutting Remark</dt>
                                         <dd class="col-md-8 col-sm-12"> : {{ ($fabric_request->apiFabricRequest->fbr_remark) ? $fabric_request->apiFabricRequest->fbr_remark : '-' }}  </dd>
                                         <dt class="col-md-4 col-sm-12">Fabric Detail</dt>
                                         <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_fabric_type }}  </dd>

@@ -15,6 +15,11 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{{ asset('css/grayscale-template.css') }}" rel="stylesheet" />
+        <style>
+            .btn-action-login:hover {
+                opacity: 0.8;
+            }
+        </style>
     </head>
     <body id="page-top">
         <!-- Navigation-->
@@ -33,10 +38,9 @@
                         @if (Route::has('login'))
                             <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
                                 @auth
-                                    <a href="{{ url('/home') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Home</a>
+                                    <a href="{{ url('/home') }}" class="btn login text-white bg-primary btn-action-login" style="font-size:14px;">Home</a>
                                 @else
-                                    <a href="{{ route('login') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Log in</a>
-
+                                    <a href="{{ route('login') }}" class="btn login text-white bg-primary btn-action-login" style="font-size:14px;" >Log in</a>
                                     @if (Route::has('register'))
                                         <!-- <a href="" class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline">Register</a> -->
                                     @endif

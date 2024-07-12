@@ -197,7 +197,7 @@ return [
     'classes_content_header' => '',
     'classes_content' => '',
     'classes_sidebar' => 'sidebar-dark-primary elevation-4',
-    'classes_sidebar_nav' => '',
+    'classes_sidebar_nav' => 'nav-flat',
     'classes_topnav' => 'navbar-white navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
@@ -257,7 +257,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => '/',
+    'dashboard_url' => 'home',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -305,7 +305,7 @@ return [
         [
             'text' => 'Dashboard',
             'icon' => 'fas fa-home nav-icon',
-            'url' => '/home'
+            'url' => 'home'
         ],
         [
             'text' => 'Master Data',
