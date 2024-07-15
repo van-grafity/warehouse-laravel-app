@@ -558,6 +558,8 @@
 
     let fabric_roll_table = $('#fabric_roll_table').DataTable({
         processing: true,
+        serverSide: true,
+        deferLoading: 0,
         ajax: {
             url: dtable_list_url,
             data: function (d) {
@@ -670,6 +672,10 @@
         // ## Preselect select2 filter if there is data matching the fabric request
         @if($is_gl_number_exist)
             $('#gl_filter').val(`{{ $fabric_request->apiFabricRequest->fbr_gl_number }}`).trigger('change');
+        @endif
+
+        @if(!$is_gl_number_exist)
+            $('#fabric_roll_table').emptyTable();
         @endif
         
         @if($color_id)
