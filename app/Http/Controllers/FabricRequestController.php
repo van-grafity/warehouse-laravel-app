@@ -105,6 +105,19 @@ class FabricRequestController extends Controller
                         $query->where('api_fabric_requests.fbr_color', request()->color_filter);
                     }
                 
+                if (request()->has('status_filter')) {
+                    if (request('status_filter') == 'requested') {
+                        $query->whereNull('fabric_requests.received_at');
+                    }
+                    if (request('status_filter') == 'received') {
+                        $query->whereNotNull('fabric_requests.received_at')->whereNull('fabric_requests.issued_at');
+                    }
+                    if (request('status_filter') == 'issued') {
+                        $query->whereNotNull('fabric_requests.issued_at');
+                    }
+                }
+
+                
             }, true)
 
             ->toJson();

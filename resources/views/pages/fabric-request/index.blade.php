@@ -39,6 +39,14 @@
                                 @endforeach
                             </select>
                         </div>
+                         <div class="filter_wrapper mr-2" style="width:200px;">
+                            <select name="status_filter" id="status_filter" class="form-control select2 no-search-box">
+                                <option value="" selected>All Data</option>
+                                <option value="requested"> Requested </option>
+                                <option value="received"> Received </option>
+                                <option value="issued"> Issued </option>
+                            </select>
+                        </div>
                         <div class="filter_wrapper text-right align-self-center">
                             <button id="reload_table_btn" class="btn btn-sm btn-info">
                                 <i class="fas fa-sync-alt"></i>
@@ -182,6 +190,7 @@
              data: function (d) {
                 d.gl_filter = $('#gl_filter').val();
                 d.color_filter = $('#color_filter').val();
+                d.status_filter = $('#status_filter').val();
             },
             beforeSend: function() {
                 // ## Tambahkan kelas dimmed-table sebelum proses loading dimulai
@@ -263,7 +272,11 @@
 
     $('#gl_filter, #color_filter').select2({}).change(function(event) {
         reload_dtable();
-    }); 
+    });
+
+    $('#status_filter').change(function(event) {
+        reload_dtable();
+    });  
 
 </script>
 
