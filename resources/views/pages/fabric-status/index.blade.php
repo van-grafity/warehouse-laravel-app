@@ -24,7 +24,7 @@
                     <div class="col-sm-12 d-inline-flex justify-content-end">
                         <div class="filter_wrapper mr-2" style="width:200px;">
                              
-                        <select name="gl_filter" id="gl_filter" class="form-control select2 no-search-box">
+                        <select name="gl_filter" id="gl_filter" class="form-control select2">
                             <option value="" selected>All GL Number</option>    
                             @foreach ($packinglist as $packinglist)
                             <option value="{{$packinglist->gl_number}}" >{{$packinglist->gl_number}}</option>    
@@ -340,9 +340,11 @@
         }
     });
 
+    $('#color_filter').change(function(event) {
+        reload_dtable();
+    });
 
-
-    $('#gl_filter, #color_filter').change(function(event) {
+    $('#gl_filter').select2({}).change(function(event) {
         reload_dtable();
     }); 
 </script>
