@@ -13,10 +13,34 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <div class="mb-3 text-right">
-                    <button id="reload_table_btn" class="btn btn-sm btn-info">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
+                <div class="row mb-3">
+                    <div class="col-sm-12 d-inline-flex justify-content-end">
+                        <div class="filter_wrapper mr-2" style="width:200px; height:10px">                         
+                           <select name="gl_filter" id="gl_filter" class="form-control select2">
+                            <option value="" selected>All GL Number</option>    
+                            @foreach ($packinglist as $packinglist)
+                            <option value="{{$packinglist->gl_number}}" >{{$packinglist->gl_number}}</option>    
+                            @endforeach
+                        </select>
+                       </div>
+                       <div class="filter_wrapper mr-2" style="width:200px;">
+                           <select name="color_filter" id="color_filter" class="form-control select2">
+                               <option value="" selected >All Color</option>
+                           </select>
+                       </div>
+                       <div class="filter_wrapper mr-2" style="width:200px;">                         
+                           <select name="invoice_filter" id="invoice_filter" class="form-control select2">
+                               <option value="" selected>All Invoice</option>
+                                   <option value=""></option>    
+                               <option value=""></option>  
+                           </select>
+                       </div>
+                        <div class="filter_wrapper text-right align-self-center">
+                            <button id="reload_table_btn" class="btn btn-sm btn-info"> 
+                                <i class="fas fa-sync-alt"></i> 
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <table id="packinglist_table" class="table table-bordered table-hover text-center">
                     <thead>
@@ -53,6 +77,8 @@
     
     // ## URL List
     const dtable_url = "{{ route('fabric-stock-in.dtable') }}";
+    const fetch_select_invoice_url = "{{ route('fetch-select.invoice') }}";
+    const fetch_select_color_url = "{{ route('fetch-select.color') }}";
 </script>
 
 <script type="text/javascript">
@@ -61,6 +87,11 @@
         serverSide: true,
         ajax: {
             url: dtable_url,
+            data: function (d) {
+                d.gl_filter = $('#gl_filter').val();
+                d.color_filter = $('#color_filter').val();
+                d.invoice_filter = $('#invoice_filter').val();
+            },
             beforeSend: function() {
                 // ## Tambahkan kelas dimmed-table sebelum proses loading dimulai
                 $('#packinglist_table').addClass('dimmed-table').append('<div class="datatable-overlay"></div>');
@@ -102,5 +133,71 @@
             $('#reload_table_btn').removeClass('loading').attr('disabled',false);
         });
     });
+
+    const reload_dtable = () => {
+        $('#reload_table_btn').trigger('click');
+    }
+
+    $('#color_filter.select2').select2({
+        ajax: {
+            url: fetch_select_color_url,
+            dataType: 'json',
+            delay: 500,
+            data: function (params) {
+                var query = {
+                    search: params.term || '',
+                }
+                return query;
+            },
+            processResults: function (fetch_result, params) {
+                if (!params.term) {
+                    fetch_result.data.items.unshift({
+                        id: '',
+                        text: 'All Color'
+                    });
+                }
+                return {
+                    results: fetch_result.data.items,
+                };
+            },
+        }
+    });
+
+    $('#color_filter').change(function(event) {
+        reload_dtable();
+    });
+
+    $('#invoice_filter.select2').select2({
+        ajax: {
+            url: fetch_select_invoice_url,
+            dataType: 'json',
+            delay: 500,
+            data: function (params) {
+                var query = {
+                    search: params.term || '',
+                }
+                return query;
+            },
+            processResults: function (fetch_result, params) {
+                if (!params.term) {
+                    fetch_result.data.items.unshift({
+                        id: '',
+                        text: 'All Invoice'
+                    });
+                }
+                return {
+                    results: fetch_result.data.items,
+                };
+            },
+        }
+    });
+
+    $('#invoice_filter').change(function(event) {
+        reload_dtable();
+    });
+
+    $('#gl_filter').select2({}).change(function(event) {
+        reload_dtable();
+    }); 
 </script>
 @stop

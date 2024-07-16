@@ -32,9 +32,11 @@
                 <div class="row mb-3">
                     <div class="col-sm-12 d-flex">
                         <div class="action-wrapper mr-auto">
-                            @can('manage')
+                            @can('remove')
+                                <button class="btn btn-sm btn-danger" onclick="remove_roll()" data-toggle='tooltip' data-placement='top' title='remove roll'><i class="fas fa-times"></i></button>
+                            @endcan
+                            @can('change')
                                 <button class="btn btn-info btn-sm" onclick="show_modal_change('modal_change_rack')">Change Rack</button>
-                                <button class="btn btn-sm btn-danger" onclick="delete_roll()" ><i class="fas fa-trash-alt"></i></button>
                             @endcan
                             
                         </div>
@@ -144,7 +146,7 @@
     const packinglist_information_url = "{{ route('packinglist.information-card', ':id') }}";
     const store_url = "{{ route('fabric-status.store') }}";
     const fetch_select_rack_url = "{{ route('fetch-select.rack') }}";
-    const delete_url = "{{ route('fabric-status.delete-roll') }}";
+    const remove_url = "{{ route('fabric-status.remove-roll') }}";
 
     const reload_dtable = () => {
         $('#reload_table_btn').trigger('click');
@@ -243,14 +245,14 @@
         $(`#${modal_id}`).modal('hide');
     }
 
-    const delete_roll = async () => {
+    const remove_roll = async () => {
         let selected_roll = get_selected_item();
 
         swal_data = {
-            title: `Want to delete ${selected_roll.item_id.length} selected roll?`,
+            title: `Want to remove ${selected_roll.item_id.length} selected roll?`,
             text: "selected roll will be remove from stock in",
             icon: "warning",
-            confirmButton: "Delete Roll",
+            confirmButton: "Remove Roll",
             confirmButtonClass: "btn-danger",
             cancelButtonClass: "btn-secondary"
         };
@@ -259,7 +261,7 @@
 
         params_data = { selected_roll_id : selected_roll.item_id };
         fetch_data = {
-            url: delete_url,
+            url: remove_url,
             method: "DELETE",
             data: params_data,
             token: token,

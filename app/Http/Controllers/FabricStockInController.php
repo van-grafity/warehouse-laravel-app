@@ -28,9 +28,12 @@ class FabricStockInController extends Controller
      */
     public function index()
     {
+        $packinglist = Packinglist::select('gl_number')->distinct()->get();
+
         $data = [
             'title' => 'Fabric Stock In',
             'page_title' => 'Fabric Stock In',
+            'packinglist' => $packinglist,
             'can_manage' => auth()->user()->can('manage'),
         ];
         return view('pages.fabric-stock-in.index', $data);
@@ -67,6 +70,18 @@ class FabricStockInController extends Controller
                 $stock_in_roll = $PackinglistModel->getRollSummaryInPackinglist($row->id,'stock_in');
                 return $stock_in_roll ? $stock_in_roll->total_roll : 0;
             })
+
+            ->filter(function ($query, $gl_filter){
+                if (request('gl_filter')) {
+                    $query->where('gl_number', request()->gl_filter);
+                }
+                if (request('color_filter')) {
+                    $query->where('color_id', request()->color_filter);
+                }
+                if (request('invoice_filter')) {
+                    $query->where('invoice_id', request()->invoice_filter);
+                }
+            }, true)
             ->toJson();
     }
 
