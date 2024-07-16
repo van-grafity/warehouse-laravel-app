@@ -47,15 +47,17 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->hasRole($permitted_roles)) { return true; }
         });
 
-        Gate::define('user-menu', function (User $user) {
-            $permitted_roles = [
-                'admin',
-                'user',
-                'warehouse-supervisor',
-                'warehouse-clerk',
-                'fg-warehouse',
-            ];
-            if ($user->hasRole($permitted_roles)) { return true; }
-        });
+        // !!  next nya cara ini mungkin akan di gantikan
+        // Gate::define('user-menu', function (User $user) {
+        //     $permitted_roles = [
+        //         'admin',
+        //         'user',
+        //         'warehouse-supervisor',
+        //         'warehouse-clerk',
+        //         'fg-warehouse',
+        //         'fg-warehouse-clerk',
+        //     ];
+        //     if ($user->hasRole($permitted_roles)) { return true; }
+        // });
     }
 }
