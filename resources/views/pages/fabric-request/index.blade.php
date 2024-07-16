@@ -14,9 +14,11 @@
                     <a id="report_fabric_request_btn" href="{{ route('fabric-request.report') }}" type="button" class="btn btn-info">
                         Report
                     </a>
+                    @can('sync')
                     <button id="sync_fabric_request_btn" type="button" class="btn btn-default mr-2" onclick="show_modal('modal_sync_fabric_request')">
                         Sync Fabric Request
                     </button>
+                    @endcan
                 </div>
             </div>
             <!-- /.card-header -->

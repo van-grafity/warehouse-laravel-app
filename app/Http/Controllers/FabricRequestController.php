@@ -33,6 +33,9 @@ class FabricRequestController extends Controller
         Gate::define('issuance-note-full', function ($user) {
             return $user->hasPermissionTo('fabric-request.issuance-note-full');
         });
+        Gate::define('sync', function ($user) {
+            return $user->hasPermissionTo('fabric-request.sync');
+        });
     }
 
     /**
