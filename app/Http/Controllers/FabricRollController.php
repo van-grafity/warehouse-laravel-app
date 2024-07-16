@@ -49,16 +49,12 @@ class FabricRollController extends Controller
             ->escapeColumns([])
             ->addColumn('action', function($row){
                 $action_button = "";
+                $action_button .= '<a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_fabric_roll\', '.$row->id.')">Edit</a> ';
+
                 if($row->racked_at != null){
-                    $action_button .= '
-                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_fabric_roll\', '.$row->id.')">Edit</a>
-                    <div data-toggle="tooltip" data-placement="top" title="This fabric roll already stock in" class="btn btn-danger btn-sm disabled">Delete</div>
-                    ';
+                    $action_button .= '<div data-toggle="tooltip" data-placement="top" title="This fabric roll already stock in" class="btn btn-danger btn-sm disabled">Delete</div>';
                 } else {
-                    $action_button .= '
-                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_fabric_roll\', '.$row->id.')">Edit</a>
-                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>
-                    ';
+                    $action_button .= '<a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="show_modal_delete('.$row->id.')">Delete</a>';
                 }
                 return $action_button; 
             })
@@ -214,13 +210,11 @@ class FabricRollController extends Controller
     {
         try {
             $selected_roll_list = $request->selected_roll_id;
-
             $deleted_roll = [];
             DB::transaction(function () use ($selected_roll_list, &$data_return, &$deleted_roll) {
                 
                 foreach ($selected_roll_list as $key => $roll_id) {
-                    $fabric_roll = FabricRoll::where('id', $roll_id)
-                    ->whereNotNull('racked_at')->first();
+                    $fabric_roll = FabricRoll::where('id', $roll_id)->whereNotNull('racked_at')->first();
 
                     if ($fabric_roll) {
                         throw new \Exception("Failed to removed roll number $fabric_roll->roll_number, because this fabric roll is already stock in");
