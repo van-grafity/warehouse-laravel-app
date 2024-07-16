@@ -91,6 +91,10 @@ class RackLocationController extends Controller
                 $colors = FabricRollRack::getColorByRackId($row->id);
                 return $colors ? $colors : '-';
             })
+            ->addColumn('batch', function($row) {
+                $batch = FabricRollRack::getBatchByRackId($row->id);
+                return $batch ? $batch : '-';
+            })
             ->addColumn('total_roll', function($row) {
                 $total_roll = FabricRollRack::getTotalRollByRackId($row->id);
                 return $total_roll;

@@ -60,6 +60,7 @@
                             <th width="">Location</th>
                             <th width="">GL Number</th>                            
                             <th width="">Color</th>
+                            <th width="">Batch</th>
                             <th width="">Total Roll</th>
                             <th width="150">Action</th>
                         </tr>
@@ -314,6 +315,7 @@
             { data: 'location', name: 'locations.location'},
             { data: 'gl_number', name: 'gl_number'},
             { data: 'color', name: 'color'},
+            { data: 'batch', name: 'batch'},
             { data: 'total_roll', name: 'total_roll'},
             { data: 'action', name: 'action', visible: column_visible},
         ],
