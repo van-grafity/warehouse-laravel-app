@@ -26,6 +26,12 @@ class FabricStatusController extends Controller
         Gate::define('print', function ($user) {
             return $user->hasPermissionTo('instore-report.print');
         });
+        Gate::define('remove', function ($user) {
+            return $user->hasPermissionTo('fabric-status.remove');
+        });
+        Gate::define('change', function ($user) {
+            return $user->hasPermissionTo('fabric-status.change');
+        });
     }
 
     /**
@@ -246,7 +252,7 @@ class FabricStatusController extends Controller
         return Excel::download(new InstoreReportExport, 'Instore-Report.xlsx');
     }
     
-    public function delete_roll(Request $request)
+    public function remove_roll(Request $request)
     {
         try {
             $selected_roll_ids = $request->selected_roll_id;

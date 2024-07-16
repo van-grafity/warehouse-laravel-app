@@ -64,6 +64,8 @@ class PermissionsSeeder extends Seeder
             ['name' => 'fabric-status.access', 'description' => 'Can access fabric status features.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
             ['name' => 'fabric-status.manage', 'description' => 'Can manage fabric status features.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
             ['name' => 'fabric-request.print', 'description' => 'Can manage print fabric request.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
+            ['name' => 'fabric-status.change', 'description' => 'Can change rack in fabric status features.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
+            ['name' => 'fabric-status.remove', 'description' => 'Can remove fabric roll in fabric status features.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
             ['name' => 'fabric-request.issuance-note', 'description' => 'Can manage print issuance note.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
             ['name' => 'fabric-request.issuance-note-full', 'description' => 'Can manage print issuance note full.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
 
