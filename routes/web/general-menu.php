@@ -49,7 +49,6 @@ Route::group([
 Route::group([
     'middleware' => [
         'auth',
-        'can:user-menu',
     ],
     'controller' => App\Http\Controllers\FabricRollController::class,
     'prefix' => 'fabric-roll',

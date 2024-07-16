@@ -23,7 +23,6 @@ Auth::routes();
 Route::group([
     'middleware' => [
         'auth',
-        'can:user-menu',
     ]
 ], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home.index');
@@ -36,7 +35,6 @@ Route::group([
 Route::group([
     'middleware' => [
         'auth',
-        'can:user-menu',
     ],
     'controller' => App\Http\Controllers\FetchSelectController::class,
     'prefix' => 'fetch-select',
