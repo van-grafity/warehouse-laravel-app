@@ -37,10 +37,13 @@ class PackinglistController extends Controller
     public function index()
     {
         $suppliers = Supplier::get();
+        $packinglist = Packinglist::select('gl_number')->distinct()->get();
+
         $data = [
             'title' => 'Packing List',
             'page_title' => 'Packing List',
             'suppliers' => $suppliers,
+            'packinglist' => $packinglist,
             'can_manage' => auth()->user()->can('manage'),
         ];
         return view('pages.packinglist.index', $data);
@@ -86,6 +89,19 @@ class PackinglistController extends Controller
             ->addColumn('roll_qty', function($row){
                 return $row->fabric_rolls->count();
             })
+
+            ->filter(function ($query, $gl_filter){
+                if (request('gl_filter')) {
+                    $query->where('gl_number', request()->gl_filter);
+                }
+                if (request('color_filter')) {
+                    $query->where('color_id', request()->color_filter);
+                }
+                if (request('invoice_filter')) {
+                    $query->where('invoice_id', request()->invoice_filter);
+                }
+                
+            }, true)
             ->toJson();
     }
 
