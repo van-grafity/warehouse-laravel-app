@@ -603,9 +603,12 @@
     $('#reload_table_btn').on('click', async function(event) {
         try {
             let gl_number = $('#gl_filter').val();
-            
-            if(gl_number){
-                let swal_data = {
+            if(!gl_number) {
+                swal_warning({title: "Please select GL Number first!"});
+                return false;
+            }
+
+            let swal_data = {
                 title: "Are you Sure?",
                 text: "Applying the filter will reset your selected fabric roll",
                 icon: "warning",
@@ -622,11 +625,6 @@
 
             remove_all_selected_roll_from_fbr();
             insert_into_selected_roll_table(allocated_fabric_rolls);
-
-            } else {
-                swal_warning({title: "Please select gl number before apply"});
-                return false;
-            }
 
         } catch (error) {
             console.log(error);
