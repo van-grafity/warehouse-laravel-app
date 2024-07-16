@@ -602,7 +602,10 @@
 
     $('#reload_table_btn').on('click', async function(event) {
         try {
-            let swal_data = {
+            let gl_number = $('#gl_filter').val();
+            
+            if(gl_number){
+                let swal_data = {
                 title: "Are you Sure?",
                 text: "Applying the filter will reset your selected fabric roll",
                 icon: "warning",
@@ -613,13 +616,17 @@
             let confirm_delete = await swal_confirm(swal_data);
             if(!confirm_delete) { return false; };
 
-
             $(this).addClass('loading').attr('disabled',true);
             await reload_dtable();
             $('#reload_table_btn').removeClass('loading').attr('disabled',false);
 
             remove_all_selected_roll_from_fbr();
             insert_into_selected_roll_table(allocated_fabric_rolls);
+
+            } else {
+                swal_warning({title: "Please select gl number before apply"});
+                return false;
+            }
 
         } catch (error) {
             console.log(error);
@@ -673,9 +680,9 @@
         @if($is_gl_number_exist)
             $('#gl_filter').val(`{{ $fabric_request->apiFabricRequest->fbr_gl_number }}`).trigger('change');
         @endif
-
+        
         @if(!$is_gl_number_exist)
-            $('#fabric_roll_table').emptyTable();
+            return false;
         @endif
         
         @if($color_id)
@@ -686,13 +693,12 @@
             };
             await select2_preselected_option(preselect_color);
         @endif
-
+        
         reload_dtable(); // ## apply filter and reload the table according to the selected filter
         selected_roll_table_listener();
         insert_into_selected_roll_table(allocated_fabric_rolls);
         update_total_selected_roll();
     });
-
 </script>
 
 <script>
