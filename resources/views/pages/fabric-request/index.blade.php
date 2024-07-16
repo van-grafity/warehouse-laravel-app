@@ -41,7 +41,7 @@
                         </div>
                          <div class="filter_wrapper mr-2" style="width:200px;">
                             <select name="status_filter" id="status_filter" class="form-control select2 no-search-box">
-                                <option value="" selected>All Data</option>
+                                <option value="" selected>All Status</option>
                                 <option value="requested"> Requested </option>
                                 <option value="received"> Received </option>
                                 <option value="issued"> Issued </option>
