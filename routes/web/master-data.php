@@ -67,10 +67,10 @@ Route::group([
 ], function () {
     Route::get('', 'index')->name('index');
     Route::get('dtable', 'dtable')->name('dtable');
-    Route::get('{location-row}', 'show')->name('show');
+    Route::get('{location_row}', 'show')->name('show');
     Route::post('', 'store')->name('store');
-    Route::put('{location-row}', 'update')->name('update');
-    Route::delete('{location-row}', 'destroy')->name('destroy');
+    Route::put('{location_row}', 'update')->name('update');
+    Route::delete('{location_row}', 'destroy')->name('destroy');
 });
 
 Route::group([
