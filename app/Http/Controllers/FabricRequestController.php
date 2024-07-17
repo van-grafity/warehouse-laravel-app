@@ -288,11 +288,7 @@ class FabricRequestController extends Controller
         $color = Color::where('color', 'like', '%' . $fabric_request->apiFabricRequest->fbr_color . '%')->first();
         $color_id = $color ? $color->id : null;
 
-        $batch_numbers = Packinglist::where('gl_number', $fabric_request->apiFabricRequest->fbr_gl_number);
-        if ($color_id !== null) {
-            $batch_numbers->where('color_id', $color_id);
-        }
-        $batch_numbers = $batch_numbers->select('batch_number')->distinct()->get();
+        $batch_numbers = Packinglist::select('batch_number')->distinct()->get();
 
         $data = [
             'title' => 'Fabric Issue',
