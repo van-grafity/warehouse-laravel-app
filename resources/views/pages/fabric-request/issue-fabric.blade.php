@@ -369,7 +369,7 @@
 
             const response = await using_fetch(fetch_data);
             if(response.status == 'success') {
-                swal_info({ title: response.message, reload_option: true })
+                swal_info({ title: response.message, reload_option: false })
                 
             } else {
                 swal_failed({ title: response.message })
@@ -558,8 +558,6 @@
 
     let fabric_roll_table = $('#fabric_roll_table').DataTable({
         processing: true,
-        serverSide: true,
-        deferLoading: 0,
         ajax: {
             url: dtable_list_url,
             data: function (d) {

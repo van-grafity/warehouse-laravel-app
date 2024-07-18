@@ -675,13 +675,16 @@ class FabricRequestController extends Controller
                 'packinglists.batch_number',
                 'colors.color'
             );
+
+            if (!request('gl_filter')) {
+                $query = [];
+            }
         
         return Datatables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
             ->addColumn('checkbox', function ($row) {
                 if($row->new_roll_id) { return null; }
-                
                 $checkbox_element = '
                     <div class="form-group mb-0">
                         <div class="custom-control custom-checkbox">
@@ -707,16 +710,14 @@ class FabricRequestController extends Controller
                 if (request('gl_filter')) {
                     $query->where('gl_number', request()->gl_filter)->get();
                 }
-
                 if (request('color_filter')) {
                     $query->where('color_id', request()->color_filter)->get();
                 }
-                    
                 if (request('batch_filter')) {
                     $query->where('batch_number', request()->batch_filter)->get();
-                }
-                
-            }, true)
+                }    
+                  
+            }, true)        
             ->toJson();
     }
 
