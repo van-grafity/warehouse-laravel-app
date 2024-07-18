@@ -12,7 +12,7 @@
             border: 1px black solid;
             text-align: center;
             vertical-align: middle;
-            font-size: 6px;
+            font-size: 9px;
             padding-top: 2 !important;
             padding-bottom: 2 !important;
             padding-left: 5 !important;
@@ -22,14 +22,14 @@
         .table-request-report tbody td {
             border: 1px black solid;
             vertical-align: middle;
-            font-size: 6px;
+            font-size: 9px;
             padding-top: 2 !important;
             padding-bottom: 2 !important;
             padding-left: 3 !important;
             padding-right: 3 !important;
         }
         .table-detail thead th {
-            font-size: 8px;
+            font-size: 10px;
         }
 
         @page { 
