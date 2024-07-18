@@ -24,13 +24,13 @@
 </head>
     @foreach ($fabricrolls as $fabricroll)
         <div class="page-break">
-            <table style=" display: inline-table; border: 1px solid black; margin-left: 5px; margin-right: 5px; margin-top: 5px;" cellpadding="8" cellspacing="0" width="105">
+            <table style=" display: inline-table; border: 1px solid black; margin-left: 4px; margin-right: 4px; margin-top: 5px;" cellpadding="8" cellspacing="0" width="105">
                 <tbody>
                     <tr style="">
-                        <td width="50">
-                            <img src="data:image/png;base64, {!! base64_encode(QrCode::size(70)->generate($fabricroll->serial_number))!!} ">
+                        <td width="">
+                            <img src="data:image/png;base64, {!! base64_encode(QrCode::size(55)->generate($fabricroll->serial_number))!!} ">
                         </td>
-                        <td style="font-size: 30px; text-align: center;">
+                        <td style="font-size: 25px; text-align: center;">
                             {{ $fabricroll->roll_number }}
                         </td>
                         <tr>
