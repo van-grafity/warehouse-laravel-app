@@ -303,7 +303,6 @@ class FabricRequestController extends Controller
         return view('pages.fabric-request.issue-fabric', $data);
     }
 
-
     public function issue_fabric_store(Request $request, $fbr_id)
     {
         try {
@@ -661,6 +660,7 @@ class FabricRequestController extends Controller
             ->join('colors', 'colors.id', '=', 'packinglists.color_id')
             ->whereNotNull('fabric_rolls.racked_at')
             ->whereNull('fabric_issuances.fabric_roll_id')
+            ->whereNull('rack_locations.exit_at')
             ->select(
                 'fabric_rolls.id',
                 'fabric_rolls.roll_number',

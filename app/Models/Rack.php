@@ -25,7 +25,7 @@ class Rack extends Model
 
     public function location()
     {
-        return $this->hasOneThrough(Location::class, RackLocation::class, 'rack_id', 'id', 'id', 'location_id');
+        return $this->hasOneThrough(Location::class, RackLocation::class, 'rack_id', 'id', 'id', 'location_id')->whereNull('rack_locations.exit_at');
     }
 
     public static function generateRackSerialNumber($rack_type, $basic_number)
