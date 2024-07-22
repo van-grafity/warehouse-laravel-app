@@ -143,14 +143,14 @@ class RackLocationController extends Controller
                             continue;
                         }
                         $last_rack_location->exit_at = Carbon::now();
-                        $last_rack_location->save();
+                        $last_rack_location->save(); 
                     }
-                    
+
                     $data_rack = RackLocation::firstOrCreate([
                         'location_id' => $location_id,
                         'rack_id' => $rack_id,
                         'entry_at' => date('Y-m-d H:i:s')
-                    ]);                 
+                    ]);              
                     $rack = Rack::find($rack_id);
                     $rack->save();
                     $updated_racks[] = $rack;
@@ -158,9 +158,15 @@ class RackLocationController extends Controller
 
             });
 
+            if(!$location_id){
+                $msg = 'Successfully move '. count($updated_racks) .' Rack locations to warehouse';
+            } else {
+                $msg = 'Successfully move '. count($updated_racks) .' Rack locations to ' . $location->location;
+            }
+
             $data_return = [
                 'status' => 'success',
-                'message' => 'Successfully move '. count($updated_racks) .' Rack locations to ' . $location->location,
+                'message' => $msg,
                 'data' => [
                     'updated_racks' => $updated_racks
                 ]

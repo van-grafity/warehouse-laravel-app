@@ -99,9 +99,10 @@
                     </div>
                      <div class="form-group">
                         <label for="location">Location</label>
-                        <select name="location" id="location" class="form-control select2 validate-on-change" data-placeholder="Select Location" required>
+                        <select name="location" id="location" class="form-control select2">
+                            <option value=""> Warehouse </option>
                             @foreach ($locations as $location)
-                                <option value="{{ $location->id }}"> {{ $location->location }} </option>
+                            <option value="{{ $location->id }}"> {{ $location->location }} </option>
                             @endforeach
                         </select>
                     </div>
