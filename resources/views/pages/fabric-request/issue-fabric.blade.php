@@ -677,9 +677,10 @@
             $('#gl_filter').val(`{{ $fabric_request->apiFabricRequest->fbr_gl_number }}`).trigger('change');
         @endif
         
-        @if(!$is_gl_number_exist)
-            return false;
-        @endif
+        // todo : kayaknya bagian sini
+        // @if(!$is_gl_number_exist)
+        //     return false;
+        // @endif
         
         @if($color_id)
             let preselect_color = {
