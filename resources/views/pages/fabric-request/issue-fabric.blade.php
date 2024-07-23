@@ -622,7 +622,12 @@
             $('#reload_table_btn').removeClass('loading').attr('disabled',false);
 
             remove_all_selected_roll_from_fbr();
-            insert_into_selected_roll_table(allocated_fabric_rolls);
+
+            // ## kalau ada allocated roll sebelumnya di tambahkan ulang
+            if(allocated_fabric_rolls.length > 0) {
+                insert_into_selected_roll_table(allocated_fabric_rolls);
+                confirmed_fabric_roll = allocated_fabric_rolls.map(fabric_roll => fabric_roll.id.toString());
+            }
 
         } catch (error) {
             console.log(error);
