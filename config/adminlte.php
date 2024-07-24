@@ -383,6 +383,11 @@ return [
                     'url' => 'rack-location',
                     'can' => 'rack-location.access',
                 ],
+                [
+                    'text' => 'Location Status',
+                    'url' => 'location-status',
+                    'can'   => 'location-status.access',
+                ],
                 // [
                 //     'text' => 'Rack Status',
                 //     'url' => 'rack-status',

@@ -88,4 +88,40 @@ class FabricRollRack extends Model
         $total_roll = $fabric_rolls->count();
         return $total_roll;
     }
+
+    public static function getColorByLocationId($location_id)
+    {
+        $colors = self::join('fabric_rolls', 'fabric_rolls.id', 'fabric_roll_racks.fabric_roll_id')
+            ->join('racks', 'racks.id', '=', 'fabric_roll_racks.rack_id')
+            ->join('rack_locations', 'rack_locations.rack_id', '=', 'fabric_roll_racks.rack_id')
+            ->join('locations', 'locations.id', '=', 'rack_locations.location_id')
+            ->join('packinglists', 'packinglists.id', '=', 'fabric_rolls.packinglist_id')
+            ->join('colors', 'colors.id', '=', 'packinglists.color_id')
+            ->where('rack_locations.location_id', $location_id)
+            ->whereNull('rack_locations.exit_at')
+            ->groupBy('packinglists.id')
+            ->select('colors.color')
+            ->get();
+
+        $color_list = $colors->pluck('color')->unique()->implode(' | ');
+        return $color_list;
+    }
+
+    public static function getGlNumberByLocationId($location_id)
+    {
+        $packinglists = self::join('fabric_rolls', 'fabric_rolls.id', 'fabric_roll_racks.fabric_roll_id')
+            ->join('racks', 'racks.id', '=', 'fabric_roll_racks.rack_id')
+            ->join('rack_locations', 'rack_locations.rack_id', '=', 'fabric_roll_racks.rack_id')
+            ->join('locations', 'locations.id', '=', 'rack_locations.location_id')
+            ->join('packinglists', 'packinglists.id', '=', 'fabric_rolls.packinglist_id')
+            ->join('colors', 'colors.id', '=', 'packinglists.color_id')
+            ->where('rack_locations.location_id', $location_id)
+            ->whereNull('rack_locations.exit_at')
+            ->groupBy('packinglists.id')
+            ->select('packinglists.gl_number')
+            ->get();
+
+        $gl_numbers = $packinglists->pluck('gl_number')->unique()->implode(' | ');
+        return $gl_numbers;
+    }
 }
