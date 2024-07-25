@@ -11,9 +11,11 @@
                 <h3 class="card-title p-3 my-auto"> Fabric Request List </h3>
                 
                 <div class="ml-auto p-3">
+                    @can('report')
                     <a id="report_fabric_request_btn" href="{{ route('fabric-request.report') }}" type="button" class="btn btn-info">
                         Report
                     </a>
+                    @endcan
                     @can('sync')
                     <button id="sync_fabric_request_btn" type="button" class="btn btn-default mr-2" onclick="show_modal('modal_sync_fabric_request')">
                         Sync Fabric Request

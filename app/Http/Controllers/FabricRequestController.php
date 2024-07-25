@@ -36,6 +36,9 @@ class FabricRequestController extends Controller
         Gate::define('sync', function ($user) {
             return $user->hasPermissionTo('fabric-request.sync');
         });
+        Gate::define('report', function ($user) {
+            return $user->hasPermissionTo('fabric-request.report');
+        });
     }
 
     /**

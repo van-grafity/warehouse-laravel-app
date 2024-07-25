@@ -54,7 +54,7 @@ class PermissionsSeeder extends Seeder
             ['name' => 'packinglist.access', 'description' => 'Can access packinglist features.', 'permission_category_id' => $permission_categories['general_menu']],
             ['name' => 'packinglist.manage', 'description' => 'Can manage packinglist features.', 'permission_category_id' => $permission_categories['general_menu']],
             ['name' => 'packinglist.print-qrcode', 'description' => 'Can manage print qrcode.', 'permission_category_id' => $permission_categories['general_menu']],
-
+            
             
             ['name' => 'manage-fabric.access', 'description' => 'Can access Manage Fabric Menu.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
             ['name' => 'fabric-stock-in.access', 'description' => 'Can access stock in features.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
@@ -62,6 +62,7 @@ class PermissionsSeeder extends Seeder
             ['name' => 'fabric-request.access', 'description' => 'Can access fabric request features.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
             ['name' => 'fabric-request.manage', 'description' => 'Can manage fabric request features.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
             ['name' => 'fabric-request.print', 'description' => 'Can manage print fabric request.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
+            ['name' => 'fabric-request.report', 'description' => 'Can manage report fabric request.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
             ['name' => 'fabric-request.issuance-note', 'description' => 'Can print issuance note.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
             ['name' => 'fabric-request.issuance-note-full', 'description' => 'Can print issuance note full.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
             ['name' => 'fabric-request.sync', 'description' => 'Can sync fabric request.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
@@ -74,11 +75,14 @@ class PermissionsSeeder extends Seeder
             ['name' => 'manage-rack.access', 'description' => 'Can access Manage Fabric Menu.', 'permission_category_id' => $permission_categories['manage_rack_menu']],
             ['name' => 'rack-location.access', 'description' => 'Can access rack location features.', 'permission_category_id' => $permission_categories['manage_rack_menu']],
             ['name' => 'rack-location.manage', 'description' => 'Can manage rack location features.', 'permission_category_id' => $permission_categories['manage_rack_menu']],
-
+            
             
             ['name' => 'instore-report.print', 'description' => 'Can manage instore report.', 'permission_category_id' => $permission_categories['general_menu']],
+            
+            
+            ['name' => 'report-menu.access', 'description' => 'Can access Report Menu.', 'permission_category_id' => $permission_categories['report_menu']],
         ];
-
+        
         foreach ($permission_list as $permission) {
             Permission::create($permission);
         }

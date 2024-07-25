@@ -397,11 +397,12 @@ return [
         ],
         [
             'header' => 'Report',
-            'can'   => ['report-menu','report-menu.access'],
+            'can'   => ['fabric-request','fabric-request.report'],
         ],
         [
             'text' => 'Fabric Request Report',
             'icon' => 'fas fa-fw fa fa-file-alt',
+            'can'   => 'fabric-request.report',
             'url' => 'fabric-request/report'
         ],
         [
