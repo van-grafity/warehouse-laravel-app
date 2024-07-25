@@ -44,20 +44,28 @@
         <table class="table-detail">
             <thead>
                 <tr>
-                    <th width="60"> Serial Number </th>
+                    <th width="80"> Serial Number </th>
                     <th>: {{ $fabric_request->apiFabricRequest->fbr_serial_number }} </th>
                 </tr>
                 <tr>
-                    <th width="60"> Gl Number </th>
+                    <th width="80"> Gl Number </th>
                     <th>: {{ $fabric_request->apiFabricRequest->fbr_gl_number }} </th>
                 </tr>
                 <tr>
-                    <th width="60" class="no-border"> Color </th>
+                    <th width="80" class="no-border"> Color </th>
                     <th>: {{ $fabric_request->apiFabricRequest->fbr_color }} </th>
                 </tr>
                 <tr>
-                    <th width="60"> Fabric Detail </th>
+                    <th width="80"> Fabric Detail </th>
                     <th>: {{ $fabric_request->apiFabricRequest->fbr_fabric_type }} </th>
+                </tr>
+                <tr>
+                    <th width="80"> Warehouse Remark </th>
+                    <th>: {{ ($fabric_request->remark) ? $fabric_request->remark : '-' }} </th>
+                </tr>
+                </br>
+                <tr>
+                    <th> Fabric Roll : </th>
                 </tr>
             </thead>
         </table>
@@ -84,6 +92,5 @@
             </tbody>
         </table>
     </div>
-    </br>
 </body>
 </html>

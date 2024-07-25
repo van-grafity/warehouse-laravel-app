@@ -323,10 +323,10 @@
     };
 
     const show_modal_confirmation = async (modal_element_id) => {
-        if(is_table_data_empty()){
-            swal_warning({title: "Please select at least one roll"});
-            return false;
-        }
+        // if(is_table_data_empty()){
+        //     swal_warning({title: "Please select at least one roll"});
+        //     return false;
+        // }
 
         // ## get the necessary data and assign to variables
         let total_selected_roll_qty = parseInt($('#total_selected_roll_qty').text());
