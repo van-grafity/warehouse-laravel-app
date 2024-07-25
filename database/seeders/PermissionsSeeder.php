@@ -75,12 +75,11 @@ class PermissionsSeeder extends Seeder
             ['name' => 'manage-rack.access', 'description' => 'Can access Manage Fabric Menu.', 'permission_category_id' => $permission_categories['manage_rack_menu']],
             ['name' => 'rack-location.access', 'description' => 'Can access rack location features.', 'permission_category_id' => $permission_categories['manage_rack_menu']],
             ['name' => 'rack-location.manage', 'description' => 'Can manage rack location features.', 'permission_category_id' => $permission_categories['manage_rack_menu']],
+            ['name' => 'location-status.access', 'description' => 'Can access location status features.', 'permission_category_id' => $permission_categories['manage_rack_menu']],
             
             
             ['name' => 'instore-report.print', 'description' => 'Can manage instore report.', 'permission_category_id' => $permission_categories['general_menu']],
             
-            
-            ['name' => 'report-menu.access', 'description' => 'Can access Report Menu.', 'permission_category_id' => $permission_categories['report_menu']],
         ];
         
         foreach ($permission_list as $permission) {
