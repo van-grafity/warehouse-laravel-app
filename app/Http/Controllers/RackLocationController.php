@@ -6,11 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Rack;
 use App\Models\Location;
 use App\Models\RackLocation;
+use App\Models\FabricRoll;
 use App\Models\FabricRollRack;
+use App\Models\Packinglist;
+use App\Models\Color;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 
 use Yajra\Datatables\Datatables;
@@ -54,10 +56,19 @@ class RackLocationController extends Controller
             ->addIndexColumn()
             ->escapeColumns([])
             ->addColumn('action', function($row){
-                $return = '
+                $action_button = "";
+                if ($row->location != null){
+                    $action_button .= '
                     <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_change_rack_location\',this)" data-rack-id="'.$row->id.'" data-rack-number="'.$row->serial_number.'">Edit</a>
-                ';
-                return $return; 
+                    <a href='. route('rack-location.detail',$row->id).' class="btn btn-primary btn-sm">Detail</a>
+                    ';
+                } else {
+                    $action_button .= '
+                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" onclick="show_modal_edit(\'modal_change_rack_location\',this)" data-rack-id="'.$row->id.'" data-rack-number="'.$row->serial_number.'">Edit</a>
+
+                    ';
+                }
+                return $action_button; 
             })
             ->addColumn('checkbox', function ($row) {
                 if($row->rack_location_id) { return null; }
@@ -205,5 +216,46 @@ class RackLocationController extends Controller
             ];
             return response()->json($data_return);
         }
+    }
+
+    /**
+    * Display a detail of this resource.
+    */
+    public function detail(string $id)
+    {
+        $rack = Rack::find($id);
+        $data = [
+            'title' => 'Rack Location Information',
+            'page_title' => 'Rack Location Information',
+            'rack' => $rack,
+        ];
+        return view('pages.rack-location.detail', $data);
+    }
+
+    public function dtable_roll_list()
+    {
+        $rack_id = request()->rack_id;
+        $query = FabricRoll::join('fabric_roll_racks', 'fabric_roll_racks.fabric_roll_id', '=', 'fabric_rolls.id')
+            ->join('racks', 'racks.id', '=', 'fabric_roll_racks.rack_id')
+            ->join('rack_locations', 'rack_locations.rack_id', '=', 'fabric_roll_racks.rack_id')
+            ->join('locations', 'locations.id', '=', 'rack_locations.location_id')
+            ->join('packinglists', 'packinglists.id', '=', 'fabric_rolls.packinglist_id')
+            ->join('colors', 'colors.id', '=', 'packinglists.color_id')
+            ->where('fabric_roll_racks.rack_id', $rack_id)
+            ->whereNull('rack_locations.exit_at')
+            ->select(
+                'fabric_rolls.id',
+                'fabric_rolls.roll_number',
+                'fabric_rolls.yds',
+                'fabric_rolls.width',
+                'packinglists.gl_number',
+                'packinglists.batch_number',
+                'colors.color'
+            );
+
+        return Datatables::of($query)
+            ->addIndexColumn()
+            ->escapeColumns([])
+            ->toJson();
     }
 }
