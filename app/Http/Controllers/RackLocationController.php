@@ -235,23 +235,24 @@ class RackLocationController extends Controller
     public function dtable_roll_list()
     {
         $rack_id = request()->rack_id;
-        $query = FabricRoll::join('fabric_roll_racks', 'fabric_roll_racks.fabric_roll_id', '=', 'fabric_rolls.id')
-            ->join('racks', 'racks.id', '=', 'fabric_roll_racks.rack_id')
-            ->join('rack_locations', 'rack_locations.rack_id', '=', 'fabric_roll_racks.rack_id')
-            ->join('locations', 'locations.id', '=', 'rack_locations.location_id')
-            ->join('packinglists', 'packinglists.id', '=', 'fabric_rolls.packinglist_id')
-            ->join('colors', 'colors.id', '=', 'packinglists.color_id')
-            ->where('fabric_roll_racks.rack_id', $rack_id)
-            ->whereNull('rack_locations.exit_at')
-            ->select(
-                'fabric_rolls.id',
-                'fabric_rolls.roll_number',
-                'fabric_rolls.yds',
-                'fabric_rolls.width',
-                'packinglists.gl_number',
-                'packinglists.batch_number',
-                'colors.color'
-            );
+        $query = FabricRoll::leftJoin('fabric_issuances', 'fabric_rolls.id', '=', 'fabric_issuances.fabric_roll_id')
+        ->join('fabric_roll_racks', 'fabric_roll_racks.fabric_roll_id', '=', 'fabric_rolls.id')
+        ->join('rack_locations', 'rack_locations.rack_id', '=', 'fabric_roll_racks.rack_id')
+        ->join('packinglists', 'packinglists.id', '=', 'fabric_rolls.packinglist_id')
+        ->join('colors', 'colors.id', '=', 'packinglists.color_id')
+        ->where('fabric_roll_racks.rack_id', $rack_id)
+        ->whereNotNull('fabric_rolls.racked_at')
+        ->whereNull('fabric_issuances.fabric_roll_id')
+        ->whereNull('rack_locations.exit_at')
+        ->select(
+            'fabric_rolls.id',
+            'fabric_rolls.roll_number',
+            'fabric_rolls.yds',
+            'fabric_rolls.width',
+            'packinglists.gl_number',
+            'packinglists.batch_number',
+            'colors.color'
+        );
 
         return Datatables::of($query)
             ->addIndexColumn()
