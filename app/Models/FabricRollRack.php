@@ -32,11 +32,14 @@ class FabricRollRack extends Model
 
     public static function getGlNumberByRackId($rack_id)
     {
-        $packinglists = self::join('fabric_rolls', 'fabric_rolls.id', 'fabric_roll_racks.fabric_roll_id')
+        $packinglists = FabricRoll::leftJoin('fabric_issuances', 'fabric_rolls.id', '=', 'fabric_issuances.fabric_roll_id')
+            ->join('fabric_roll_racks', 'fabric_roll_racks.fabric_roll_id', '=', 'fabric_rolls.id')
             ->join('packinglists','packinglists.id','fabric_rolls.packinglist_id')
+            ->join('rack_locations', 'rack_locations.rack_id', '=', 'fabric_roll_racks.rack_id')
             ->where('fabric_roll_racks.rack_id', $rack_id)
-            ->whereNotNull('fabric_roll_racks.stock_in_at')
-            ->whereNull('fabric_roll_racks.stock_out_at')
+            ->whereNotNull('fabric_rolls.racked_at')
+            ->whereNull('fabric_issuances.fabric_roll_id')
+            ->whereNull('rack_locations.exit_at')
             ->groupBy('packinglists.id')
             ->select('packinglists.gl_number')
             ->get();
@@ -47,12 +50,15 @@ class FabricRollRack extends Model
 
     public static function getColorByRackId($rack_id)
     {
-        $colors = self::join('fabric_rolls', 'fabric_rolls.id', 'fabric_roll_racks.fabric_roll_id')
+        $colors = FabricRoll::leftJoin('fabric_issuances', 'fabric_rolls.id', '=', 'fabric_issuances.fabric_roll_id')
+            ->join('fabric_roll_racks', 'fabric_roll_racks.fabric_roll_id', '=', 'fabric_rolls.id')
             ->join('packinglists','packinglists.id','fabric_rolls.packinglist_id')
             ->join('colors','colors.id','packinglists.color_id')
+            ->join('rack_locations', 'rack_locations.rack_id', '=', 'fabric_roll_racks.rack_id')
             ->where('fabric_roll_racks.rack_id', $rack_id)
-            ->whereNotNull('fabric_roll_racks.stock_in_at')
-            ->whereNull('fabric_roll_racks.stock_out_at')
+            ->whereNotNull('fabric_rolls.racked_at')
+            ->whereNull('fabric_issuances.fabric_roll_id')
+            ->whereNull('rack_locations.exit_at')
             ->groupBy('packinglists.id')
             ->select('colors.color')
             ->get();
@@ -63,11 +69,14 @@ class FabricRollRack extends Model
 
     public static function getBatchByRackId($rack_id)
     {
-        $packinglists = self::join('fabric_rolls', 'fabric_rolls.id', 'fabric_roll_racks.fabric_roll_id')
+        $packinglists = FabricRoll::leftJoin('fabric_issuances', 'fabric_rolls.id', '=', 'fabric_issuances.fabric_roll_id')
+            ->join('fabric_roll_racks', 'fabric_roll_racks.fabric_roll_id', '=', 'fabric_rolls.id')
             ->join('packinglists','packinglists.id','fabric_rolls.packinglist_id')
+            ->join('rack_locations', 'rack_locations.rack_id', '=', 'fabric_roll_racks.rack_id')
             ->where('fabric_roll_racks.rack_id', $rack_id)
-            ->whereNotNull('fabric_roll_racks.stock_in_at')
-            ->whereNull('fabric_roll_racks.stock_out_at')
+            ->whereNotNull('fabric_rolls.racked_at')
+            ->whereNull('fabric_issuances.fabric_roll_id')
+            ->whereNull('rack_locations.exit_at')
             ->groupBy('packinglists.id')
             ->select('packinglists.batch_number')
             ->get();
@@ -78,10 +87,13 @@ class FabricRollRack extends Model
 
     public static function getTotalRollByRackId($rack_id)
     {
-        $fabric_rolls = self::join('fabric_rolls', 'fabric_rolls.id', 'fabric_roll_racks.fabric_roll_id')
+        $fabric_rolls = FabricRoll::leftJoin('fabric_issuances', 'fabric_rolls.id', '=', 'fabric_issuances.fabric_roll_id')
+            ->join('fabric_roll_racks', 'fabric_roll_racks.fabric_roll_id', '=', 'fabric_rolls.id')
+            ->join('rack_locations', 'rack_locations.rack_id', '=', 'fabric_roll_racks.rack_id')
             ->where('fabric_roll_racks.rack_id', $rack_id)
-            ->whereNotNull('fabric_roll_racks.stock_in_at')
-            ->whereNull('fabric_roll_racks.stock_out_at')
+            ->whereNotNull('fabric_rolls.racked_at')
+            ->whereNull('fabric_issuances.fabric_roll_id')
+            ->whereNull('rack_locations.exit_at')
             ->select('fabric_rolls.id')
             ->get();
 
