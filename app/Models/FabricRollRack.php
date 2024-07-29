@@ -103,13 +103,14 @@ class FabricRollRack extends Model
 
     public static function getColorByLocationId($location_id)
     {
-        $colors = self::join('fabric_rolls', 'fabric_rolls.id', 'fabric_roll_racks.fabric_roll_id')
-            ->join('racks', 'racks.id', '=', 'fabric_roll_racks.rack_id')
+        $colors = FabricRoll::leftJoin('fabric_issuances', 'fabric_rolls.id', '=', 'fabric_issuances.fabric_roll_id')
+            ->join('fabric_roll_racks', 'fabric_roll_racks.fabric_roll_id', '=', 'fabric_rolls.id')
+            ->join('packinglists','packinglists.id','fabric_rolls.packinglist_id')
+            ->join('colors','colors.id','packinglists.color_id')
             ->join('rack_locations', 'rack_locations.rack_id', '=', 'fabric_roll_racks.rack_id')
-            ->join('locations', 'locations.id', '=', 'rack_locations.location_id')
-            ->join('packinglists', 'packinglists.id', '=', 'fabric_rolls.packinglist_id')
-            ->join('colors', 'colors.id', '=', 'packinglists.color_id')
             ->where('rack_locations.location_id', $location_id)
+            ->whereNotNull('fabric_rolls.racked_at')
+            ->whereNull('fabric_issuances.fabric_roll_id')
             ->whereNull('rack_locations.exit_at')
             ->groupBy('packinglists.id')
             ->select('colors.color')
@@ -121,18 +122,18 @@ class FabricRollRack extends Model
 
     public static function getGlNumberByLocationId($location_id)
     {
-        $packinglists = self::join('fabric_rolls', 'fabric_rolls.id', 'fabric_roll_racks.fabric_roll_id')
-            ->join('racks', 'racks.id', '=', 'fabric_roll_racks.rack_id')
+        $packinglists = FabricRoll::leftJoin('fabric_issuances', 'fabric_rolls.id', '=', 'fabric_issuances.fabric_roll_id')
+            ->join('fabric_roll_racks', 'fabric_roll_racks.fabric_roll_id', '=', 'fabric_rolls.id')
+            ->join('packinglists','packinglists.id','fabric_rolls.packinglist_id')
             ->join('rack_locations', 'rack_locations.rack_id', '=', 'fabric_roll_racks.rack_id')
-            ->join('locations', 'locations.id', '=', 'rack_locations.location_id')
-            ->join('packinglists', 'packinglists.id', '=', 'fabric_rolls.packinglist_id')
-            ->join('colors', 'colors.id', '=', 'packinglists.color_id')
             ->where('rack_locations.location_id', $location_id)
+            ->whereNotNull('fabric_rolls.racked_at')
+            ->whereNull('fabric_issuances.fabric_roll_id')
             ->whereNull('rack_locations.exit_at')
             ->groupBy('packinglists.id')
             ->select('packinglists.gl_number')
             ->get();
-
+            
         $gl_numbers = $packinglists->pluck('gl_number')->unique()->implode(' | ');
         return $gl_numbers;
     }
