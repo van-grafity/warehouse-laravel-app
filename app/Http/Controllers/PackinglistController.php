@@ -382,7 +382,8 @@ class PackinglistController extends Controller
                     ->first();
                 
                 if(!$packinglist){
-                    throw new \Exception("Packinglist Not Found. There is strange data. Please contant the Administrator");
+                    throw new \Exception("Something Wrong with Roll <br> Color : {$roll['color']} <br> Batch : {$roll['batch']} <br> No : {$roll['roll']} <br> Please contact the Administrator");
+                    // throw new \Exception("Packinglist Not Found. There is strange data. Please contant the Administrator");
                 }
 
                 $is_roll_number_exist = FabricRoll::is_roll_number_exist($packinglist->id, $roll['roll']);
