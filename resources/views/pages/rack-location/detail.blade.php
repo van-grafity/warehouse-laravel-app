@@ -38,6 +38,7 @@
                                 <tr class="">
                                     <th style="width: 50px">No</th>
                                     <th style="width: 150px" class="text-center">Color</th>
+                                    <th style="width: 150px" class="text-center">Gl Number</th>
                                     <th style="width: 150px" class="text-center">Batch No.</th>
                                     <th style="width: 100px" class="text-center">Roll No.</th>
                                     <th style="width: 75px">Width</th>
@@ -107,6 +108,7 @@
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
             { data: 'color', name: 'colors.color'},
+            { data: 'gl_number', name: 'packinglists.gl_number'},
             { data: 'batch_number', name: 'packinglists.batch_number'},
             { data: 'roll_number', name: 'roll_number'},
             { data: 'width', name: 'fabric_rolls.width'},
