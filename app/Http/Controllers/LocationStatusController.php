@@ -37,6 +37,12 @@ class LocationStatusController extends Controller
         return Datatables::of($query)
             ->addIndexColumn()
             ->escapeColumns([])
+            ->addColumn('action', function($row){
+                $action_button = "
+                    <a href='". route('location-status.detail',$row->id)."' class='btn btn-primary btn-sm' >Detail</a>
+                ";
+                return $action_button;
+            })
 
             ->addColumn('rack', function($row) {
                 $racks = Racklocation::getRackByLocationId($row->id);
@@ -53,6 +59,48 @@ class LocationStatusController extends Controller
             ->addColumn('total_rack', function($row) {
                 $total_rack = Racklocation::getTotalRackByLocationId($row->id);
                 return $total_rack;
+            })
+            ->toJson();
+    }
+
+    /**
+    * Display a detail of this resource.
+    */
+    public function detail(string $id)
+    {
+        $location = Location::find($id);
+        $data = [
+            'title' => 'Location Detail',
+            'page_title' => 'Location Detail',
+            'location' => $location,
+        ];
+        return view('pages.location-status.detail', $data);
+    }
+
+    public function dtable_roll_list()
+    {
+        $location_id = request()->location_id;
+        $query = Rack::leftJoin('rack_locations','rack_locations.rack_id','=','racks.id')
+            ->leftJoin('locations','locations.id','=','rack_locations.location_id')
+            ->where('rack_locations.location_id', $location_id)
+            ->whereNull('rack_locations.exit_at')
+            ->select(
+                'racks.id',
+                'racks.serial_number',
+        );
+
+        return Datatables::of($query)
+            ->addIndexColumn()
+            ->escapeColumns([])
+            ->addColumn('action', function($row){
+                $action_button = "
+                    <a href='". route('rack-location.detail',$row->id)."' class='btn btn-primary btn-sm' >Detail</a>
+                ";
+                return $action_button;
+            })
+            ->addColumn('total_roll', function($row) {
+                $total_roll = FabricRollRack::getTotalRollByRackId($row->id);
+                return $total_roll;
             })
             ->toJson();
     }
