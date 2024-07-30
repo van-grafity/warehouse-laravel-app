@@ -30,6 +30,7 @@
                             <th width="">Color</th>
                             <th width="">Gl Number</th>
                             <th width="">Total Rack</th>
+                            <th width="">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,9 +84,10 @@
             { data: 'color', name: 'color'},
             { data: 'gl_number', name: 'gl_number'},
             { data: 'total_rack', name: 'total_rack'},
+            { data: 'action', name: 'action'},
         ],
         columnDefs: [
-            { targets: [0,2,3,4], orderable: false, searchable: false },
+            { targets: [0,2,3,4,-1], orderable: false, searchable: false },
         ],
         paging: true,
         responsive: true,
