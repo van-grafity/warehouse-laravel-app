@@ -85,7 +85,7 @@
             { data: 'total_rack', name: 'total_rack'},
         ],
         columnDefs: [
-            { targets: [0], orderable: false, searchable: false },
+            { targets: [0,2,3,4], orderable: false, searchable: false },
         ],
         paging: true,
         responsive: true,
