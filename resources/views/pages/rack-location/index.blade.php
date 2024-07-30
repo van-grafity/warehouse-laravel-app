@@ -19,14 +19,22 @@
                                 <button class="btn btn-primary btn-sm" disabled="disabled" onclick="show_modal_change('modal_change_rack_location')">Change Location</button>
                             @endcan
                         </div>
-                         <div class="filter_wrapper mr-2" style="width:200px;">
+                        <div class="filter_wrapper mr-2" style="width:200px; height:10px">                         
+                           <select name="location_filter" id="location_filter" class="form-control select2">
+                                <option value="" selected>All Location</option>    
+                                @foreach ($locations as $location)
+                                <option value="{{$location->id}}" >{{$location->location}}</option>    
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="filter_wrapper mr-2" style="width:200px;">
                             <select name="rack_type_filter" id="rack_type_filter" class="form-control select2 no-search-box">
                                 <option value="">All Rack Type</option>
                                 <option value="moveable" selected > Moveable Rack </option>
                                 <option value="fixed"> Fixed Rack </option>
                             </select>
                         </div>
-                         <div class="filter_wrapper mr-2" style="width:200px;">
+                        <div class="filter_wrapper mr-2" style="width:200px;">
                             <select name="rack_allocation_filter" id="rack_allocation_filter" class="form-control select2 no-search-box">
                                 <option value="" selected>All Data</option>
                                 <option value="allocated"> Allocated Rack </option>
@@ -297,6 +305,7 @@
             data: function (d) {
                 d.rack_allocation_filter = $('#rack_allocation_filter').val();
                 d.rack_type_filter = $('#rack_type_filter').val();
+                d.location_filter = $('#location_filter').val();
             },
             beforeSend: function() {
                 // ## Tambahkan kelas dimmed-table sebelum proses loading dimulai
@@ -369,6 +378,10 @@
     $('#location.select2').select2({
         dropdownParent: $('#modal_change_rack_location'),
     });
+
+    $('#location_filter').select2({}).change(function(event) {
+        reload_dtable();
+    }); 
 
     $('#rack_allocation_filter, #rack_type_filter').change(function(event) {
         reload_dtable();

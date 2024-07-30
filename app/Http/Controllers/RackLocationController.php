@@ -111,6 +111,9 @@ class RackLocationController extends Controller
                 return $total_roll;
             })
             ->filter(function ($query) {
+                if (request('location_filter')) {
+                    $query->where('location_id', request()->location_filter);
+                }
                 if (request()->has('rack_allocation_filter')) {
                     if (request('rack_allocation_filter') == 'allocated') {
                         $query->where('rack_locations.location_id', '!=', null);
