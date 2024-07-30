@@ -189,9 +189,10 @@
 <script type="text/javascript">
     let farbic_request_table = $('#farbic_request_table').DataTable({
         processing: true,
+        serverSide: true,
         ajax: {
             url: dtable_url,
-             data: function (d) {
+            data: function (d) {
                 d.gl_filter = $('#gl_filter').val();
                 d.color_filter = $('#color_filter').val();
                 d.status_filter = $('#status_filter').val();
@@ -210,11 +211,11 @@
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex'},
             { data: 'serial_number', name: 'serial_number', className: 'text-left'},
-            { data: 'fbr_gl_number', name: 'fbr_gl_number'},
-            { data: 'fbr_color', name: 'fbr_color'},
-            { data: 'fbr_table_number', name: 'fbr_table_number'},
-            { data: 'fbr_qty_required', name: 'fbr_qty_required'},
-            { data: 'fbr_requested_at', name: 'fbr_requested_at', visible: false },
+            { data: 'fbr_gl_number', name: 'api_fabric_requests.fbr_serial_number'},
+            { data: 'fbr_color', name: 'api_fabric_requests.fbr_color'},
+            { data: 'fbr_table_number', name: 'api_fabric_requests.fbr_table_number'},
+            { data: 'fbr_qty_required', name: 'api_fabric_requests.fbr_qty_required'},
+            { data: 'fbr_requested_at', name: 'api_fabric_requests.fbr_requested_at', visible: false },
             { data: 'status', name: 'status'},
             { data: 'action', name: 'action'},
         ],
