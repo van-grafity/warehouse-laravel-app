@@ -401,7 +401,7 @@ return [
         ],
         [
             'text' => 'Fabric Request Report',
-            'icon' => 'fas fa-fw fa fa-file-alt',
+            'icon' => 'fas fa-fw fa fa-file-alt nav-icon',
             'can'   => 'fabric-request.report',
             'url' => 'fabric-request/report'
         ],
