@@ -35,10 +35,10 @@
                         <table id="detail_location_table" class="table table-bordered table-hover text-center table-vertical-align mb-4">
                             <thead>
                                 <tr class="">
-                                    <th style="width: 50px">No</th>
-                                    <th style="width: 150px" class="text-center">Rack</th>
-                                    <th style="width: 100px" class="text-center">Total Roll</th>
-                                    <th style="width: 75px">Action</th>
+                                    <th>No</th>
+                                    <th>Rack</th>
+                                    <th>Total Roll</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -108,7 +108,7 @@
             { data: 'action', name: 'action'},
         ],
         columnDefs: [
-            { targets: [0], orderable: false, searchable: false },
+            { targets: [0, -1], orderable: false, searchable: false },
         ],
 
         paging: true,
