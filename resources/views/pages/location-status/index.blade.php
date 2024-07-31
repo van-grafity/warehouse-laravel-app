@@ -64,7 +64,7 @@
 <script type="text/javascript">
     let location_status_table = $('#location_status_table').DataTable({
         processing: true,
-        serverSide: true,
+        // serverSide: true,
         ajax: {
             url: dtable_url,
             beforeSend: function() {
@@ -78,16 +78,16 @@
         },
         order: [],
         columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false},
             { data: 'location', name: 'location'},
             { data: 'rack', name: 'rack'},
             { data: 'color', name: 'color'},
             { data: 'gl_number', name: 'gl_number'},
             { data: 'total_rack', name: 'total_rack'},
-            { data: 'action', name: 'action'},
+            { data: 'action', name: 'action', searchable: false},
         ],
         columnDefs: [
-            { targets: [0,2,3,4,-1], orderable: false, searchable: false },
+            { targets: [0,2,3,4,-1], orderable: false},
         ],
         paging: true,
         responsive: true,

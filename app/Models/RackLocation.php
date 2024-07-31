@@ -31,10 +31,16 @@ class RackLocation extends Model
         $rack_locations = self::join('racks','racks.id','rack_locations.rack_id')
             ->where('rack_locations.location_id', $location_id)
             ->whereNull('rack_locations.exit_at')
-            ->select('racks.serial_number')
+            ->select(
+                'racks.id',
+                'racks.serial_number',
+            )
             ->get();
 
-        $racks = $rack_locations->pluck('serial_number')->unique()->implode(' | ');
+
+        $racks = $rack_locations->sort()->map(function($rack) {
+                return "<a class='badge bg-navy' href='". route('rack-location.detail',$rack->id)."' data-toggle='tooltip' title='Rack Detail'>$rack->serial_number</a>";
+                })->implode(' ');
         return $racks;
     }
 
