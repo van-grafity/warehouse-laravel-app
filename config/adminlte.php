@@ -458,6 +458,10 @@ return [
                     'text' => 'Logs',
                     'url' => 'logs',
                 ],
+                [
+                    'text' => 'Authentication Logs',
+                    'url' => 'authentication-log',
+                ],
             ],
         ],
     ],
