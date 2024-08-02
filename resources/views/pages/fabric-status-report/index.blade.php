@@ -23,7 +23,7 @@
             </div>
             <div class="ml-auto p-3">
                 <a href="javascript:void(0)" class="btn btn-info mb-2 mr-2" id="btn_preview_report">Preview</a>
-                <a href="javascript:void(0)" class="btn btn-primary mb-2 mr-2" id="btn_download_excel">Download Excel</a>
+                <a href="javascript:void(0)" class="btn btn-primary mb-2 mr-2" id="btn_download_excel"><i class="far fa-file-excel mr-1"></i> Download Excel </a>
             </div>
         </div>
     </div>
