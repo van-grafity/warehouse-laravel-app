@@ -10,7 +10,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="form-group">
-                    <label for="date_filter" class="mb-0 align-self-center col-form-label">Date Filter</label>
+                    <label for="date_filter" class="mb-0 align-self-center col-form-label">Incoming Date Filter</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="far fa-calendar"></i></span>
@@ -23,7 +23,6 @@
             </div>
             <div class="ml-auto p-3">
                 <a href="javascript:void(0)" class="btn btn-info mb-2 mr-2" id="btn_preview_report">Preview</a>
-                <a href="javascript:void(0)" class="btn btn-primary mb-2 mr-2" id="btn_print_report">Print PDF</a>
                 <a href="javascript:void(0)" class="btn btn-primary mb-2 mr-2" id="btn_download_excel">Download Excel</a>
             </div>
         </div>
@@ -70,53 +69,43 @@
 </script>
 
 <script type="text/javascript">
-    // ## Page Variable
-
-    $('#date_filter').daterangepicker({
-        opens: 'left',
-        locale: {
-            format: 'DD/MM/YYYY',
-            cancelLabel: 'Clear'
-        },
-        startDate: moment().subtract(1, 'month').startOf('month'),
-        endDate: moment().endOf('month'),
-        alwaysShowCalendars: true,
-        showCustomRangeLabel: false,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Current Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().endOf('month')],
-            'Last 3 Month': [moment().subtract(3, 'month').startOf('month'), moment().endOf('month')],
-        },
-        
-    }, function(start, end, label) {
-        $('#date_start_filter').val(start.format('YYYY-MM-DD'));
-        $('#date_end_filter').val(end.format('YYYY-MM-DD'));
-    });
-
-    $('#date_start_filter').val(moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
-    $('#date_end_filter').val(moment().add(1, 'month').endOf('month').format('YYYY-MM-DD'))
-    $('#date_filter').on('apply.daterangepicker', function(ev, picker) {
-
-    });
-    $('#date_filter').on('cancel.daterangepicker', function(ev, picker) {
-        $('#date_start_filter').val('');
-        $('#date_end_filter').val('');
-        $('#date_filter').val('');
-        reload_dtable();
-    });
-
     $(document).ready(function(){
-        $('#gl_filter, #color_filter').select2();
-        
-        $('#btn_print_report').click(function(){
 
-            var date_start_filter = $('#date_start_filter').val();
-            var date_end_filter = $('#date_end_filter').val();
-
-            window.open(url + '?gl_number=' + gl_filter + '&color_name=' + color_filter + '&start_date=' + date_start_filter + '&end_date=' + date_end_filter, '_blank');
+        $('#date_filter').daterangepicker({
+            opens: 'left',
+            locale: {
+                format: 'DD/MM/YYYY',
+                cancelLabel: 'Clear'
+            },
+            startDate: moment().subtract(1, 'month').startOf('month'),
+            endDate: moment().endOf('month'),
+            alwaysShowCalendars: true,
+            showCustomRangeLabel: false,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Current Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().endOf('month')],
+                'Last 3 Month': [moment().subtract(3, 'month').startOf('month'), moment().endOf('month')],
+            },
+            
+        }, function(start, end, label) {
+            $('#date_start_filter').val(start.format('YYYY-MM-DD'));
+            $('#date_end_filter').val(end.format('YYYY-MM-DD'));
         });
 
+        $('#date_start_filter').val(moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
+        $('#date_end_filter').val(moment().add(1, 'month').endOf('month').format('YYYY-MM-DD'))
+        $('#date_filter').on('apply.daterangepicker', function(ev, picker) {
+
+        });
+        $('#date_filter').on('cancel.daterangepicker', function(ev, picker) {
+            $('#date_start_filter').val('');
+            $('#date_end_filter').val('');
+            $('#date_filter').val('');
+            reload_dtable();
+        });
+
+    
         $('#btn_download_excel').click(function(){
             let data_filter = {
                 date_start_filter : $('#date_start_filter').val(),
@@ -126,12 +115,20 @@
             download_excel_filter_url = `${download_excel_url}?${queryString}`;
             window.location.href = download_excel_filter_url;
         });
+
+        $('#preview_card').hide();
+
+        $('#btn_preview_report').on('click', function(event) {
+            $('#preview_card').show();
+            $(this).addClass('loading').attr('disabled',true);
+            fabric_status_table.ajax.reload(function(json){
+                $('#btn_preview_report').removeClass('loading').attr('disabled',false);
+            });
+        });
     });
 </script>
 
 <script type="text/javascript">
-    $('#preview_card').hide();
-    
     let fabric_status_table = $('#fabric_status_table').DataTable({
         processing: true,
         serverSide: true,
@@ -179,14 +176,5 @@
         autoWidth: false,
         searchDelay: 500,
     });
-
-    $('#btn_preview_report').on('click', function(event) {
-        $('#preview_card').show();
-        $(this).addClass('loading').attr('disabled',true);
-        fabric_status_table.ajax.reload(function(json){
-            $('#btn_preview_report').removeClass('loading').attr('disabled',false);
-        });
-    });
-
 </script>
 @endpush
