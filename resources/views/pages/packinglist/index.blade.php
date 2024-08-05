@@ -22,25 +22,33 @@
                 <div class="row mb-3">
                     <div class="col-sm-12 d-inline-flex justify-content-end">
                         <div class="filter_wrapper mr-2" style="width:200px; height:10px">                         
-                           <select name="gl_filter" id="gl_filter" class="form-control select2">
-                            <option value="" selected>All GL Number</option>    
-                            @foreach ($packinglist as $packinglist)
-                            <option value="{{$packinglist->gl_number}}" >{{$packinglist->gl_number}}</option>    
-                            @endforeach
-                        </select>
-                       </div>
-                       <div class="filter_wrapper mr-2" style="width:200px;">
-                           <select name="color_filter" id="color_filter" class="form-control select2">
-                               <option value="" selected >All Color</option>
-                           </select>
-                       </div>
-                       <div class="filter_wrapper mr-2" style="width:200px;">                         
-                           <select name="invoice_filter" id="invoice_filter" class="form-control select2">
-                               <option value="" selected>All Invoice</option>
-                                   <option value=""></option>    
-                               <option value=""></option>  
-                           </select>
-                       </div>
+                           <select name="po_filter" id="po_filter" class="form-control select2">
+                                <option value="" selected>All Fabric PO</option>    
+                                @foreach ($po_numbers as $po_numbers)
+                                <option value="{{$po_numbers->po_number}}" >{{$po_numbers->po_number}}</option>    
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="filter_wrapper mr-2" style="width:200px; height:10px">                         
+                            <select name="gl_filter" id="gl_filter" class="form-control select2">
+                                <option value="" selected>All GL Number</option>    
+                                @foreach ($gl_numbers as $gl_numbers)
+                                <option value="{{$gl_numbers->gl_number}}" >{{$gl_numbers->gl_number}}</option>    
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="filter_wrapper mr-2" style="width:200px;">
+                            <select name="color_filter" id="color_filter" class="form-control select2">
+                                <option value="" selected >All Color</option>
+                            </select>
+                        </div>
+                        <div class="filter_wrapper mr-2" style="width:200px;">                         
+                            <select name="invoice_filter" id="invoice_filter" class="form-control select2">
+                                <option value="" selected>All Invoice</option>
+                                    <option value=""></option>    
+                                <option value=""></option>  
+                            </select>
+                        </div>
                         <div class="filter_wrapper text-right align-self-center">
                             <button id="reload_table_btn" class="btn btn-sm btn-info"> 
                                 <i class="fas fa-sync-alt"></i> 
@@ -58,6 +66,7 @@
                             <th width="50">GL</th>
                             <th width="">Color</th>
                             <th width="">Batch</th>
+                            <th width="">Fabric PO</th>
                             <th width="">Roll Qty</th>
                             <th width="125">Action</th>
                         </tr>
@@ -457,6 +466,7 @@
                 d.incoming_date_start_filter = $('#incoming_date_start_filter').val();
                 d.incoming_date_end_filter = $('#incoming_date_end_filter').val();
                 d.gl_filter = $('#gl_filter').val();
+                d.po_filter = $('#po_filter').val();
                 d.color_filter = $('#color_filter').val();
                 d.invoice_filter = $('#invoice_filter').val();
             },
@@ -479,6 +489,7 @@
             { data: 'gl_number', name: 'gl_number'},
             { data: 'color', name: 'color'},
             { data: 'batch_number', name: 'batch_number'},
+            { data: 'po_number', name: 'po_number'},
             { data: 'roll_qty', name: 'roll_qty'},
             { data: 'action', name: 'action', visible: column_visible },
         ],
@@ -687,7 +698,7 @@
         reload_dtable();
     });
 
-    $('#gl_filter').select2({}).change(function(event) {
+    $('#gl_filter, #po_filter').select2({}).change(function(event) {
         reload_dtable();
     }); 
 </script>
