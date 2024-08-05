@@ -102,6 +102,11 @@ class FabricRequestController extends Controller
                 return $status;
             })
 
+            ->addColumn('qty_issued', function($row) {
+                $qty_issued = $this->getQtyIssued($row);
+                return $qty_issued;
+            })
+
             ->filter(function ($query){
                 if (request('gl_filter')) {
                         $query->where('api_fabric_requests.fbr_gl_number', request()->gl_filter);
@@ -439,7 +444,7 @@ class FabricRequestController extends Controller
         foreach( $fabric_rolls as $key => $roll ) {
             $total_qty_issued += $roll->yds;
         }
-        return $total_qty_issued;
+        return round($total_qty_issued, 2);
     }
 
     public function report()

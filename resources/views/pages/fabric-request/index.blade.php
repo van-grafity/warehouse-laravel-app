@@ -67,6 +67,7 @@
                             <th width="">Color</th>
                             <th width="">Table</th>
                             <th width="">Qty Required</th>
+                            <th width="">Qty Issued</th>
                             <th width="">Requested at</th>
                             <th width="">Status</th>
                             <th width="150">Action</th>
@@ -215,6 +216,7 @@
             { data: 'fbr_color', name: 'api_fabric_requests.fbr_color'},
             { data: 'fbr_table_number', name: 'api_fabric_requests.fbr_table_number'},
             { data: 'fbr_qty_required', name: 'api_fabric_requests.fbr_qty_required'},
+            { data: 'qty_issued', name: 'qty_issued'},
             { data: 'fbr_requested_at', name: 'api_fabric_requests.fbr_requested_at', visible: false },
             { data: 'status', name: 'status'},
             { data: 'action', name: 'action'},
