@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('authentication-log:purge')
-            ->monthly()
+            ->daily()
             ->onSuccess(function () {
                 Artisan::call('authentication-log:purge');
                 $output = Artisan::output();
