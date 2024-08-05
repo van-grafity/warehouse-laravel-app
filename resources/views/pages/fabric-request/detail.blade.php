@@ -85,7 +85,7 @@
                             <div class="col-sm-5">
                                 <dl class="row">
                                     <dt class="col-md-4 col-sm-12">Status</dt>
-                                    <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->apiFabricRequest->fbr_status_print }} </dd>
+                                    <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->status }} </dd>
                                 </dl>
                             </div>
                         </div>

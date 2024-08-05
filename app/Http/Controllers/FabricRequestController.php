@@ -142,6 +142,7 @@ class FabricRequestController extends Controller
         $qty_difference_value = $fabric_request->qty_issued - $fabric_request->apiFabricRequest->fbr_qty_required;
         $fabric_request->qty_difference = round($qty_difference_value > 0 ? '+'. $qty_difference_value : $qty_difference_value, 2);
         $fabric_roll_issuance = $fabric_request->allocatedFabricRolls;
+        $fabric_request->status = $this->getFabricStatus($fabric_request);
 
         $fabric_roll_issuance = $fabric_roll_issuance->map(function ($fabric_roll) {
             return [
@@ -411,20 +412,20 @@ class FabricRequestController extends Controller
     {
         if($pill_mode){
             if($fabric_data->issued_at != null){
-                $status = '<span class="badge badge-success">issued</span>';
+                $status = '<span class="badge badge-success">Issued</span>';
             } elseif($fabric_data->issued_at == null && $fabric_data->received_at != null){
                 $status = '<span class="badge badge-warning">Received</span>';
-            } elseif($fabric_data->fbr_requested_at != null){
+            } elseif($fabric_data->received_at == null){
                 $status = '<span class="badge badge-danger">Requested</span>';
             } else {
                 $status = '<span class="badge badge-danger">Unknown Status</span>';
             }
         } else {
            if($fabric_data->issued_at != null){
-                $status = 'issued';
+                $status = 'Issued';
             } elseif($fabric_data->issued_at == null && $fabric_data->received_at != null){
                 $status = 'Received';
-            } elseif($fabric_data->fbr_requested_at != null){
+            } elseif($fabric_data->received_at == null){
                 $status = 'Requested';
             } else {
                 $status = 'Unknown Status';
