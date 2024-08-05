@@ -21,6 +21,20 @@ Route::group([
     Route::post('role/{role}/manage-permission', [App\Http\Controllers\RoleController::class, 'manage_permission_update'])->name('role.manage-permission-update');
 });
 
+// ## Authentication Log
+Route::group([
+    'middleware' => [
+        'auth',
+        'can:developer-menu',
+    ],
+    'controller' => App\Http\Controllers\AuthenticationLogController::class,
+    'prefix' => 'authentication-log',
+    'as' => 'authentication-log.',
+],function() {
+    Route::get('', 'index')->name('index');
+    Route::get('dtable', 'dtable')->name('dtable');
+});
+
 
 // ## Route for Admin Role
 Route::group([

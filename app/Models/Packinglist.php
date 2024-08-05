@@ -112,6 +112,9 @@ class Packinglist extends Model
                 if($summary_option == 'stock_in') {
                     $query->join('fabric_roll_racks','fabric_roll_racks.fabric_roll_id','=','fabric_rolls.id');
                 }
+                if($summary_option == 'stock_out') {
+                    $query->join('fabric_issuances', 'fabric_issuances.fabric_roll_id', '=', 'fabric_rolls.id');
+                }
             })
             ->where('fabric_rolls.deleted_at', null)
             ->where('packinglists.id', $packinglist_id)

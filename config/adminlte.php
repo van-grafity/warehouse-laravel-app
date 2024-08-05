@@ -401,9 +401,15 @@ return [
         ],
         [
             'text' => 'Fabric Request Report',
-            'icon' => 'fas fa-fw fa fa-file-alt nav-icon',
+            'icon' => 'fa fa-file-alt nav-icon',
             'can'   => 'fabric-request.report',
             'url' => 'fabric-request/report'
+        ],
+        [
+            'text' => 'Fabric Status Report',
+            'icon' => 'fa fa-file-alt nav-icon',
+            'can'   => 'fabric-status-report.access',
+            'url' => 'fabric-status-report'
         ],
         [
             'header' => 'Admin',
@@ -451,6 +457,10 @@ return [
                 [
                     'text' => 'Logs',
                     'url' => 'logs',
+                ],
+                [
+                    'text' => 'Authentication Logs',
+                    'url' => 'authentication-log',
                 ],
             ],
         ],
