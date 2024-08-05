@@ -165,6 +165,11 @@
         $('#gl_filter, #color_filter').select2();
         
         $('#btn_print_report').click(function(){
+            let gl_number = $('#gl_filter').val();
+            if(!gl_number) {
+                swal_warning({title: "Please select GL Number first!"});
+                return false;
+            }
 
             var gl_filter = $('#gl_filter').val();
             var color_filter = $('#color_filter').val();
@@ -227,6 +232,11 @@
     });
 
     $('#btn_preview_report').on('click', function(event) {
+        let gl_number = $('#gl_filter').val();
+            if(!gl_number) {
+                swal_warning({title: "Please select GL Number first!"});
+                return false;
+            }
         $('#preview_card').show();
         $(this).addClass('loading').attr('disabled',true);
         fabric_request_table.ajax.reload(function(json){
