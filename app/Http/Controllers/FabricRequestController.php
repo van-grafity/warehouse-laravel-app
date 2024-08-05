@@ -685,7 +685,11 @@ class FabricRequestController extends Controller
                 'colors.color'
             );
 
-            if (!request('gl_filter')) {
+            if (request('gl_filter')) {
+                $query = $query;
+            } elseif (request('batch_filter')) {
+                $query = $query;
+            } else {
                 $query = [];
             }
         

@@ -600,8 +600,10 @@
 
     $('#reload_table_btn').on('click', async function(event) {
         try {
+            let batch_number = $('#batch_filter').val();
             let gl_number = $('#gl_filter').val();
-            if(!gl_number) {
+
+            if(!gl_number && !batch_number) {
                 swal_warning({title: "Please select GL Number first!"});
                 return false;
             }
