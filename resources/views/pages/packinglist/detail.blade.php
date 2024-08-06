@@ -22,6 +22,9 @@
                     Fabric Roll List 
                 </h3>
                 <div class="ml-auto p-3">
+                    @can('print')
+                        <a  href="{{ route('packinglist.report', $packinglist->id) }}" class="btn btn-primary" target="_blank">Report</a>
+                    @endcan
                     @can('manage')
                         <a href="javascript:void(0)" class="btn btn-success " id="btn_modal_create" onclick="show_modal_create('modal_fabric_roll')" >Create</a>
                     @endcan

@@ -35,8 +35,8 @@ Route::group([
     Route::post('import', 'import')->name('import');
 
 
-
     Route::get('{packinglist}', 'show')->name('show');
+    Route::get('{packinglist}/report', 'report')->name('report');
     Route::get('{packinglist}/detail', 'detail')->name('detail');
     Route::get('{packinglist}/information-card', 'information_card')->name('information-card');
 

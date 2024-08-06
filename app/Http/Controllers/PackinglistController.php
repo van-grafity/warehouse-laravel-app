@@ -29,6 +29,9 @@ class PackinglistController extends Controller
         Gate::define('print', function ($user) {
             return $user->hasPermissionTo('packinglist.print-qrcode');
         });
+        Gate::define('report', function ($user) {
+            return $user->hasPermissionTo('packinglist.report');
+        });
     }
 
     /**
@@ -477,5 +480,32 @@ class PackinglistController extends Controller
         
         $pdf = PDF::loadview('pages.packinglist.qrcode', $data)->setPaper($customepaper, 'landscape');
         return $pdf->stream('fabric-roll.pdf');
+    }
+
+    public function report(string $id) 
+    {   
+        $packinglist = Packinglist::find($id);
+        $fabric_rolls = FabricRoll::where('packinglist_id', $id)->get();
+
+        // ## Penjumlahan untuk Total
+        $total_roll = $fabric_rolls->count();
+        $total_kgs = $fabric_rolls->sum('kgs');
+        $total_lbs = $fabric_rolls->sum('lbs');
+        $total_yds = $fabric_rolls->sum('yds');
+
+        $data = [
+            'title' => 'Packing List Report',
+            'page_title' => 'Packing List Report',
+            'packinglist' => $packinglist,
+            'fabric_rolls' => $fabric_rolls,
+            'total_roll' => $total_roll,
+            'total_kgs' => $total_kgs,
+            'total_lbs' => $total_lbs,
+            'total_yds' => $total_yds,
+        ];
+
+        $filename = 'Packing List Report.pdf';
+        $pdf = PDF::loadview('pages.packinglist.report', $data)->setPaper('a4', 'potrait');
+        return $pdf->stream($filename);
     }
 }

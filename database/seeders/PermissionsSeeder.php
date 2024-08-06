@@ -54,6 +54,7 @@ class PermissionsSeeder extends Seeder
             ['name' => 'packinglist.access', 'description' => 'Can access packinglist features.', 'permission_category_id' => $permission_categories['general_menu']],
             ['name' => 'packinglist.manage', 'description' => 'Can manage packinglist features.', 'permission_category_id' => $permission_categories['general_menu']],
             ['name' => 'packinglist.print-qrcode', 'description' => 'Can manage print qrcode.', 'permission_category_id' => $permission_categories['general_menu']],
+            ['name' => 'packinglist.report', 'description' => 'Can print report packing list.', 'permission_category_id' => $permission_categories['general_menu']],
             
             
             ['name' => 'manage-fabric.access', 'description' => 'Can access Manage Fabric Menu.', 'permission_category_id' => $permission_categories['manage_fabric_menu']],
