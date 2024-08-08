@@ -55,6 +55,7 @@ require __DIR__ . '/web/general-menu.php';
 require __DIR__ . '/web/manage-fabric.php';
 require __DIR__ . '/web/manage-rack.php';
 require __DIR__ . '/web/report.php';
+require __DIR__ . '/web/analysis.php';
 // ## ======================================
 
 

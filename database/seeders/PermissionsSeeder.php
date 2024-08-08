@@ -80,6 +80,9 @@ class PermissionsSeeder extends Seeder
             
             ['name' => 'instore-report.print', 'description' => 'Can manage instore report.', 'permission_category_id' => $permission_categories['general_menu']],
             
+            ['name' => 'analysis.access', 'description' => 'Can access analysis.', 'permission_category_id' => $permission_categories['general_menu']],
+            ['name' => 'invoice-chart.access', 'description' => 'Can access invoice chart.', 'permission_category_id' => $permission_categories['general_menu']],
+            
         ];
         
         foreach ($permission_list as $permission) {

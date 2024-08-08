@@ -412,6 +412,18 @@ return [
             'url' => 'fabric-status-report'
         ],
         [
+            'text' => 'Analysis',
+            'icon' => 'fas fa-chart-pie nav-icon',
+            'can'   => 'analysis.access',
+            'submenu' => [
+                [
+                    'text' => 'Invoice',
+                    'url' => 'invoice-chart',
+                    'can'   => 'invoice-chart.access',
+                ],
+            ],
+        ],
+        [
             'header' => 'Admin',
             'can'   => ['admin-menu','admin-menu.access'],
         ],
