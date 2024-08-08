@@ -604,7 +604,7 @@
             let gl_number = $('#gl_filter').val();
 
             if(!gl_number && !batch_number) {
-                swal_warning({title: "Please select GL Number first!"});
+                swal_warning({title: "Please select GL Number or Batch first!"});
                 return false;
             }
 
