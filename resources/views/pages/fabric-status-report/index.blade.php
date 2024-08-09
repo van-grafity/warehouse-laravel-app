@@ -10,7 +10,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="form-group">
-                    <label for="date_filter" class="mb-0 align-self-center col-form-label">Incoming Date Filter</label>
+                    <label for="date_filter" class="mb-0 align-self-center col-form-label">Date Filter</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="far fa-calendar"></i></span>

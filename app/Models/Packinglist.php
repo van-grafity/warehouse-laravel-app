@@ -105,7 +105,7 @@ class Packinglist extends Model
         return $packinglist_id;
     }
 
-    public function getRollSummaryInPackinglist($packinglist_id, $summary_option = null)
+    public function getRollSummaryInPackinglist_old($packinglist_id, $summary_option = null, $date_filter = [])
     {
         $result = DB::table('packinglists')->join('fabric_rolls','fabric_rolls.packinglist_id' ,'=', 'packinglists.id')
             ->when($summary_option, function ($query, string $summary_option) {
@@ -128,5 +128,46 @@ class Packinglist extends Model
 
         return $result;
     }
+
+    public function getRollSummaryInPackinglist($packinglist_id, $summary_option = null, $date_filter = [])
+    {
+        $query = DB::table('packinglists')
+            ->join('fabric_rolls', 'fabric_rolls.packinglist_id', '=', 'packinglists.id')
+            ->whereNull('fabric_rolls.deleted_at')
+            ->where('packinglists.id', $packinglist_id);
+
+        if ($summary_option === 'stock_in') {
+            $query->join('fabric_roll_racks', 'fabric_roll_racks.fabric_roll_id', '=', 'fabric_rolls.id');
+
+            if (!empty($date_filter['start_date_filter'])) {
+                $query->where('fabric_roll_racks.stock_in_at', '>=', $date_filter['start_date_filter']);
+            }
+
+            if (!empty($date_filter['end_date_filter'])) {
+                $query->where('fabric_roll_racks.stock_in_at', '<=', $date_filter['end_date_filter']);
+            }
+        } elseif ($summary_option === 'stock_out') {
+            $query->join('fabric_issuances', 'fabric_issuances.fabric_roll_id', '=', 'fabric_rolls.id');
+
+            if (!empty($date_filter['start_date_filter'])) {
+                $query->where('fabric_issuances.created_at', '>=', $date_filter['start_date_filter']);
+            }
+
+            if (!empty($date_filter['end_date_filter'])) {
+                $query->where('fabric_issuances.created_at', '<=', $date_filter['end_date_filter']);
+            }
+        }
+
+        $result = $query->groupBy('packinglists.id')
+            ->selectRaw('
+                COUNT(fabric_rolls.id) as total_roll, 
+                SUM(fabric_rolls.yds) as total_length_yds, 
+                SUM(fabric_rolls.kgs) as total_weight_kgs
+            ')
+            ->first();
+
+        return $result;
+    }
+
     
 }
