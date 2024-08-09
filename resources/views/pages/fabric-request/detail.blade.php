@@ -85,7 +85,17 @@
                             <div class="col-sm-5">
                                 <dl class="row">
                                     <dt class="col-md-4 col-sm-12">Status</dt>
-                                    <dd class="col-md-8 col-sm-12"> : {{ $fabric_request->status }} </dd>
+                                    <dd class="col-md-8 col-sm-12"> :
+                                        @if($fabric_request->issued_at != null)
+                                            <span class="badge badge-success">Issued</span>
+                                        @elseif($fabric_request->issued_at == null && $fabric_request->received_at != null)
+                                            <span class="badge badge-warning">Received</span>
+                                        @elseif($fabric_request->received_at == null)
+                                            <span class="badge badge-danger">Requested</span>
+                                        @else
+                                            <span class="badge badge-danger">Unknown Status</span>
+                                        @endif
+                                    </dd>
                                 </dl>
                             </div>
                         </div>
