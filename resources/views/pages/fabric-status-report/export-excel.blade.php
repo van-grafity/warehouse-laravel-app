@@ -12,11 +12,15 @@
             <th rowspan="2" valign="center" style="text-align:center;" width="120px">Style</th>
             <th rowspan="2" valign="center" style="text-align:center;" width="200px">Fabric Content</th>
             <th rowspan="2" valign="center" style="text-align:center;" width="200px">Color</th>
+            <th rowspan="1" colspan="3" valign="center" style="text-align:center;">Opening Balance</th>
             <th rowspan="1" colspan="3" valign="center" style="text-align:center;">In Store</th>
             <th rowspan="1" colspan="3" valign="center" style="text-align:center;">Issue Out</th>
             <th rowspan="1" colspan="3" valign="center" style="text-align:center;">Balance</th>
         </tr>
         <tr>
+            <th rowspan="1" valign="center" style="text-align:center;" width="100px">Roll</th>
+            <th rowspan="1" valign="center" style="text-align:center;" width="100px">Length (Yards)</th>
+            <th rowspan="1" valign="center" style="text-align:center;" width="100px">Weight (Kgs)</th>
             <th rowspan="1" valign="center" style="text-align:center;" width="100px">Roll</th>
             <th rowspan="1" valign="center" style="text-align:center;" width="100px">Length (Yards)</th>
             <th rowspan="1" valign="center" style="text-align:center;" width="100px">Weight (Kgs)</th>
@@ -42,6 +46,9 @@
             <td style="text-align:center;" >{{ $value->style }}</td>
             <td style="text-align:center;" >{{ $value->fabric_content }}</td>
             <td style="text-align:center;" >{{ $value->color }}</td>
+            <td style="text-align:center;" >{{ $value->old_stock_balance_data->total_roll }}</td>
+            <td style="text-align:center;" >{{ $value->old_stock_balance_data->total_length_yds }}</td>
+            <td style="text-align:center;" >{{ $value->old_stock_balance_data->total_weight_kgs }}</td>
             <td style="text-align:center;" >{{ $value->stock_in_data->total_roll }}</td>
             <td style="text-align:center;" >{{ $value->stock_in_data->total_length_yds }}</td>
             <td style="text-align:center;" >{{ $value->stock_in_data->total_weight_kgs }}</td>
