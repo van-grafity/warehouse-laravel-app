@@ -42,16 +42,16 @@ class RackHistoryController extends Controller
             ->escapeColumns([])
             ->addColumn('action', function($row){
                 $action_button = "";
-                // if ($row->location != null){
+                if ($row->location != null){
                     $action_button .= "
-                    <a href='". route('rack-history.detail',$row->id)."' class='btn btn-primary btn-sm'>History</a>
+                    <a href='". route('rack-history.detail',$row->id)."' class='btn btn-primary btn-sm'> Detail </a>
                 ";
-                // }
+                }
                 return $action_button;
             })
 
             ->editColumn('location', function($row) {
-                return $row->location ?? 'No Location';
+                return $row->location ?? '-';
             })
 
             ->editColumn('entry_at', function($row) {
@@ -97,10 +97,10 @@ class RackHistoryController extends Controller
                 return Carbon::parse($row->entry_at)->format('d F Y H:i:s');
             })
             ->addColumn('exit_at', function($row){
-                return $row->exit_at ? Carbon::parse($row->exit_at)->format('d F Y H:i:s') : '<span class="badge badge-success">Current Location</span>';
+                return $row->exit_at ? Carbon::parse($row->exit_at)->format('d F Y H:i:s') : '-';
             })
             ->editColumn('location', function($row) {
-                return $row->location ?? 'No Location';
+                return $row->location ?? '-';
             })
             ->toJson();
     }

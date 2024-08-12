@@ -13,6 +13,9 @@
                     <i class="fas fa-info-circle mr-1"></i>
                     Rack Location Information :
                 </h3>
+                <div class="ml-auto p-3">
+                    <a href="{{ route('rack-history.detail', $rack->id) }}" class="btn btn-info btn-sm"> Rack History </a>
+                </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">

@@ -13,6 +13,9 @@
                     <i class="fas fa-info-circle mr-1"></i>
                     Rack Location History :
                 </h3>
+                <div class="ml-auto p-3">
+                    <a href="{{ route('rack-location.detail', $rack->id) }}" class="btn btn-info btn-sm"> Rack Information </a>
+                </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -21,6 +24,7 @@
                         <div class="row mb-3">
                             <div class="col-sm-12">
                                 <h5 style="font-weight:bold">Serial Number : {{$rack->serial_number}} </h5>
+                                <h5 style="font-weight:bold">Current Location : {{$rack->location->location}} </h5>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -60,7 +64,7 @@
 <!-- Back Button -->
 <div class="row text-right mb-5">
     <div class="col-12">
-        @php $back_url = (url()->previous() == url()->current()) ? url('rack-location') : url()->previous() @endphp
+        @php $back_url = (url()->previous() == url()->current()) ? url('rack-history') : url()->previous() @endphp
         <a href="<?= $back_url ?>" class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left mr-1"></i>Back</a>
     </div>
 </div>
